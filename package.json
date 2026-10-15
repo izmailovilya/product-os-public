@@ -1,6 +1,6 @@
 {
   "name": "product-os-public",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A product workspace, source-backed context and local visual console",
   "license": "MIT",
   "engines": {

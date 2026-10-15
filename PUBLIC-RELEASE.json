@@ -1,12 +1,12 @@
 {
   "edition": "public",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "skills": [
     "os-setup",
     "product-context",
     "product-status"
   ],
-  "sourceDigest": "bb6cd482127de6a024509d54674f5b102880b49612ff4b38443c3e9dac74da5c",
+  "sourceDigest": "69fe22127b2d64a9785b6178eea5814af0117238acf4addea21617f98c512cb9",
   "files": [
     {
       "path": ".gitignore",
@@ -425,7 +425,7 @@
     },
     {
       "path": "bin/console/public/index.html",
-      "sha256": "186847739f54edacf87280cc09bc391c7f134f5fba3bfeb270ff6b66a1904c85",
+      "sha256": "564653cfb66ec3ed1e9667d36250000a68040c015a795801f2bc26613749e256",
       "origin": "public-edition"
     },
     {
@@ -860,17 +860,17 @@
     },
     {
       "path": "package.json",
-      "sha256": "7f1aacf9621b0fdc4b2a18b0ef5137c4c7269220e442bf0134fa66f4fd4d714f",
+      "sha256": "9152168b0d1439b3304c073d51850ad8feef8a56dadffc16a0e1d3d063f9770f",
       "origin": "public-edition"
     },
     {
       "path": "README.md",
-      "sha256": "34aa73d9f49b94e39fb433e1865d00728ee8f5979d6d7d330a069d2bb2f98b97",
+      "sha256": "8b20ad31e98eaf0ff84a2456f76b1d0ef994942b1459a7fab6c3676b8bafc82b",
       "origin": "public-edition"
     },
     {
       "path": "scripts/verify-console.js",
-      "sha256": "bbf7af4527a6f1a4194b7222b2525b658fa611716ec6b1c8156f7b209c162b30",
+      "sha256": "183beb19369e63af97e38ac53308f8ea04ab463497115b1fca19e58b1036eb9b",
       "origin": "public-edition"
     },
     {

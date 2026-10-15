@@ -1,0 +1,916 @@
+{
+  "edition": "public",
+  "skills": [
+    "os-setup",
+    "product-context",
+    "product-status"
+  ],
+  "createdAt": "2026-10-15T08:11:21.099Z",
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "cc561c939dce80b4c37566ba5624323b11258ba4b36f3045fd5aa8b57b728ce3",
+      "origin": "public-edition"
+    },
+    {
+      "path": "bin/behaviour-identity.js",
+      "sha256": "6657bb7ebce2da7be255a79a44e8f92af1c77f11a8289f73e46cae9f856f7aaa",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/competitor-key.js",
+      "sha256": "45e8c4313dd039c3fb3eb6c1245acc83c048ee5b17e1ca35ea01675432181a27",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/chrome.js",
+      "sha256": "b7fda7ddca05fc407905ac3c0731c126dade598105c7033db6289888dc5bfd9e",
+      "origin": "public-edition"
+    },
+    {
+      "path": "bin/console/communications.js",
+      "sha256": "78d145e2c5a6e55502db6f28d3bc05e2a334d5d78096882961b47cfe48b5d609",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/competitor-compatibility.js",
+      "sha256": "276d7b219ff623e9ee398dd28cca37b89412cb7694da1b140306a66d5241c8d4",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/competitor-kind.js",
+      "sha256": "98395ca8da910f22415059f235618423eb2ff66ac7afffc2a87f593c65fcb82e",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/consideration.js",
+      "sha256": "12965ce7f216c0c2001f832d244b091d1ea4c472e4d8634eb385e83ffdbe7ad6",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/evidence.js",
+      "sha256": "d00805b0712ab1bb6bcd2d80e831044cbff6d9db57e1eb8528a8d73769a3399d",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/galaxy-model.js",
+      "sha256": "9441ee9b80f34f5c0ff7431949c061a84a5c713ad4f67acd618dab160c01c703",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/model.js",
+      "sha256": "7f34da173dbbd44ab9350088a467624d7c9ae0a938550f8dd9ab444a1b726d4c",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/parameter-views.js",
+      "sha256": "9ed7f33611973c15bc150e28d8d9e53de97efac833ce446993c6a14741aac0a0",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/product-elements.js",
+      "sha256": "4958b2851c46931da8f7b23d1296c192fa9822538cb8a458b654b4fd21f017a5",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/product-references.js",
+      "sha256": "46e345e396f4c461ac03434be9177e4ba7d543f298604d8ec78b2b4ffd95a270",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/annotation-popover.js",
+      "sha256": "3ac56be0e274d66b56f02124e080fd9847de6eeecb88d4b6f17311c869c83f22",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/app.js",
+      "sha256": "a875ded962bb7ac8c27e8cfa971ef7a71bb307c36f4df5c14393bb87f94f58d2",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/brand/app-icon-16.png",
+      "sha256": "e5d33643acbd3cede124fe7dbf9559fbb8b4267113d1c1ab0f994233ae906caa",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/brand/app-icon-180.png",
+      "sha256": "5b671ffb54c95ebf94fc980e84d29a828ce8059898c7ccc1100c31b43d18cfcd",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/brand/app-icon-32.png",
+      "sha256": "294208fe4ca397b08e0849f655edd2453d441141baec76d23d2ee15f755260d7",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/brand/app-icon-512.png",
+      "sha256": "9a3f21770cc9b4776e4b4300b8df32dda73f158f692b00f30302052cf3e1c224",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/brand/app-icon-64.png",
+      "sha256": "7c978ae065218e73c387a1d78b52bfd2bdc64eb2d9718dbd061b7e26f4cbf5a4",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/brand/app-icon.svg",
+      "sha256": "a3164e6c545557741d065572a63ca1ad85653e5ddf157e829d218bf75684d62b",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/brand/favicon.svg",
+      "sha256": "b01fa3d1dd9c17ba3a6467ad0bd918db17fca9fa9992fb7ee62d280cf9b7b632",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/brand/mark-accent.svg",
+      "sha256": "720270abbc278a613ca65ec02b024a64a56b27084b9c91d0fac0c59d4c68ea2f",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/brand/mark-ink.svg",
+      "sha256": "b16f9212eec5acc4572a9b412acc8d1437a5c5a82ffa5c0369bb3dc443592605",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/brand/mark-inverse.svg",
+      "sha256": "868b7c3aa48052d47ddc531c25b4a8524b496722d87e3bafd188717cd5ad85e2",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/brand/README.md",
+      "sha256": "be520212dddc2943afb0651857690a09faf85e6d3194adeb90e41d07416cd8de",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/brand/wordmark-ink.svg",
+      "sha256": "bd5361847cafce3a7fb747559a530bdbe56e6c5e8aea106ac68ae1dcb2a0483c",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/brand/wordmark-inverse.svg",
+      "sha256": "9564c2bf7a1da5b56d80d1ed0500ffc025f779bcb22487f0ae61a199a57e9162",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/inter-cyrillic-400-normal.woff2",
+      "sha256": "f0bb586459ce8f09b238285040f17e3e9e9538b2c5a7aae0775194e33c36c3c3",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/inter-cyrillic-500-normal.woff2",
+      "sha256": "b77a86ec16aadc157f4a99e8898d71cd75ea264753d9bdf13f962f8c3988cbb0",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/inter-cyrillic-600-normal.woff2",
+      "sha256": "6c2a37f82a676bcd441b735e4e2cda4edb8873a059ab9c362a84f0711f257041",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/inter-cyrillic-700-normal.woff2",
+      "sha256": "5917871d3cc970d8ce195101cbf65c1f68ec948022eb6070030342bb7edfb3bb",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/inter-cyrillic-ext-400-normal.woff2",
+      "sha256": "ef572f9187a8be018d9d9c2c6b77c1f6cb2af4199f02fc16c292ea10ab25a2cc",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/inter-cyrillic-ext-500-normal.woff2",
+      "sha256": "1c2db92d3cd9b237ca7c9c07af556d542f28ded1db54cd4382cf776501c5291f",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/inter-cyrillic-ext-600-normal.woff2",
+      "sha256": "509fca9c59564f9a846fa69bc647f9b050fc11abf1c9f6f3da71fb2d5ed425bd",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/inter-cyrillic-ext-700-normal.woff2",
+      "sha256": "a46b99781170971e2c99a87ff7ee9f5cf90a9dfcd18175e1be6300201d030123",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/inter-latin-400-normal.woff2",
+      "sha256": "8909904ab6c872eb994093482a88a28eca2cd95912d7b6fecd72103b0dc07edc",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/inter-latin-500-normal.woff2",
+      "sha256": "f3779f1efccc4bdcdf9c0a02ab95bf6bd092ed09c48c08cedc725889edd1d19f",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/inter-latin-600-normal.woff2",
+      "sha256": "f9a06e79cd3a2a20951c0f0e28f66dd0e6d3fda73911d640a2125c8fcb78f21a",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/inter-latin-700-normal.woff2",
+      "sha256": "6f56409fd3d64bb85f7d070bce20749db2d66b6d63cec586cc22d1c761be2491",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/inter-latin-ext-400-normal.woff2",
+      "sha256": "6744a7f509ebc6ab220a6cd4ea77e898adf014f03d88dcda5d45d8a9feefb4e9",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/inter-latin-ext-500-normal.woff2",
+      "sha256": "2c6fbc42d315528beb06c1096df45487bf4186c4b78b8111d12c9c951f8acca2",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/inter-latin-ext-600-normal.woff2",
+      "sha256": "e4bdf67b0cd15ca9e184509275be95db942195d3cc2b17f6a0452f2adf75d0bf",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/inter-latin-ext-700-normal.woff2",
+      "sha256": "143f9504f1377012aa3e39c90c4354ef429cb0494b9ac0e1437f1a81e5412236",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/inter/LICENSE.txt",
+      "sha256": "3b0a5fca3d17942cde889069889dedbbbd075e9b599968c82a95f4d944e9b345",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/onest/LICENSE.txt",
+      "sha256": "071195d8806e226faeee60259c28ca67b458227af5195a73f5cfcab06e3003bc",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/onest/onest-variable.woff2",
+      "sha256": "ff957d4e13f5da1761cdddd8ffd0a9fe8ef0e8009c58583ac6b34cdcb323ec65",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/source-serif-4/LICENSE.txt",
+      "sha256": "5f94c3fd3a23131a417ab5a0c8452de57e70c3cfb9f604d88241f7065ebf9fd9",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/fonts/source-serif-4/source-serif-4-variable.woff2",
+      "sha256": "610aab8874b00429cacdd95637e584e1ce6a3afd6bf244d14e38e918eb526f6f",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/job-flow.css",
+      "sha256": "2329a748348259ff141e35806baeeb94c7cd1e291c754fd8457ee45d4280fb02",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/job-flow.js",
+      "sha256": "4bb445b879f9dc81e675a6571eb468a538ffd4f6231076253ab0f329d4650bd8",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/job-flow.js.LEGAL.txt",
+      "sha256": "27d3d15f586aa32b54c7c4531a30cd8e4de9eb4361b7b9d9c7623c33195046c1",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/README.md",
+      "sha256": "040f161b51b508e4d842b0ff2ad954baa9d14f8a3fb740aadc4571904a3c0b9d",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/assets/reference-example.png",
+      "sha256": "25b5ff90f03d11060f049cb7df6a2ce4292c6742bc62aba5601a2e7eb5a50c7e",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/atlas-navigation.js",
+      "sha256": "8f7d44b4a08a60b537a2483adb7b48169eb9cbf0b778f9c6b4f0ae5e5f7e4996",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/atlas-route.js",
+      "sha256": "6f86016a8c1ca86876360ad6b954b3d02db1ff57e45f678797c13fc8f571b6ac",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/atlas-runtime.js",
+      "sha256": "6c4a5269016ba6e2b09e13b26205ff3bec1d416c04bb1253efdf11254abcb42d",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/atlas-shell.css",
+      "sha256": "6c730215caab7f9d0ad2f02405fed5738e48079b7153a38fbe4a63242c5e8f04",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/atlas-shell.js",
+      "sha256": "581c698a30f48c626e8397a2c3a868b3baefb8e92dcad729401c7ff72b9ee3ef",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/atlas.css",
+      "sha256": "d5adb9e05ae6ae8d40f3d5ffee8ebafb7c34ba5deb3b21f1714382100cb80de7",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/atlas.html",
+      "sha256": "5713af132972a64a460e6df5cacdbe3c82e34187ec6dde058b3f2bcbf6f86763",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/atlas.js",
+      "sha256": "80fae70af63f34065b348e6dfdcaf501ba2dae12672d895cd7bc3515ea06a811",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/channel-content.js",
+      "sha256": "15e8b16c2666fbddaa66a8c8854182b6ec1eef777463030488b1c1f41b95f7f0",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/communication-job-graph.js",
+      "sha256": "823a2872e44176c531b9e5c92f671c6b3f2f510cea9025a11b92eeafb9946cf2",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/communication-reading.css",
+      "sha256": "4de1a7b2036b921427eaacf63e6ca5a8d05754861299535fd88105478c53692b",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/communications.css",
+      "sha256": "e6daf00c899a73c474433895505c8b5dd052295b131fcf585d0f6606fde7caf0",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/communications.js",
+      "sha256": "aa120fdf273cb091e4f636b984146ceab23934194d09b39e80feb77e4f3b9225",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/competitor-landing.js",
+      "sha256": "170db4e562ee5730dbaa34adc010a94c3c8a066888ab8199a0b24f8361d84088",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/competitor-preview.js",
+      "sha256": "c211ea83d7c32f5758988f2bdb07d5d3d94b1d0ec3284e127c423882d032518f",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/competitor-reading.css",
+      "sha256": "f83bb78999fcb48c7e61fd6cbdef5bb3c954a22c8e6b3008c7b43b0cbd297400",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/console-runtime.js",
+      "sha256": "96f2575ba4efaa8f098752726f5b066d33a26f20709b7939b7966d4ec96bfb2c",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/customer-evidence.js",
+      "sha256": "80053ea96cc16f8cccad57c980a0d282e38580ac93a7db20b8912911f1f1ebaf",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/design-system-catalog.js",
+      "sha256": "d161df6e2660734f8d509f89e831d38722a5cadcb363c14de60e625c05d2d3a3",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/design-system.css",
+      "sha256": "bc6d0991377b5e215fd5a2761ad0e0432ed7677fe7101f1e2b542da03f153643",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/design-system.html",
+      "sha256": "62b072b39474b20400ee33c9f4ba04b20d7515f0030233cba1d927789b90f0d1",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/dossier-content.js",
+      "sha256": "600839fb84643e6fbd522bdb08b115734961e6ea459e73796d0e075a87dc08dc",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/dossier-evidence.js",
+      "sha256": "9d2abddc613b60817de2507cba26036cd4fd7d780076e5722506b1392010bd16",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/dossier-refinement.css",
+      "sha256": "0a4878e680dfc9f81364087ac38b848d354ae324c5cd0618533101384e1b0c28",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/fonts.css",
+      "sha256": "97ff63ae2b161d242c90fe650e2ce13cb85075eba46e772d523e70491fc441be",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/galaxy-hangar.js",
+      "sha256": "e23f674563170b19bb4de1d5b5f79a052d7fa7f6ca097419c7e6af55d9b29e39",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/galaxy-icons.js",
+      "sha256": "0c9fd216abe6e1904ccd6c19e76171771cdc67ff8d69cb10887f14b2ef3cd412",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/hangar-refinement.css",
+      "sha256": "5500a5b340a3aafe22c936400a03b53c88028ec9acb5c25750e110b363919d1b",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/index.html",
+      "sha256": "77aab9a63ac0eb7394411c1ff1c1eacade9da8bb7f5cf04161284cac1182caab",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/job-graph-example.js",
+      "sha256": "c6fb66c939ca17fb908a7aee128e6f1a498c1ccd893bbc5a99e4a9550bb48c00",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/landing-panel-context.js",
+      "sha256": "614862404f6621e2f3f6ca32f9c48ced00fa921e5a3c22c6f0e874ab714212be",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/product-element-example.js",
+      "sha256": "ee05afe37b8be234d2f80269d8b0ef0842b5e1d34e9405eed4d316682045aa65",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/product-elements.css",
+      "sha256": "ff91eede7ce4ff8569788a025c30eef7a19fcaab8892cc8350527c0765354137",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/product-elements.js",
+      "sha256": "3b93fff26673493970c6436bac059959e785f9af751ded976bb6b6f20dc7b39e",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/product-references.css",
+      "sha256": "b36a93721abe1b1acd74bd1df51547db1b3bf0e61e5ac61196ca410d93479d5d",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/product-references.js",
+      "sha256": "f68b999735cf5320179e7344d14ec77e76e8ba2f601e3eb4d68d1bafa893bb76",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/product-tabs.js",
+      "sha256": "6af5123fecfece823cf2e536f9da7a7bf0df0bdcec6f54c86091e6178619e4fc",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/product-work.css",
+      "sha256": "c0fb7b48cf515873eb192a7b613e6b43993de992eddd521a5a5906febc4b7e7e",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/product-work.js",
+      "sha256": "31bdc1304cba1cef66b2df9be377c050eba3215489271b70c24cf791b25f96a5",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/readability.css",
+      "sha256": "cb91a1f4374ed43a1f62f16aa4c7bfdfd96262a4cfb468a75f19a7849a1d6630",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/reading-list.js",
+      "sha256": "8f5dc7d9c1f390508e0695e1877f63b737e373eb299180e7ad0785b1d2bfc31d",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/reference-example.js",
+      "sha256": "d3a6bdf1edc99f2b362caf867a3406886e5d57f48fd9d21e5b16de8ded81dd37",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/report-reading.css",
+      "sha256": "01c9cd0c85057ef6cfe8675c5cdb20f28c7dd7029c32fc9fb7710bc3dbc0944a",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/report-reading.js",
+      "sha256": "2b7cd3d30d1a9aa27a3b1af6570beb73ec6e54b1fb210496dd2fa144de3c42c7",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/research-brief-state.js",
+      "sha256": "45d546702cf4569730860a19e80ee7e2eb4e954c9eec8b798fb1e9c3828d2605",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/research-brief.css",
+      "sha256": "e8c4dbe336442adbc2d37c900392eea7baf69ec6d6d38fb84a05c21d3ff11763",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/research-brief.js",
+      "sha256": "be4814975615c85ad790b0650d8fcb6d602d8852d6ea9297263684bcb2c1f7a5",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/research-job-layout.js",
+      "sha256": "b72a4e12a9b3ac3af6600a2b50641bd6a8e1a145e8b9e9df26677b621c0b412b",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/research-reading.css",
+      "sha256": "185a5b7eeff6dd538b4d953169bf3ad496f1700320848635fc7d850983589491",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/research.css",
+      "sha256": "52fe7dc94829f59b56cafeb3a68815badbc5bb717246fafcd29e47ed7bafc552",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/research.js",
+      "sha256": "483d418734466f4bbec2c7ade91123fc05a4a7b7338f87e926be8a67dde1b665",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/segment-collection.js",
+      "sha256": "f018f5104ebfa5bccf8d16e111cef963d10e517c2f2c05df5f056d68f0f0618d",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/segment-discovery.js",
+      "sha256": "e4fc0d5870e9b7c5f00b068484ca96b45289c7039d7cf275b84a50dea7b468f9",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/segment-support.js",
+      "sha256": "30f25f62f78b0766a26900bdda631c0da5de39c5362d5e4ba29de63f3c6e3a2e",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/styles.css",
+      "sha256": "0ffe9f1da4c3b225a410d65988ae94b189ad2dc21c16888be1092d4a293f3e2e",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/ui-components.css",
+      "sha256": "58468d3b9813ec7cfd0f01c4a397e97e5d03a8dfc95240986636cf7d3fbf40db",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/ui-components.js",
+      "sha256": "f646fa016de9f105b980f09ed2dcc43680c0392ffc618eb24c5a3557f9879d5a",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/ui-tokens.css",
+      "sha256": "4748543c6bc4f1300e52953769bbd8b7768ac89ac937331a1c5eb972045cc7ac",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/report-assets.js",
+      "sha256": "4f08feb187a6b75d300cb0f23e076e806d8e6d99de7cf4eb6d5d9a904c7f3c64",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/research-actions.js",
+      "sha256": "5edbc7d7198682120dcc4b2a4a54dc0c99d2d0f703ddb547c74e16cd51609350",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/segment-job-graph.js",
+      "sha256": "a0f3be98091462d4be542e76c1bdfc114f81fc1109d321cf3c0309ea6f393d55",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/segment-research.js",
+      "sha256": "cb21ae33717f553b46ab43404d2fec0c7ccd066b12b6665a26471c2358a21502",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/segment-views.js",
+      "sha256": "2000d08b8092da3a1271b17ff937f7d7bbaae2280ce5c853aabaed0e98c887db",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/server.js",
+      "sha256": "51891c7b490210c70c5bd1ebc92a5bc3978672fc0828afde787bb282a42aac5c",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/state.js",
+      "sha256": "866ae77f5b793e01b42dbb1beb1143de1ab82327549eeb626fb8842882b6c987",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/work.js",
+      "sha256": "bc218dc0326917a1a01cec81593a7c4054c899db07eb053b5c229e4cc20bdedb",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/customer-profile.js",
+      "sha256": "0bcab3438be3d457dafe2c09bc9b3987fa1fd1579aeb0feff2781ed649ae6847",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/graph-write.js",
+      "sha256": "ee6f82a6548d98ea3472519941c6c8e6b947a3ab24521af2e2e0cb1a776c9479",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/graph/communications-legacy.js",
+      "sha256": "3534b7349a3c51d0b22b2ec590193125133e8915cd91c129f19d55bc77133222",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/graph/communications.js",
+      "sha256": "713adb6c47c8e4612ad1df3bee7c27b021844b1a3d792bceca1a69b45b0594ee",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/graph/competition-normalization.js",
+      "sha256": "11e314cf9d92ff71c23b5784a373d14ae0af867f8eb14467cd665c48aad3594c",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/graph/competitors.js",
+      "sha256": "768b1037f43cc39de157b2ac2516cc212e3e541465db83cde1d08b6ce52209ac",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/graph/schema.js",
+      "sha256": "d50b2abc81d72924a7401d89c7c6751217dcb679158faea6b1b6d134c07f3be1",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/graph/storage.js",
+      "sha256": "93bd0f2c0587d1303647fb5966b0188b9ff918cac4a897d8da4addd0a969c14a",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/graph/visual-assets.js",
+      "sha256": "430831ba204df8f0900b2e3c9975a9030bd72b9ae724daa6eae19c56db31358c",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/graph/writer.js",
+      "sha256": "60b1bb63b9c7dc0884453c8969c656592d31d918fe988fd420d6a841b621cfd4",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/install.js",
+      "sha256": "ada7d9cbfffe3e0ebc2800a83273869ee53648d85729d7693cc3f5c39a323a6b",
+      "origin": "public-edition"
+    },
+    {
+      "path": "bin/moves.js",
+      "sha256": "78b1acc7bd389493ff706e91e2820c321c81fe6db5f5b055729b22401cf69347",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/pages.js",
+      "sha256": "448985e2d0973a6f7605f5acb8f78feb55a52d283c33d8038433ab56660d2adc",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/product-os.js",
+      "sha256": "867f7b6868a81b2289ee15b7cf26a3262ba94e61038ab6162d5e779f4fe98db4",
+      "origin": "public-edition"
+    },
+    {
+      "path": "bin/public-workspace.js",
+      "sha256": "f4f258f890d0bf5bc25c812b9b6c2dc80130253e5a47085b04af96d3486c903e",
+      "origin": "public-edition"
+    },
+    {
+      "path": "bin/reference-graph.js",
+      "sha256": "92bb0a15365e2d96fa349284632d9142ba83158b3459012fe06e5df3acd8e20e",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research-gates.js",
+      "sha256": "5af60085643b4a2b3ea4bdc18c3fb7a4f90e4632b523df8eb98be9b477954575",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research-quality.js",
+      "sha256": "50120bf3a3681fda2ff8c833909d7cf3a93be1871ac76a51bf71c1e670cf8e92",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research-result.js",
+      "sha256": "3f9cbc092d35e63c59a60cc4b95b88970b11e0b91abb8a77a0a06029091453a5",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research-schemas.js",
+      "sha256": "7beda827262a216cc4ba32d9f297a513caf3739e255c52925397f9ab4b9d35ca",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research/canon.js",
+      "sha256": "bddd38ff623883953bd3b9bc3c03fee0f68bc4df3d1d25041b412aeefbbb3858",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research/cli.js",
+      "sha256": "09cbd58f00edb1515e9693263776f37b6c1a3c446e93b8664e881a6b1f287d15",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research/fields.js",
+      "sha256": "75a3c72ee5d657900e95cb3a246336d814a4e569c4051a1eecb83895180f89f2",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research/interview-support.js",
+      "sha256": "3820b62843a173ff315757fa70742f55da1ac592fd11a2049290a8c8df6ca2e6",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research/migrate.js",
+      "sha256": "abd21c418c4f157ac1c6b8a6fb6e8ced4230d03bcb34004ef1f5a4a887b1f9a0",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research/provenance-plan.js",
+      "sha256": "d5c85811dd86077887fdbbd20a09825546f7f597e665c8c67cc9f065db3011d8",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research/provenance.js",
+      "sha256": "feafdb713f13589f179309903f1427f422b18d6cf919d1f7768a06937baf5627",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research/reading-preview.js",
+      "sha256": "fd3adf6c96d6e3c9fd4b109a92cccdf6521f4eb159e8166c219880fd4287c3bc",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research/schema.js",
+      "sha256": "670abfafc616141ac862a9dfb5b9063f7a6b76898db3572808e7a920f6a840d3",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research/schema.json",
+      "sha256": "bef6f529d2e12f713c74dc8803d73ab6f5f663006b0acdf703a74eb897fa15e2",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research/scope.js",
+      "sha256": "eb237a1712f86e509c43ed38cb3a163fd8de428dd9f52cb9d79791dd881f1555",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research/segment-analysis.js",
+      "sha256": "640eb401bae2f082ffa975d04d1cad6357619af1f62ef695498a98d855f2b2af",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research/store.js",
+      "sha256": "c25ad3f615a3f861611a09fcd3f509fa9b9bafbb09ef7ff539990c5bdbe5e9f1",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/research/summary.js",
+      "sha256": "cee43ef709ca33db476c8c6305f733583d48c0e566a29212372a3f72ede202f0",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/russian-defaults.js",
+      "sha256": "04ae44211348e21c85bc3d4fc8fbbece6015f16dca9e0a87358f5ebfc8907dfa",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/segment-model.js",
+      "sha256": "4367bfbeb73c0fcbef4837f5cd4114027504d44be759a79c4c4cec523c374dc6",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/segments.js",
+      "sha256": "e5e4a936d32487fa34cd855681f3898acfffc52eae079891f7f8295badc522c5",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/source-snapshot.js",
+      "sha256": "410b7ddef273f7cb00d3b97c76e1937bc95ea3d4792ae25b4bea8cf57638719a",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/verification.js",
+      "sha256": "6bf946a8745843d399e345e0013b736b1642f544b38d1aaf1cb84af249ae27b5",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/workspace-instructions.js",
+      "sha256": "3cd7e3a8fdc0ff8264135cd323b95ccb894e8b01e00cc6bbe3042f8c47174577",
+      "origin": "toolkit"
+    },
+    {
+      "path": "BRAND.md",
+      "sha256": "b9aac47a3a766e66fecfc135e1c2f061f324abd06db210091e8e9399bab6143d",
+      "origin": "toolkit"
+    },
+    {
+      "path": "COMMUNICATIONS.md",
+      "sha256": "fe4fcc3a28be7d196f18d8fa60ced8ff7138e6cb09daf4e88dabe4b400519ac6",
+      "origin": "toolkit"
+    },
+    {
+      "path": "CONTRACT.md",
+      "sha256": "4f133c25ac7b0771dcf4b00ac6f959980a953a4e1362db38fda4ad98014c45d0",
+      "origin": "public-edition"
+    },
+    {
+      "path": "DESIGN-SYSTEM.md",
+      "sha256": "258eba6d640a3e6788109f0c16aa7655da2b7c4fefca0baa89ebbdf0b9bc613c",
+      "origin": "toolkit"
+    },
+    {
+      "path": "GRAPH-WRITES.md",
+      "sha256": "87affc7ff212e771bb2675c0f3e277e6cfb7eef34b85fa362cd8dc8f8752984f",
+      "origin": "public-edition"
+    },
+    {
+      "path": "GRAPH.md",
+      "sha256": "af6dd8f187698842427a92514c39c1dfd8fa3f3457e878f1537ec72a87b395c8",
+      "origin": "public-edition"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "38be2fbf4f1e08c7f483ba2724a643d2de377be71ab4214954fd2324076c7ae7",
+      "origin": "toolkit"
+    },
+    {
+      "path": "package.json",
+      "sha256": "8a9d59b1bab6be49abe577b88e4aa9be9ad32babc7bba851190cc9dba456b28a",
+      "origin": "public-edition"
+    },
+    {
+      "path": "README.md",
+      "sha256": "ddb6b595390ec22239ee5aa2fa0b43017479b9b16c4a5e971e238fcb2652b304",
+      "origin": "public-edition"
+    },
+    {
+      "path": "scripts/verify-console.js",
+      "sha256": "e74554715afbb968036dac2315334557446ee1fe0bf2ed90cff68d8c658c3472",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/COMMUNICATIONS.md",
+      "sha256": "fe4fcc3a28be7d196f18d8fa60ced8ff7138e6cb09daf4e88dabe4b400519ac6",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/CONTRACT.md",
+      "sha256": "4f133c25ac7b0771dcf4b00ac6f959980a953a4e1362db38fda4ad98014c45d0",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/DESIGN-SYSTEM.md",
+      "sha256": "200cabf2bc0c0b5daf9b8e9118ee094e26a3f2be9fd36b86cd373ed0379c6434",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/GRAPH-WRITES.md",
+      "sha256": "87affc7ff212e771bb2675c0f3e277e6cfb7eef34b85fa362cd8dc8f8752984f",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/GRAPH.md",
+      "sha256": "af6dd8f187698842427a92514c39c1dfd8fa3f3457e878f1537ec72a87b395c8",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/os-setup/SKILL.md",
+      "sha256": "438907e7d0f65e779e515e16f8d06b8c22ba751f0ef16501e22081ab885bd571",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/os-setup/workspace-CLAUDE.md",
+      "sha256": "557507643fd49e8dc05e970d5caf0167e6ca5b7e189d947732845648d8f115bd",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/product-context/SKILL.md",
+      "sha256": "c2915dd8d3d0c8fec1137413ff188369de31da417f2000df69a8dd654ab2c8eb",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/product-status/SKILL.md",
+      "sha256": "4559c8d2db5cd32fd99b713d0bf988bf99a591b955fd296f817267abd5fe7b1d",
+      "origin": "public-edition"
+    },
+    {
+      "path": "test/public.test.js",
+      "sha256": "a65b3ba4a46b1b0d91a79e6e3e5c246ab79598cd4129dec0e2ed403dd4172925",
+      "origin": "public-edition"
+    }
+  ]
+}

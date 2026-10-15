@@ -1,0 +1,82 @@
+// Read-only preview of saved facts. No inferred coverage, conversion or research status.
+const text = value => typeof value === 'string' ? value.trim() : ''
+const stageNames = {discovered:'Нашли',considered:'Рассматривали',contacted:'Связались',applied:'Подали заявку',tried:'Пробовали',selected:'Выбрали',rejected:'Отказались',switched:'Сменили решение',used:'Использовали',abandoned:'Перестали использовать'}
+const evidenceNames = {mixed:'Источники расходятся',contradicted:'Есть опровергающие сведения'}
+const coverageLimits = {partial:'Закрывает часть задачи',none:'Не закрывает задачу',unsupported:'Выполнение задачи не подтверждено',varies:'Зависит от сегмента'}
+// Reading translations of retained formulations; never a fresh claim about the service.
+// Original text stays in the dossier source/archive. Unknown text is retained verbatim.
+const readingTranslations = {
+  "Universal voice AI assistants": "Голосовые ИИ-помощники общего назначения",
+  "Online English schools with live tutors (RU)": "Онлайн-школы английского с преподавателями",
+  "Telegram text tutor bots": "Боты для практики английского в переписке",
+  "Telegram voice tutor bots": "Голосовые боты для практики английского",
+  "Global tutor marketplaces": "Международные площадки поиска преподавателей",
+  "AI conversation-practice apps": "Приложения разговорной практики с ИИ",
+  "General assistant; voice mode for conversation (no pronunciation-specific promise)": "Помощник общего назначения с голосовым режимом для разговора. В сохранённом описании нет отдельного обещания работы над произношением.",
+  "«Easy way to start talking in English» (mr1-c39)": "Обещает помочь начать общаться на английском.",
+  "Learn any language with a native tutor online": "Предлагает изучать языки онлайн с преподавателем — носителем языка.",
+  "«Finally. Someone to speak with.» (главная, 25.09.2026)": "«Наконец-то есть с кем поговорить» — обещание на главной странице от 25.09.2026.",
+  "«Говорите свободно с ИИ» — fluency and confidence (mr1-c29)": "«Говорите свободно с ИИ» — обещание беглости и уверенности в речи.",
+  "Изучать английский онлайн с преподавателем (general English; pronunciation is a topic inside lessons, not a product)": "Изучать английский онлайн с преподавателем. В сохранённом описании произношение — тема внутри уроков, а не отдельный продукт.",
+  "Same Big Job, especially for IT specialists on work calls (seg_1) and rehearsal of specific situations (seg_4); different Core Job (rehearsal and fluency, not pronunciation diagnosis). Premium-priced.": "В сохранённом сравнении помогает достичь той же общей цели: общаться на английском на рабочих созвонах и репетировать конкретные ситуации. Непосредственная задача отличается: репетиция и беглость речи, а не диагностика произношения. В исследовании отмечена высокая цена.",
+  "Named by the founder. Same channel, but text chat, grammar, vocabulary and games; no voice or pronunciation function shown on the site (mr1-c39). Indirect at most.": "Назван основателем для сравнения. Использует тот же канал, но предлагает текстовый чат, грамматику, слова и игры. В изученном сайте не показаны голосовые функции и работа над произношением. В пояснении отмечен как косвенная альтернатива.",
+  "Founder named 'universal voice AIs' as an alternative. Same Big Job via free-form voice conversation. Officially unavailable in Russia: site blocks Russian IPs and Russian bank cards are not accepted; users pay through foreign cards, intermediaries or friends abroad (t-j.ru/chatgpt-in-russia, vc.ru guides 2025). Available to Russian speakers living abroad.": "Основатель назвал голосовые ИИ-помощники альтернативой для свободного разговора. В сохранённом сравнении они помогают достичь той же общей цели. Материалы 2025 года описывают ограничения доступа и оплаты из России и способы оплаты через иностранные карты, посредников или знакомых за рубежом; доступ для русскоязычных за рубежом рассматривается отдельно. Это сведения из прежнего исследования, а не текущая проверка.",
+  "Same Big Job; used by Russian speakers abroad for native-speaker lessons (60–80 USD/month at 1 lesson/week, mr1-c43). Different Core Job unless a phonetics tutor is chosen. Payment from Russian cards not verified; relevant mainly to relocants.": "В сохранённом сравнении помогает достичь той же общей цели. Описаны уроки с носителем языка для русскоязычных за рубежом: 60–80 долларов в месяц при одном уроке в неделю. Непосредственная задача отличается, если не выбран преподаватель фонетики. Оплата российскими картами не проверена; в исследовании рассматривается прежде всего для переехавших за рубеж.",
+  "Same Big Job (speak English at work), different Core Job (fluency and conversation, not intelligibility). Named by the founder; 3 000 RU App Store ratings (mr1-c29). A user asked in Oct 2025 where the pronunciation exercises went (mr1-c30) — evidence pronunciation is not its focus.": "В сохранённом сравнении помогает говорить на английском на работе, но непосредственная задача — беглость и разговор, а не разбор понятности произношения. Назван основателем; в исследовании указаны 3 000 оценок в российском App Store. Вопрос пользователя об исчезновении упражнений на произношение в октябре 2025 года использован в исследовании как основание гипотезы о фокусе продукта.",
+  "Largest player in the language segment (12.7 bn RUB revenue 2025, mr1-c08). Same Big Job, different Core Job (general English). A learner can ask a tutor to work on pronunciation, and Skyeng's Talks (390 RUB/lesson) and Just Speak (849 RUB/lesson) products target speaking practice (digital-academy.ru listing).": "В сохранённом исследовании назван крупнейшим игроком языкового сегмента с выручкой 12,7 млрд рублей за 2025 год. Помогает достичь той же общей цели, но непосредственная задача — изучение английского в целом. Произношением можно заниматься с преподавателем; для разговорной практики в материалах отдельно указаны Talks — 390 рублей за урок — и Just Speak — 849 рублей за урок. Эти цены и показатели взяты из прежнего исследования.",
+  "Individual English phonetics tutors/coaches, bookable via marketplaces like Yandex Uslugi and Profi.ru, offer 1:1 sessions focused on sounds and intonation.": "В материалах описаны индивидуальные занятия по фонетике английского: звуки и интонация. Преподавателя можно найти через площадки вроде «Яндекс Услуг» и Profi.ru.",
+  "Individual phonetics tutoring in Moscow (Yandex Uslugi listings) runs about 2000 RUB per 60-minute session (2500 RUB per 90 minutes); generic online English tutoring starts from about 500 RUB/hour depending on the tutor's experience.": "В московских объявлениях «Яндекс Услуг» в исследовании указано около 2 000 рублей за 60 минут фонетики и 2 500 рублей за 90 минут. Обычные онлайн-уроки английского — примерно от 500 рублей в час, в зависимости от опыта преподавателя.",
+  "General-purpose conversational voice AI (e.g. ChatGPT Voice Mode) is used by some learners for free-form spoken English practice instead of a dedicated pronunciation app.": "В материалах описана свободная разговорная практика с голосовым ИИ-помощником, например ChatGPT Voice Mode, вместо отдельного приложения для произношения. Это описание некоторых учащихся, а не всех клиентов.",
+  "ChatGPT Voice is usable for free-tier spoken practice without additional payment beyond any pre-existing ChatGPT subscription.": "В сохранённых материалах голосовую практику ChatGPT описывают как доступную на бесплатном тарифе без доплаты сверх уже имеющейся подписки, если она есть. Текущие условия не проверены.",
+  "Chatty - English Tutor (@ChattyEnglishBot) is a Telegram bot marketed as 'Bot №1 for studying English,' showing about 47,000 monthly users on its own Telegram page.": "В материалах Chatty — English Tutor (@ChattyEnglishBot) описан как Telegram-бот с заявлением «Бот №1 для изучения английского». На его собственной странице указано около 47 000 пользователей в месяц; это показатель со страницы, а не независимая оценка.",
+  "Andy English Bot (@andyrobot) is a Telegram bot for English practice via chat/dialogue, vocabulary saving, grammar study and word-battle games.": "Andy English Bot (@andyrobot) описан как Telegram-бот для практики английского в переписке: диалоги, сохранение слов, грамматика и игры со словами.",
+  "Praktika is an app offering AI-avatar-led conversation practice for English, positioned around natural conversation rather than isolated pronunciation drills.": "Praktika описана как приложение разговорной практики английского с ИИ-аватарами. В позиционировании акцент на естественном разговоре, а не отдельных упражнениях на произношение.",
+  "Praktika's monthly plan is commonly listed around $19.99/month (quarterly ~$49.99 total, annual ~$149.99/year); figures vary by source and market.": "В сохранённых материалах: около 19,99 доллара в месяц, 49,99 доллара за квартал и 149,99 доллара за год. Цифры различаются между источниками и рынками; текущие тарифы не проверены.",
+  "A Praktika user reports being charged for a full annual subscription (€110) after a 5-day free trial with no reminder, i.e. billing transparency is a source of dissatisfaction with this competitor.": "Один пользователь Praktika сообщает о списании 110 евро за годовую подписку после пятидневного бесплатного периода без напоминания. Это отдельная жалоба на прозрачность оплаты.",
+  "Preply tutors for job-interview prep cost roughly CHF 28–77 per 50-minute lesson; separately, a Preply-side tutor review describes 33% platform commission on lesson fees (dropping over time), which shapes tutor pricing and availability.": "В материалах уроки подготовки к собеседованию на Preply стоят примерно 28–77 швейцарских франков за 50 минут. В отдельном отзыве преподавателя указана комиссия платформы 33%, которая со временем снижается и влияет на цены и доступность преподавателей.",
+  "Skyeng's job-interview program is priced 1,090–1,890 ₽ per lesson depending on package size (premium tier 1,590–2,690 ₽/lesson), includes 6 interview-prep lessons plus a mock interview and resume review, and is explicitly marketed as the fi": "В сохранённой записи программа Skyeng для собеседований: 1 090–1 890 рублей за урок в зависимости от пакета, премиальный тариф — 1 590–2 690 рублей. Указаны шесть подготовительных уроков, пробное собеседование и проверка резюме. Конец исходного описания обрезан.",
+  "Windsor's interview-prep course is priced from 14,520 ₽ online, minimum 6 academic hours, covering CV, cover letter, interview structure, small talk and specialized vocabulary.": "В сохранённых материалах онлайн-курс Windsor для собеседования стоит от 14 520 рублей и включает минимум шесть академических часов. Темы: резюме, сопроводительное письмо, структура собеседования, светская беседа и профессиональная лексика.",
+  "Gives no structured pronunciation feedback: rarely flags a specific mispronounced sound, leans toward encouragement over correction, and can't reliably hold a fixed target error across sessions.": "В исследовании отмечено отсутствие структурированной обратной связи по произношению: редко выделяется конкретная ошибка в звуке, поддержка преобладает над исправлением, а одну целевую ошибку трудно удерживать между занятиями.",
+  "General-purpose conversational voice AI like ChatGPT Voice Mode gives no structured pronunciation feedback: it rarely flags a specific mispronounced sound, leans toward encouragement over correction, and can't reliably hold a fixed target error across sessions.": "В исследовании у голосовых ИИ-помощников вроде ChatGPT Voice Mode отмечено отсутствие структурированной обратной связи по произношению: редко выделяется конкретная ошибка в звуке, поддержка преобладает над исправлением, а одну целевую ошибку трудно удерживать между занятиями.",
+  "Users report unexpected and repeated charges beyond the advertised offer, including being billed extra on top of an annual offer, charges appearing every few days, and surprise charges after a short free trial.": "В отзывах описаны неожиданные повторные списания сверх заявленного предложения: доплата к годовой подписке, платежи каждые несколько дней и списание после короткого бесплатного периода.",
+  "Speaking feedback is not shown inline — users must click through to a secondary screen to see it, breaking the flow of practice.": "В исследовании отмечено, что отзыв о речи нужно открывать на отдельном экране: он не показан рядом с ответом, что прерывает практику.",
+  "In some markets Praktika has no month-to-month option, so the minimum commitment (quarterly or annual) is comparatively high for a try-and-decide purchase.": "В материалах для некоторых рынков Praktika не предлагает помесячную оплату: квартальная или годовая подписка увеличивает расходы на первую пробу.",
+  "Praktika users report unexpected and repeated charges beyond the advertised offer, including being billed extra on top of an annual offer, charges appearing every few days, and surprise charges after a short free trial.": "Пользователи Praktika сообщают о неожиданных повторных списаниях сверх заявленного предложения: доплате к годовой подписке, платежах каждые несколько дней и списании после короткого бесплатного периода.",
+  "Praktika's speaking feedback is not shown inline — users must click through to a secondary screen to see it, breaking the flow of practice.": "В исследовании отмечено, что отзыв Praktika о речи нужно открывать на отдельном экране: он не показан рядом с ответом, что прерывает практику.",
+  "A Praktika user reports poor AI pronunciation assessment quality (in Mandarin, but indicative of general AI evaluation-quality complaints against this vendor).": "Один пользователь Praktika жалуется на качество оценки произношения ИИ при изучении китайского. В исследовании это отнесено к жалобам на оценку; результат для английского этим не установлен."
+}
+export function competitorText(value) {
+ const raw=text(value)
+ return readingTranslations[raw] || raw.replace(/\s*\(mr\d+-c\d+(?:[,; ]+mr\d+-c\d+)*\)/g,'').trim()
+}
+export function competitorCategory(competitor) {
+ const category=competitor.solutionCategory||competitor.category
+ const label=typeof category==='string'?category:category?.label
+ return category?.id==='uncategorized'||['Категория не уточнена','Категория решения не указана'].includes(label)?'':competitorText(label)
+}
+
+export function competitorPreview(competitor, segmentIds = []) {
+  const scoped = row => !segmentIds.length || (row.segmentIds || [row.segmentId]).some(id => segmentIds.includes(id))
+  const summaryOriginal = text(competitor.description) || text(competitor.landingBigJob)
+  const summary = competitorText(summaryOriginal)
+  const facts = [], seen = new Set([summary])
+  const add = (label, value, context = '') => {
+    value = competitorText(value)
+    if (!value || seen.has(value) || facts.length >= 2) return
+    seen.add(value); facts.push({label,text:value,context})
+  }
+  const cases = (competitor.considerationCases || []).filter(scoped)
+  if (cases.length) {
+    const qualified = cases.filter(row => row.usageQualified !== false && row.choiceScope !== 'compound')
+    const stages = [...new Set(qualified.flatMap(row => row.stages || []))]
+    add('Опыт клиентов', stages.length ? stages.map(stage => stageNames[stage] || 'Этап не уточнён').join(' · ') : qualified.length ? 'Результат выбора не записан' : cases.some(row=>row.choiceScope==='compound') ? 'Назван в общем ответе о нескольких решениях' : 'Упоминали; использование не подтверждено')
+  }
+  const hire = (competitor.hiredFacts || []).filter(scoped).find(row => text(row.whyHired) && !seen.has(text(row.whyHired)))
+  if (hire) add('Причина выбора в материалах', hire.whyHired, [hire.segmentLabel,evidenceNames[hire.evidenceStatus]].filter(Boolean).join(' · '))
+  // Global pricing can be shown alongside scoped facts; it is never attributed to a selected segment.
+  const price = (competitor.priceDetails || []).find(row => (!row.segmentIds?.length || scoped(row)) && text(row.summary))
+  if (price) add('Цена в материалах', price.summary, evidenceNames[price.evidenceStatus] || '')
+  const job = (competitor.jobCoverage || []).filter(scoped).find(row => text(row.job) && !seen.has(text(row.job)))
+  if (job) add('Задача клиента', job.job, [coverageLimits[job.coverage],evidenceNames[job.evidenceStatus]].filter(Boolean).join(' · '))
+  return {summary,summaryOriginal,summaryLabel:text(competitor.description)?'':'Заявление сервиса',category:competitorCategory(competitor),facts}
+}

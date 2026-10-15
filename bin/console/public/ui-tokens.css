@@ -1,0 +1,19 @@
+/* Canonical semantic tokens. Reading adapters and UI components consume this file. */
+:root{
+ --os-page:#f7f4ed;--os-surface:#fffcf5;--os-text:#272d28;--os-muted:#5b6057;
+ --os-line:#d4cdbf;--os-control:#818575;--os-accent:#963b25;--os-selected:#ead7c7;--os-tint:#eee9de;
+ --os-danger:#8b2b20;--os-danger-bg:#fbece8;--os-warning:#735117;--os-warning-bg:#faf0d8;
+ --os-positive:#246349;--os-positive-bg:#eaf4ee;--os-positive-line:#c2d8ca;
+ --os-radius:.25rem;--os-card-radius:.25rem;--os-tile-radius:.25rem;
+ --os-h1:2.5rem;--os-h2:1.75rem;--os-h3:1.5rem;--os-leading:1.6;
+ --os-sidebar:#f0ebe0;--os-hover:#e9e2d6;--os-shadow-pop:0 2px 4px #272d2810,0 16px 40px -16px #272d2840;
+ --os-space-1:.5rem;--os-space-2:1rem;--os-space-3:1.5rem;--os-space-4:2rem;--os-body:1.125rem;--os-label:1rem;--os-target:2.75rem;
+ --os-font:Onest,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ --os-heading-font:"Source Serif 4",Georgia,serif;
+ --os-on-accent:#fff9ef;--os-brand-field:#ead8c4;--os-brand-ink:#56301e;
+ /* Annotation categories: bright opaque marker fills, independent of success/error status. */
+ --os-marker-0:#67d8ff;--os-marker-1:#ffe461;--os-marker-2:#ff96c8;--os-marker-3:#bdeb65;
+ --os-marker-4:#c6a0ff;--os-marker-5:#ffb56b;--os-marker-6:#70e6bd;--os-marker-7:#9ab8ff;
+ --os-marker-8:#ff9b8e;--os-marker-9:#e0a0ec;--os-marker-10:#63dcdd;--os-marker-11:#e9cf80;
+ --os-marker-neutral:#dde1e7;--os-marker-ink:var(--os-text);
+}

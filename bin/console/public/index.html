@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>Product OS</title>
+  <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/brand/app-icon-180.png">
+  <meta name="theme-color" content="#f7f4ed">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/dossier-refinement.css">
+  <link rel="stylesheet" href="/hangar-refinement.css">
+  <link rel="stylesheet" href="/communications.css">
+  <link rel="stylesheet" href="/research.css">
+  <link rel="stylesheet" href="/readability.css">
+  <link rel="stylesheet" href="/atlas.css">
+  <link rel="stylesheet" href="/atlas-shell.css">
+  <link rel="stylesheet" href="/design-system.css">
+  <link rel="stylesheet" href="/ui-components.css">
+  <link rel="stylesheet" href="/competitor-reading.css">
+  <link rel="stylesheet" href="/communication-reading.css">
+  <link rel="stylesheet" href="/research-reading.css">
+<link rel="stylesheet" href="/assets/job-flow.css"><link rel="stylesheet" href="/research-brief.css">
+<link rel="stylesheet" href="/product-work.css">
+<link rel="stylesheet" href="/product-references.css"><link rel="stylesheet" href="/product-elements.css"></head>
+<body class="atlas-console">
+  <a class="os-skip-link" href="#atlasPageOutlet">К содержанию</a>
+  <nav class="atlas-navigation" aria-label="Основные разделы"><div class="atlas-nav-brand"><div class="os-brand" role="img" aria-label="Product OS"><img src="/assets/brand/mark-ink.svg" width="32" height="32" alt=""><span aria-hidden="true">Product OS</span></div><p id="productName" aria-label="Рабочая область">Загружаю продукт…</p></div><div class="atlas-nav-pages"><button id="atlasProductToggle" class="atlas-nav-button" type="button" aria-pressed="false"><span>Продукт</span></button><button id="galaxyMapToggle" class="atlas-nav-button" type="button" aria-pressed="true"><span data-galaxy-icon="map"></span><span>Сегменты</span></button><button id="galaxyFleetToggle" class="atlas-nav-button" type="button" aria-pressed="false"><span data-galaxy-icon="fleet"></span><span>Конкуренты</span></button><button id="galaxyCommunicationsToggle" class="atlas-nav-button" type="button" aria-pressed="false"><span data-galaxy-icon="route"></span><span>Каналы коммуникации</span></button></div><div class="atlas-nav-work"><button class="atlas-nav-button" id="tab-next" aria-controls="view-next" type="button" data-tab="next">Что дальше<span id="nextBadge" class="tab-badge" hidden></span><span id="waitBadge" class="wait-badge" hidden>!</span></button><details class="atlas-nav-tools"><summary>Инструменты</summary><button class="atlas-nav-button" id="tab-reports" aria-controls="view-reports" type="button" data-tab="reports">Отчёты</button><button class="atlas-nav-button" id="tab-skills" aria-controls="view-skills" type="button" data-tab="skills">Задачи агентам</button></details></div></nav>
+  <div id="app" aria-busy="true">
+    <header class="topbar" hidden><button id="graphStatus" class="sync-status" type="button" aria-label="Состояние данных"><span class="status-dot"></span><span class="sync-copy">проверяю данные…</span></button><button type="button" data-research-all>Участники</button><button class="tab" type="button" data-tab="map">Карта</button></header>
+
+    <main id="atlasPageOutlet" tabindex="-1">
+      <section id="view-map" class="view map-view" role="tabpanel" data-view="map">
+        <div id="mapEmpty" class="empty-state" hidden></div>
+        <div id="mapDesktop" class="map-desktop galaxy-shell">
+          <div id="galaxyViewport" class="galaxy-viewport atlas-enabled" data-mode="overview" data-zoom-band="middle">
+            <div class="product-scope-bar" hidden inert><label>Продукт <select id="productScope" aria-label="Продукт и направление"><option value="">Все продукты</option></select></label><button id="scopeParent" type="button" hidden>← К родительскому продукту</button><button id="manageProducts" type="button">Структура продуктов</button></div>
+            <section id="atlasReadingPage" class="atlas-content" aria-label="Исследование продукта" hidden><div id="main" tabindex="-1"><p role="status">Загружаем исследование…</p></div></section>
+            <section id="communicationsCenter" class="communications-center" aria-label="Центр связи" hidden></section>
+            <aside id="galaxyPanel" class="galaxy-panel" aria-label="Контекст карты" hidden></aside>
+            <section id="galaxyHangar" class="galaxy-hangar" hidden aria-label="Все конкуренты"></section>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-next" class="view content-view" role="tabpanel" data-view="next" hidden inert>
+        <div data-page-header="next"></div>
+        <button id="deckBanner" class="deck-banner" type="button" hidden>
+          <span><span class="status-dot needs-you"></span><strong id="deckCount">0 предложений</strong><small>Открытые вопросы исследования: посмотрите основания и результат, затем добавьте нужное в план.</small></span>
+          <span class="ghost-button">Разобрать <span data-galaxy-icon="chevronRight"></span></span>
+        </button>
+        <div id="todoList" class="todo-list"></div>
+      </section>
+
+      <section id="view-reports" class="view content-view" role="tabpanel" data-view="reports" hidden inert>
+        <div data-page-header="reports"></div>
+        <div id="reportsList" class="reports-list"></div>
+      </section>
+
+      <section id="view-skills" class="view content-view" role="tabpanel" data-view="skills" hidden inert>
+        <div data-page-header="skills"></div>
+        <div id="skillsList" class="skill-groups"></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="productStructureDialog" aria-labelledby="productStructureTitle"><section class="communications-center comm-structure-content"></section></dialog>
+
+  <div id="launchOverlay" class="overlay" hidden inert>
+    <div class="scrim" data-close="launch"></div>
+    <section class="launch-sheet os-dialog" role="dialog" aria-modal="true" aria-labelledby="launchTitle">
+      <div class="sheet-kicker"><span>Задача для агента</span><button class="icon-button" type="button" data-close="launch" aria-label="Закрыть"><span data-galaxy-icon="close"></span></button></div>
+      <h2 id="launchTitle" tabindex="-1"></h2>
+      <div class="os-dialog-body">
+      <p id="launchOutput" class="reward-line"></p>
+      <dl id="launchMeta" class="os-facts"></dl>
+      <details class="prompt-details"><summary>Инструкция агенту <span data-galaxy-icon="chevronDown"></span></summary><pre id="launchPrompt"></pre></details>
+      <div id="launchContextFields"></div>
+      <p>Статус, результат и остановка будут доступны в «Что дальше». Стоимость зависит от подключённого агента; консоль её не рассчитывает.</p>
+      <p id="duplicateWarning" class="warning" hidden></p>
+      </div><div class="os-dialog-footer">
+      <p id="launchError" class="error-box" role="alert" hidden></p>
+      <div id="launchPrimaryActions" class="sheet-actions"></div>
+      <button class="cancel-button" type="button" data-close="launch">Отмена · Esc</button>
+      </div>
+    </section>
+  </div>
+
+  <div id="deckOverlay" class="overlay deck-overlay" hidden inert>
+    <div class="scrim" data-close="deck"></div>
+    <section class="deck-shell" role="dialog" aria-modal="true" aria-labelledby="deckTitle">
+      <header class="deck-head">
+        <span class="deck-kicker">Предложения в план работы</span>
+        <span class="deck-head-right"><span id="deckProgress" class="deck-progress"></span><button class="deck-close" type="button" data-close="deck" aria-label="Закрыть предложения"><span data-galaxy-icon="close"></span><span>Закрыть</span></button></span>
+      </header>
+      <div class="deck-main">
+        <div id="deckStack" class="deck-stack">
+          <div id="deckLayerThree" class="deck-layer is-third" aria-hidden="true"></div>
+          <div id="deckLayerTwo" class="deck-layer is-second" aria-hidden="true"></div>
+          <div id="deckCard"></div>
+        </div>
+        <p class="deck-escape">Разберите предложения, затем запустите выбранные задачи в «Что дальше».<br>Esc — закрыть</p>
+      </div>
+    </section>
+  </div>
+
+  <div id="confirmOverlay" class="overlay" hidden inert>
+    <div class="scrim" data-close="confirm"></div>
+    <section class="confirm-box os-dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle">
+      <span class="eyebrow">ПОДТВЕРЖДЕНИЕ</span><h2 id="confirmTitle">Остановить работу агента?</h2>
+      <p>Уже потраченные время и деньги не вернуть. История работы сохранится.</p>
+      <div class="confirm-actions"><button id="confirmYes" class="danger-button" type="button">Остановить</button><button class="ghost-button" type="button" data-close="confirm">Продолжить работу</button></div>
+    </section>
+  </div>
+
+  <div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <script type="module" src="/console-runtime.js"></script>
+  <script type="module" src="/ui-components.js"></script>
+  <script type="module" src="/atlas-route.js"></script>
+  <script src="/communication-job-graph.js" defer></script>
+  <script type="module" src="/communications.js"></script>
+  <script type="module" src="/app.js"></script>
+  <script src="/research-job-layout.js" defer></script><script src="/assets/job-flow.js" defer></script>
+  <script type="module" src="/research.js"></script>
+  <script type="module" src="/atlas-shell.js"></script>
+  <script type="module" src="/product-tabs.js"></script>
+  <script type="module" src="/atlas.js"></script>
+  <script type="module" src="/atlas-navigation.js"></script>
+</body>
+</html>

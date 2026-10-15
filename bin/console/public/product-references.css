@@ -1,0 +1,39 @@
+/* References reading composition. Rhythm and surfaces are owned by the shared
+   readingSection/paperSurface/filterLink roles; these rules only shape feature content. */
+.reference-library,.reference-detail { color:var(--os-text); overflow-wrap:anywhere; }
+.reference-grid,.reference-media { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr)); gap:var(--os-space-3); }
+.reference-card { padding-block:var(--os-space-3); border-block-end:1px solid var(--os-line); min-width:0; }
+.reference-card h2 { font:600 var(--os-h3)/1.35 var(--os-heading-font); margin-block:0 var(--os-space-2); }
+.reference-card h2 .os-text-link { font:inherit; }
+.reference-material { color:var(--os-text); }
+.reference-card>.reference-meta { margin-block:0 var(--os-space-1); }
+.reference-pagination { margin-block:var(--os-space-2); }
+.reference-fact-groups { display:grid; gap:var(--os-space-3); }
+.reference-fact-group { min-width:0; }
+.reference-fact-group-title { margin:0 0 var(--os-space-1); color:var(--os-text); font:600 var(--os-label)/1.5 var(--os-font); }
+.reference-fact-sep { border-block-end:1px solid var(--os-line); margin-block:var(--os-space-2); }
+.reference-meta { color:var(--os-muted); font:400 var(--os-label)/1.5 var(--os-font); }
+.reference-conflict { color:var(--os-warning); font:500 var(--os-label)/1.5 var(--os-font); }
+.reference-card p,.reference-detail p,.reference-detail li { max-width:68ch; }
+.reference-image { margin:0; min-width:0; }
+.reference-image-open { display:block; width:100%; min-height:var(--os-target); padding:var(--os-space-1); color:var(--os-text); background:var(--os-page); border:1px solid var(--os-line); border-radius:var(--os-radius); cursor:zoom-in; font:400 var(--os-label)/1.5 var(--os-font); }
+.reference-image-open img { display:block; width:100%; height:auto; max-height:36rem; object-fit:contain; }
+.reference-thumbnail img { max-height:18rem; }
+.reference-image figcaption { padding-block:var(--os-space-1); font:400 var(--os-label)/1.5 var(--os-font); }
+.reference-steps { padding-inline-start:var(--os-space-4); }
+.reference-steps>li { max-width:none; padding-block:var(--os-space-2); border-block-end:1px solid var(--os-line); }
+.reference-step-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.2fr); gap:var(--os-space-4); align-items:start; }
+.reference-screen-stacked { display:grid; gap:var(--os-space-3); }
+.reference-step-pictures { display:grid; gap:var(--os-space-2); min-width:0; }
+.reference-step-notes { min-width:0; }
+.reference-step-notes>p:first-child { margin-block-start:0; }
+@media(max-width:55rem) { .reference-step-layout { grid-template-columns:1fr; } }
+.reference-steps li::marker { font:600 var(--os-h3)/1.5 var(--os-heading-font); }
+.reference-claim { border-block-end:1px solid var(--os-line); padding-block:var(--os-space-1); }
+.reference-detail .os-facts { min-width:0; }
+.reference-detail .os-facts dd { overflow-wrap:anywhere; }
+.reference-enlarged img { display:block; width:100%; height:auto; }
+.reference-image-open:focus-visible { outline:3px solid var(--os-accent); outline-offset:3px; }
+.reference-image-open { position:relative; }
+.reference-image-loading { position:absolute; inset:0; display:grid; place-items:center; padding:var(--os-space-2); background:var(--os-page); color:var(--os-muted); }
+.reference-image-loading[hidden] { display:none; }

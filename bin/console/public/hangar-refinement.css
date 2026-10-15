@@ -1,0 +1,45 @@
+/* Competition type → solution category → named solution. Category overviews have
+   their own compact presentation and never borrow an individual product's ship. */
+.hangar-count{font-family:inherit;font-size:var(--ui-small);line-height:1.5;letter-spacing:0;text-transform:none;overflow-wrap:anywhere}
+.hangar-group-title{flex-wrap:wrap;gap:6px 16px;min-width:0}
+.hangar-group-title b{font-family:inherit;font-weight:400;line-height:1.5;color:var(--galaxy-muted)}
+.hangar-group-hint{flex:1 1 100%;line-height:1.5;order:1}
+.hangar-group>summary>.galaxy-icon{flex-shrink:0}
+.hangar-subgroup{margin-top:24px;min-width:0}
+.hangar-subgroup-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;padding:0 0 12px;border-bottom:1px solid var(--galaxy-line)}
+.hangar-subgroup-head h3{display:flex;align-items:center;gap:10px;min-width:0;margin:0;color:var(--galaxy-text);font-size:var(--ui-body);line-height:1.5;font-weight:550;overflow-wrap:anywhere}
+.hangar-category-marker{width:9px;height:9px;flex:0 0 9px;border-radius:2px;background:var(--category-accent);box-shadow:0 0 12px var(--category-soft)}
+.hangar-subgroup-count{color:var(--galaxy-muted);font-size:var(--ui-small);line-height:1.5}
+.hangar-card{cursor:pointer}
+.hangar-name{display:block;overflow:visible;-webkit-line-clamp:unset;overflow-wrap:anywhere}
+.hangar-chip{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;line-height:1.4;letter-spacing:0}
+.hangar-actions{flex-wrap:wrap}
+.hangar-actions button{min-width:0;white-space:normal;line-height:1.4;text-transform:none;letter-spacing:0;padding-block:8px}
+.hangar-card .hangar-chip{position:relative;z-index:2}
+.hangar-overviews{display:grid;gap:10px;margin-top:14px}
+.hangar-category-overview{border-left:3px solid var(--category-accent,var(--galaxy-line));background:linear-gradient(100deg,var(--category-soft,rgba(110,207,233,.04)),rgba(5,12,20,.95))}
+.hangar-category-overview .hangar-body{gap:9px;padding:16px 18px}
+.hangar-category-overview .hangar-name{font-size:var(--ui-body)}
+.hangar-record-kind{color:var(--category-accent,var(--galaxy-muted));font-size:var(--ui-small);line-height:1.4;font-weight:550}
+.hangar-category-gap{margin:0;color:var(--galaxy-muted);font-size:var(--ui-small);line-height:1.6;max-width:80ch}
+.hangar-category-gap{padding:14px 0}
+.hangar-category-overview .hangar-actions{padding-top:2px}
+.hangar-category-overview .hangar-actions button{flex:0 1 auto;color:var(--galaxy-text)}
+@media(max-width:767px){
+  .hangar-count{flex-basis:100%}
+  .hangar-subgroup{margin-top:20px}
+  .hangar-group-title b{flex-basis:100%}
+  .hangar-category-overview .hangar-body{padding:14px}
+}
+/* Research records are supporting notes within a category, below actual solutions. */
+.hangar-research-notes{margin-top:18px;border-top:1px solid var(--galaxy-line);padding-top:12px}
+.hangar-research-notes>summary{cursor:pointer;color:var(--galaxy-muted);font-size:var(--ui-body);line-height:1.5;padding:8px 0}
+.hangar-research-notes>summary:focus-visible{outline:2px solid var(--galaxy-orange);outline-offset:3px}
+.hangar-notes-explanation{max-width:90ch;color:var(--galaxy-muted);font-size:var(--ui-small);line-height:1.6;margin:8px 0 16px}
+.hangar-category-overview{border:0;border-left:1px solid var(--galaxy-line);border-radius:0;background:rgba(110,207,233,.025)}
+.hangar-category-overview .hangar-body{padding:12px 16px;gap:8px}
+.hangar-category-overview .hangar-record-kind{display:none}
+.hangar-mentioned{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;color:var(--galaxy-muted);font-size:var(--ui-small)}
+.hangar-mentioned button{position:relative;z-index:2;min-width:0;padding:5px 8px;border:1px solid var(--galaxy-line);background:transparent;color:var(--galaxy-text);cursor:pointer;font:inherit;overflow-wrap:anywhere}
+.galaxy-hangar{scroll-padding-top:82px}
+@media(max-width:767px){.galaxy-hangar{scroll-padding-top:148px}}

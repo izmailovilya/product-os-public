@@ -1,0 +1,36 @@
+{
+  "name": "product-os-public",
+  "version": "0.1.0",
+  "description": "A product workspace, source-backed context and local visual console",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "product-os": "bin/product-os.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/izmailovilya/product-os-public.git"
+  },
+  "scripts": {
+    "test": "node --test",
+    "test:design-system": "node scripts/verify-console.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
+  },
+  "files": [
+    "bin",
+    "skills",
+    "CONTRACT.md",
+    "GRAPH.md",
+    "GRAPH-WRITES.md",
+    "COMMUNICATIONS.md",
+    "DESIGN-SYSTEM.md",
+    "BRAND.md",
+    "README.md",
+    "LICENSE",
+    "PUBLIC-RELEASE.json"
+  ]
+}

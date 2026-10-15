@@ -441,9 +441,9 @@ import * as UI from './ui-components.js'
     const values = new FormData(f), get = name => String(values.get(name) || '')
     const kind = get('kind'), materialId = get('materialId')
     const task = { kind, instruction: get('instruction'), channelId: get('channelId'), segmentId: get('segmentId'), journeyId: get('journeyId'), contactId: get('contactId') }
-    const skill = { 'job-graph': 'product-hq', rubrics: 'product-channel-concept', material: 'product-content' }[kind]
+    const skill = { 'job-graph': 'product-channel-concept', rubrics: 'product-channel-concept', material: 'product-content' }[kind]
     const productId = targets(task.journeyId, 'journey_offer')[0] || targets(materialId, 'material_offer')[0] || targets(task.channelId, 'channel_offer')[0] || state.scope || comm.products[0]?.id
-    const target = (kind === 'job-graph' ? task.segmentId : task.channelId) || productId
+    const target = (kind === 'job-graph' ? productId : task.channelId) || productId
     busy = true; error = ''; f.querySelector('button[type=submit]').disabled = true
     try {
       const move = await api('/api/move', { nodeId: target, skill, ...(materialId ? { materialId } : {}), communicationTask: task })

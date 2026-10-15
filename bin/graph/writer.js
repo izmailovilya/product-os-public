@@ -363,7 +363,10 @@ function applyOperations(workspace, input, options = {}) {
         evidenceIds: (operation.evidenceIds || []).map(id => refs.get(id) || id),
         resolves: (operation.resolves || []).map(id => refs.get(id) || id),
       })
-      else if (operation.op === 'research-brief') throw new Error('Брифы исследований не создаются в Product OS Public')
+      else if (operation.op === 'research-brief') {
+        if (require('../edition').isPublicEdition()) throw new Error('Брифы исследований не создаются в Product OS Public')
+        require('../research-brief/store').apply(tx, operation)
+      }
       else if (operation.op === 'complete') tx.complete(operation)
       else if (operation.op === 'move') tx.move(operation)
       else if (operation.op === 'communication') require('./communications').communication(tx, operation)

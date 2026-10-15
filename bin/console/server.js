@@ -15,6 +15,7 @@ const { attachFallback, buildSnapshot, hash, loadArena, moveFor, shellQuote, SKI
 const { displayLabel } = require('./galaxy-model')
 
 const { MIME: ASSET_MIME, safeAssetPath, localReportLink } = require('./report-assets')
+const { isPublicEdition, PUBLIC_SKILLS } = require('../edition')
 
 const MAX_BODY = 1024 * 1024
 
@@ -128,7 +129,7 @@ class BbClient {
     const projectId = await this.resolveProjectId()
     const result = await runFile(this.path, [
       'thread', 'spawn', '--project', projectId, '--environment', this.workspace, '--title', move.title,
-      '--prompt', move.prompt, '--service-tier', 'default', '--json',
+      '--prompt', move.prompt, '--json',
       ...(move.executor ? ['--provider', move.executor.provider, '--model', move.executor.model, '--reasoning-level', move.executor.reasoningLevel] : []),
     ], { cwd: this.workspace, timeout: 10000 })
     const parsed = parseJsonOutput(result.stdout)
@@ -369,6 +370,10 @@ function normalizeMove(body, snapshot, workspace, issued) {
   const node = snapshot.graph.nodes.find(item => item.id === source.node?.id)
   if (!node || node.status === 'dropped' || node.data?.retired) throw Object.assign(new Error('Целевой узел больше не активен.'), { status: 409 })
   if (source.skill === 'nmt-analyze-interviews') { source.skill = 'product-interviews'; source.prompt = 'Product OS: используем product-interviews вместо прежнего обработчика.\n' + source.prompt.replaceAll('nmt-analyze-interviews', 'product-interviews') }
+  if (source.skill === 'product-hq') {
+    source.skill = source.kind === 'hq' ? 'product-status' : source.kind === 'ingest' || source.kind === 'reconsider' ? 'product-context' : 'custom'
+    source.prompt = source.skill === 'custom' ? source.prompt.replace(/Запусти \/product-hq[^\n]*/, 'Выполни порученную задачу доступными инструментами.') : source.prompt.replaceAll('/product-hq', `/${source.skill}`)
+  }
   if(body.context!==undefined && (typeof body.context!=='string'||body.context.length>10000))throw Object.assign(new Error('Уточнение должно быть текстом до 10 000 символов.'),{status:400})
   const prompt=source.prompt+(body.context?.trim()?'\n\nУточнение пользователя:\n'+body.context.trim():'')
   return attachFallback({ ...source, prompt, node: { id: node.id, label: node.label, type: node.type } }, workspace)
@@ -398,6 +403,7 @@ async function createConsoleServer(options) {
   const workspace = path.resolve(options.workspace)
   const repoRoot = path.resolve(options.repoRoot || path.join(__dirname, '..', '..'))
   const staticRoot = path.join(__dirname, 'public')
+  const publicEdition = isPublicEdition(repoRoot)
   const store = new StateStore(workspace)
   const graphStore = new GraphStore(workspace)
   const bb = new BbClient(workspace, options)
@@ -405,7 +411,7 @@ async function createConsoleServer(options) {
   const token = randomBytes(32).toString('hex')
   const issued = new Map()
   const issue = (move, snap) => {
-    if (!["os-setup","product-context","product-status"].includes(move.skill)) throw new Error('Этот навык не входит в Product OS Public.')
+    if (publicEdition && !PUBLIC_SKILLS.includes(move.skill)) throw new Error('Этот навык не входит в Product OS Public.')
     if (issued.size > 500) issued.delete(issued.keys().next().value)
     issued.set(move.id, { move, signature: snap.graphSignature }); return move
   }
@@ -448,12 +454,41 @@ async function createConsoleServer(options) {
       if (await chromeBridge.handle(request, response, url)) return
       const forbidden = authorizeRequest(request, token, options.allowedOrigins || envAllowedOrigins())
       if (forbidden) return sendJson(response, 403, { error: forbidden })
-      if (url.pathname === '/api/research-briefs') {
-        if(request.method === 'GET') return sendJson(response,200,{briefs:[],modules:[],capabilities:{bb:false,claude:false}})
-        return sendJson(response,404,{error:'Запуск исследований не входит в Product OS Public.'})
+      if (publicEdition) {
+        if (url.pathname === '/api/research-briefs') return request.method === 'GET'
+          ? sendJson(response, 200, { briefs: [], modules: [], capabilities: { bb: false, claude: false } })
+          : sendJson(response, 404, { error: 'Запуск исследований не входит в Product OS Public.' })
+        if (url.pathname.startsWith('/api/chrome/') || url.pathname === '/chrome-extension.zip') return sendJson(response, 404, { error: 'Инструмент не входит в Product OS Public.' })
       }
-      if (url.pathname.startsWith('/api/chrome/') || url.pathname === '/chrome-extension.zip') return sendJson(response,404,{error:'Инструмент не входит в Product OS Public.'})
-
+      if (url.pathname === '/api/research-briefs') {
+        const briefs=require('../research-brief/store'), service=require('../research-brief/service')
+        if(request.method==='GET') return sendJson(response,200,{briefs:url.searchParams.get('id')?[briefs.read(workspace,url.searchParams.get('id'))].filter(Boolean):briefs.read(workspace),modules:service.modules,capabilities:{bb:bb.available,claude:claude.available}})
+        if(request.method==='POST'){
+          const body=await readBody(request)
+          if(body.action==='create') return sendJson(response,201,{brief:service.create(workspace,body)})
+          if(body.action==='save') return sendJson(response,200,{brief:service.operation(workspace,{action:'save',id:body.id,expectedRevision:body.expectedRevision,patch:body.patch})})
+          if(body.action==='launch'){
+            const provider=body.provider==='claude'?'claude':'bb'
+            if(!(provider==='bb'?bb:claude).available) return sendJson(response,409,{error:'Агент недоступен. Бриф сохранён; запуск не начат.'})
+            const launchToken=randomUUID()
+            const brief=service.start(workspace,{id:body.id,expectedRevision:body.expectedRevision,kind:body.kind||'modules',itemIds:body.itemIds||[],idempotencyKey:body.idempotencyKey,refresh:body.refresh===true,launchToken})
+            const run=brief.runs.find(r=>r.idempotencyKey===body.idempotencyKey)
+            if(run.launchToken!==launchToken)return sendJson(response,200,{brief,run,replayed:true})
+            try{
+              // The executor chat takes models.json executorTier: follow-up discussion happens there.
+              let executor=null;if(provider==='bb')try{executor=require('../research-brief/bb').executorModel()}catch{}
+              const launched=await (provider==='bb'?bb:claude).launch({...service.launchPrompt(workspace,repoRoot,brief,run),executor})
+              const saved=service.operation(workspace,{action:'launch-status',id:brief.id,runId:run.id,status:'running',externalId:launched.threadId||launched.externalId})
+              return sendJson(response,201,{brief:saved,run:saved.runs.find(r=>r.id===run.id)})
+            }catch(error){
+              const definite=['BB_NOT_FOUND','BB_PROJECT_NOT_FOUND','ENOENT'].includes(error.code)
+              const saved=service.operation(workspace,{action:'launch-status',id:brief.id,runId:run.id,status:definite?'failed':'unknown',error:error.message})
+              return sendJson(response,202,{brief:saved,error:error.message})
+            }
+          }
+          return sendJson(response,400,{error:'Неизвестное действие брифа'})
+        }
+      }
       if(request.method==='GET'&&url.pathname==='/api/segment-model')return sendJson(response,200,require('../research/store').snapshot(workspace,Object.fromEntries(url.searchParams),(_data,graph)=>require('../segment-model').segmentModelView(graph,Object.fromEntries(url.searchParams))))
       if(request.method==='POST'&&url.pathname==='/api/parameter-views')return sendJson(response,200,require('./parameter-views').save(workspace,await readBody(request)))
       if (request.method === 'GET' && url.pathname === '/api/segment-analysis') return sendJson(response,200,require('../research/store').snapshot(workspace,Object.fromEntries(url.searchParams),(data,graph)=>require('../research/segment-analysis').summarize(data,graph,Object.fromEntries(url.searchParams))))
@@ -511,16 +546,15 @@ async function createConsoleServer(options) {
         const node = snap.graph.nodes.find(item => item.id === body.nodeId)
         const redirected = body.skill === 'nmt-analyze-interviews'
         if (redirected) body.skill = 'product-interviews'
+        if (body.skill === 'product-hq') body.skill = body.materialId || body.report ? 'product-context' : 'product-status'
         const skill = snap.skills.find(item => item.slug === body.skill)
         if (!node || !skill) return sendJson(response, 404, { error: 'Узел или скилл не найден.' })
         if (skill.targetTypes && !skill.targetTypes.includes(node.type)) return sendJson(response, 400, { error: 'Этот скилл не работает с выбранным типом узла.' })
-        const base = moveFor('custom', node, workspace, { id: `skill:${skill.slug}:${node.id}`, title: skill.title, objective: skill.title, output: skill.output })
+        const base = moveFor('custom', node, workspace, { id: `skill:${skill.slug}:${node.id}`, skill: skill.slug, title: skill.title, objective: skill.title, output: skill.output })
         if (redirected) base.prompt = 'Старый обработчик nmt-analyze-interviews заменён на product-interviews. ' + base.prompt
         base.skill = skill.slug
-        base.prompt = `Работай в продуктовом воркспейсе: ${workspace}.\nЗапусти /${skill.slug}. Выполни его инструкции для задачи «${skill.title}».`
         base.duration = skill.duration
         base.minutes = skill.minutes
-        base.prompt = base.prompt.replace('/product-context', `/${skill.slug}`).replace('Выполни ход', 'Выполни работу')
         base.prompt += `\nИнструкции скилла: ${path.join(repoRoot, 'skills', skill.slug, 'SKILL.md')}. Прочитай этот файл перед выполнением работы.`
         if (body.materialId) {
           if (body.skill !== 'product-content') return sendJson(response, 400, { error: 'Подготовка материала использует product-content.' })
@@ -563,7 +597,7 @@ async function createConsoleServer(options) {
           if (previous) return
           const requestPrompt=move.prompt
           const runId = `run-${randomUUID()}`
-          if (move.skill === 'product-status') move.prompt += `\nИдентификатор запуска: ${runId}. Для завершения сохрани служебный результат командой status-receipt: runId=${runId}, nodeId=${move.receiptNodeId || move.node.id}, outcome=completed или failed, summary=фактический итог. Продуктовую память не изменяй.`
+          if (move.skill === 'product-status') move.prompt += `\nИдентификатор запуска: ${runId}. Сохрани только служебный итог командой status-receipt: runId=${runId}, nodeId=${move.receiptNodeId || move.node.id}, outcome=completed или failed, summary=фактический итог. Граф, паспорт, план и отчёты не изменяй.`
           else move.prompt += `\nИдентификатор запуска: ${runId}. В конце запиши результат через graph-write: операция receipt, runId=${runId}, nodeId=${move.receiptNodeId || move.node.id}, skill=${move.skill}, outcome=completed или failed, report=путь к существующему отчёту в reports/ или summary=конкретный итог. Отчёт другого запуска использовать нельзя. Все изменения графа выполняй через graph-write.`
           launch = { requestPrompt, context: body.context||'', id: runId, runId, idempotencyKey: body.idempotencyKey, moveId: move.id, provider, startedAt: Date.now(), move, prompt: move.prompt, launchState: 'pending' }
           state.launches.push(launch)
@@ -669,15 +703,15 @@ async function createConsoleServer(options) {
       }
 
       if (request.method === 'GET' && url.pathname === '/source') {
-        const relative=url.searchParams.get('path') || ''
+        const relative = url.searchParams.get('path') || ''
         if (!/\.(md|txt|json|html|csv)$/i.test(relative)) {
-          const record=graphStore.read().graph.nodes.find(node=>node.type==='artifact' && node.data?.kind==='source-material' && node.source===relative)
-          if(!record || !relative.startsWith('sources/'))return sendText(response,404,'Источник не найден.','text/plain; charset=utf-8')
-          let real;try{real=fs.realpathSync(path.resolve(workspace,relative))}catch{return sendText(response,404,'Источник не найден.','text/plain; charset=utf-8')}
-          if(!real.startsWith(fs.realpathSync(path.join(workspace,'sources'))+path.sep))return sendText(response,404,'Источник не найден.','text/plain; charset=utf-8')
-          response.setHeader('Content-Disposition', "attachment; filename*=UTF-8''"+encodeURIComponent(record.label))
-          response.setHeader('X-Content-Type-Options','nosniff')
-          return sendBuffer(response,200,fs.readFileSync(real),'application/octet-stream')
+          const record = graphStore.read().graph.nodes.find(node => node.type === 'artifact' && node.data?.kind === 'source-material' && node.source === relative)
+          if (!record || !relative.startsWith('sources/')) return sendText(response, 404, 'Источник не найден.', 'text/plain; charset=utf-8')
+          let real; try { real = fs.realpathSync(path.resolve(workspace, relative)) } catch { return sendText(response, 404, 'Источник не найден.', 'text/plain; charset=utf-8') }
+          if (!real.startsWith(fs.realpathSync(path.join(workspace, 'sources')) + path.sep)) return sendText(response, 404, 'Источник не найден.', 'text/plain; charset=utf-8')
+          response.setHeader('Content-Disposition', "attachment; filename*=UTF-8''" + encodeURIComponent(record.label))
+          response.setHeader('X-Content-Type-Options', 'nosniff')
+          return sendBuffer(response, 200, fs.readFileSync(real), 'application/octet-stream')
         }
         const file = safeSourcePath(workspace, url.searchParams.get('path'))
         if (!file) return sendText(response,404,missingDocumentPage('Источник'),'text/html; charset=utf-8')

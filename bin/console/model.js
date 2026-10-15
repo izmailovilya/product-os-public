@@ -6,6 +6,7 @@ const path = require('path')
 const crypto = require('crypto')
 const { buildGalaxyProjection } = require('./galaxy-model')
 const { dossierGaps, explainMoveIssues } = require('./research-actions')
+const { isPublicEdition, PUBLIC_SKILLS } = require('../edition')
 
 const STATUS_LABELS = {
   hypothesis: 'гипотеза',
@@ -22,46 +23,223 @@ const TYPE_LABELS = {
   value: 'гипотеза ценности',
 }
 
-const SKILL_GROUPS = [{id:'management',title:'Базовые навыки',description:'Настройка, добавление контекста и чтение состояния продукта.'}]
+const SKILL_GROUPS = [
+  { id: 'research', title: 'Исследования', description: 'Аудитория, рынок и путь клиента.' },
+  { id: 'management', title: 'Управление продуктом', description: 'Состояние продукта, риски и приоритеты.' },
+  { id: 'promotion', title: 'Продвижение и контент', description: 'Каналы, контент и SEO/GEO: от задач клиентов до материалов и проверки результата.' },
+  { id: 'other', title: 'Видео', description: 'Показать продукт в действии.' },
+]
+
 const SKILL_META = {
-  "os-setup": {
-    "category": "management",
-    "order": 1,
-    "title": "Настроить рабочее место",
-    "description": "Создать или восстановить структуру и паспорт продукта.",
-    "targetTypes": [
-      "product"
-    ],
-    "duration": "По объёму контекста",
-    "output": "Рабочее место и паспорт продукта"
+  'os-setup': {
+    category: 'management', order: -3, targetTypes: ['product'], title: 'Настроить рабочее место',
+    description: 'Создать или восстановить структуру и паспорт продукта.',
+    output: 'Рабочее место и паспорт продукта',
   },
-  "product-context": {
-    "category": "management",
-    "order": 2,
-    "title": "Добавить контекст",
-    "description": "Сохранить новые материалы и сведения с источниками.",
-    "targetTypes": [
-      "product"
-    ],
-    "duration": "По объёму материалов",
-    "output": "Сохранённые оригиналы и контекст с источниками"
+  'product-os-improve': {
+    category: 'console', targetTypes: ['product'],
+    title: 'Улучшить Product OS по итогам треда',
+    description: 'Предложить проверяемые улучшения навыков и workflows по доступному обсуждению.',
+    duration: '5–15 мин', minutes: 10,
+    output: 'Приоритетные предложения с эпизодами, owning paths и проверками; внедрение в порученном scope',
   },
-  "product-status": {
-    "category": "management",
-    "order": 3,
-    "title": "Где мы и что дальше",
-    "description": "Прочитать накопленное и предложить следующий шаг.",
-    "targetTypes": [
-      "product"
-    ],
-    "duration": "По объёму контекста",
-    "output": "Текущее состояние, неизвестное и один следующий шаг"
-  }
+  'product-telegram-bot-ux': {
+    category: 'management', targetTypes: ['product'],
+    title: 'Telegram-бот: дизайн и UX',
+    description: 'Общие правила кнопок, эмодзи, сообщений, навигации, уведомлений и результатов любого Telegram-бота.',
+    duration: 'По объёму сценария', minutes: 25,
+    output: 'Понятный пользовательский сценарий, реализация в пределах поручения и проверка переходов',
+  },
+  'product-demo-video': { category: 'other', targetTypes: ['product'], title: 'Демо-ролик продукта', description: 'Сделать короткое видео интерфейса для сайта или презентации.', duration: 'По объёму ролика', minutes: 15, output: 'Редактируемая композиция, MP4 со звуком и проверка экранов' },
+  'product-interviews': { category: 'research', title: 'Обработать интервью', duration: 'По объёму материалов', minutes: 30, output: 'Индивидуальные досье, проверка источников и покрытия; синтез отдельной версией' },
+  'product-status': {
+    category: 'management', order: -1, targetTypes: ['product'],
+    title: 'Где мы и что дальше', duration: '5–10 мин', minutes: 8,
+    description: 'Прочитать накопленный контекст и предложить следующий обоснованный шаг.',
+    output: 'Короткий разбор состояния и один обоснованный следующий ход',
+  },
+  'product-context': {
+    category: 'management', order: -2, targetTypes: ['product', 'segment', 'competitor', 'artifact'],
+    title: 'Добавить контекст', duration: 'По объёму материалов', minutes: 8,
+    description: 'Сохранить новые материалы, факты и уточнения с точными источниками.',
+    output: 'Сохранённые оригиналы и проверяемые изменения продуктовой памяти',
+  },
+  'product-deep-research': {
+    category: 'research',
+    title: 'Глубокое исследование рынка', duration: '15–30 мин', minutes: 25,
+    output: 'Отчёт: проблемы, каналы, экономика + обновлённые узлы карты',
+  },
+  'product-design': {
+    category: 'management', targetTypes: ['product'],
+    title: 'Спроектировать или улучшить интерфейс',
+    description: 'Проектирование и улучшение интерфейса продукта: локальная правка или полный связный дизайн по объёму задачи.',
+    duration: 'По согласованному объёму', minutes: 60,
+    output: 'Проверенная правка интерфейса или связный дизайн с состояниями, действиями и каталогом экранов',
+  },
+  'product-reference-library': {
+    category: 'research', targetTypes: ['product'],
+    title: 'Собрать библиотеку продуктовых референсов',
+    description: 'Конкретные примеры конкурентов с изображениями и источниками; проверка, свои примеры и удобный доступ из консоли.',
+    duration: 'По выбранному объёму', minutes: 45,
+    output: 'Библиотека по направлениям, проверка источников и материалы для проектирования',
+  },
+  'product-walkthrough': {
+    category: 'research',
+    title: 'Пройти путь клиента за сегмент', duration: '5–10 мин', minutes: 8,
+    output: 'Список точек, где сегмент застрянет, — каждая привязана к его критерию',
+  },
+  'product-ui-audit': {
+    category: 'console', order: 20, targetTypes: ['product'],
+    title: 'Проверить интерфейс целиком', duration: '15–30 мин', minutes: 25,
+    output: 'Аудит всех страниц и состояний: потерянные данные, лишние разделы, несогласованные компоненты и системный план исправлений',
+  },
+  'product-risk-analysis': {
+    category: 'management',
+    title: 'Разобрать риски', duration: '5–10 мин', minutes: 8,
+    output: 'Реестр рисков и план проверки главного: метод, критерий успеха и условия отказа',
+  },
+  'product-interview-guide': {
+    category: 'research',
+    title: 'Гайд интервью', duration: '5–10 мин', minutes: 8,
+    description: 'Подготовить вопросы интервью под конкретное решение: блоки с таймингом, подсказки и лист заметок.',
+    output: 'Гайд на час под решение: какую работу копаем, блоки с таймингом, открытые вопросы со шпаргалкой подсказок, показ продукта в конце и лист заметок',
+  },
+  'product-recruiting': {
+    category: 'research',
+    title: 'Найти респондентов', duration: '5–10 мин', minutes: 8,
+    description: 'Найти людей на интервью: где искать по прошлому поведению, скринер, вознаграждение и план каналов.',
+    output: 'План рекрутинга: кого ищем по прошлому поведению, каналы по волнам, тексты, вознаграждение и таблица кандидатов',
+  },
+  'product-segment-hypotheses': {
+    category: 'research',
+    title: 'Гипотезы сегментов', duration: '2–5 мин', minutes: 4,
+    output: '8–15 сегментов по задачам клиентов, вопросы квалификации и риски',
+  },
+  'product-prioritize': {
+    category: 'management',
+    title: 'Расставить приоритеты', duration: '5–10 мин', minutes: 8,
+    output: 'Предложенный порядок действий под цель и ресурсы команды, отложенные варианты и причины',
+  },
+  'product-channel-concept': {
+    category: 'promotion', order: 1, targetTypes: ['product', 'segment', 'channel'],
+    title: 'Концепция канала', duration: '10–20 мин', minutes: 15,
+    output: 'Варианты концепции, путь читателя в продукт, рубрики, образцы постов и первая проверка',
+  },
+  'product-editorial-voice': {
+    category: 'promotion', order: 2, targetTypes: ['product', 'channel'],
+    title: 'Голос и правила редакции', duration: '5–10 мин', minutes: 8,
+    output: 'Редакционный профиль автора и канала с примерами; предварительные правила отмечены',
+  },
+  'product-content': {
+    category: 'promotion', order: 3, targetTypes: ['product', 'segment', 'channel'],
+    title: 'Подготовить контент', duration: '5–15 мин', minutes: 10,
+    output: 'Темы, посты, серия или редактура в голосе автора, с источниками и отметкой готовности',
+  },
+  'product-visual-style': {
+    category: 'promotion', order: 5, targetTypes: ['product', 'channel'],
+    title: 'Визуальный стиль канала', duration: '10–20 мин', minutes: 15,
+    output: 'Версионный профиль оформления с реальными примерами и основаниями решений',
+  },
+  'product-brand-identity': {
+    category: 'promotion', order: 11, targetTypes: ['product'],
+    title: 'Айдентика бренда', description: 'Создать или развить фирменный стиль продукта: от брифа и визуальных направлений до правил и файлов для команды.',
+    duration: 'По объёму айдентики', minutes: 30,
+    output: 'Визуальные направления, система бренда, логобук и исходники с проверенными примерами применения',
+  },
+  'product-visual': {
+    category: 'promotion', order: 6, targetTypes: ['product', 'channel', 'artifact'],
+    title: 'Визуал к материалу', duration: '5–20 мин', minutes: 12,
+    output: 'Изображения, исходники и проверка на телефоне, связанные с материалом и версией стиля',
+  },
+  'product-landing': {
+    category: 'promotion', order: 3.5, targetTypes: ['product', 'segment'],
+    title: 'Лендинг по работам клиента', duration: '15–30 мин', minutes: 25,
+    output: 'Структура и текст лендинга по работам сегмента и языку поиска, с источником у каждой фразы',
+  },
+  'product-landing-review': {
+    category: 'promotion', order: 4, targetTypes: ['product', 'segment'],
+    title: 'Ревью лендинга по задачам', duration: '5–15 мин', minutes: 10,
+    output: 'Разбор формулировок по сегментам и работам, доля текста о клиенте и правки без раздувания графа',
+  },
+  'product-telegram-ads-targeting': {
+    category: 'promotion', order: 12, targetTypes: ['product', 'segment', 'channel'],
+    title: 'Таргетинг Telegram Ads', duration: 'По объёму проверки', minutes: 20,
+    description: 'Подобрать таргетинг для Telegram Ads: каналы, группы каналов, аудитории, боты и поисковые запросы. Выход — проверенный список кандидатов и группы целей с ограничениями данных.',
+    output: 'Кандидаты, проверка допуска в кабинете и группы целей для рекламного теста',
+  },
+  'product-telegram-ads-launch': {
+    category: 'promotion', order: 13, targetTypes: ['product', 'segment', 'channel', 'artifact'],
+    title: 'Тест Telegram Ads', duration: 'По объёму теста', minutes: 25,
+    description: 'Подготовить или запустить измеримый тест Telegram Ads: предложение, объявления, ссылки, события воронки, бюджет и настройки. Не закупка постов у администраторов и не контент-план своего канала.',
+    output: 'Объявления, ссылки и события, общий бюджет и проверенные настройки в пределах разрешения',
+  },
+  'product-telegram-ads-audit': {
+    category: 'promotion', order: 14, targetTypes: ['product', 'segment', 'channel', 'artifact'],
+    title: 'Аудит Telegram Ads', duration: 'По объёму данных', minutes: 20,
+    description: 'Разобрать результаты Telegram Ads, проверить атрибуцию и решить, что остановить, исправить или масштабировать. Считает только сопоставимые когорты; не общий аудит всех рекламных систем.',
+    output: 'Проверка атрибуции, воронка по когортам и решение о следующем ограниченном шаге',
+  },
+  'product-segment-opportunities': {
+    category: 'research', targetTypes: ['product'],
+    title: 'Сравнить сегменты', duration: '5–10 мин', minutes: 8,
+    description: 'Сравнить существующие и потенциальные сегменты: доставляемая ценность, бюджет на задачу и вклад в экономику. Предложить соседние задачи, которые могут поднять цену, привлечение или удержание.',
+    output: 'Ранжированные сегменты с основаниями и соседние задачи для решения',
+  },
+  'product-search-opportunities': {
+    category: 'promotion', order: 7, targetTypes: ['product', 'segment', 'channel'],
+    title: 'Темы и страницы для SEO/GEO', duration: '15–30 мин', minutes: 25,
+    output: 'Карта тем и недостающих страниц с источниками, задачами клиентов и приоритетом первой проверки',
+  },
+  'product-search-audit': {
+    category: 'promotion', order: 8, targetTypes: ['product', 'segment', 'channel', 'artifact'],
+    title: 'SEO/GEO-аудит страницы', duration: '10–25 мин', minutes: 20,
+    output: 'Проблемы доступности, содержания и доверия с доказательствами, правками и ограничениями проверки',
+  },
+  'product-search-brief': {
+    category: 'promotion', order: 9, targetTypes: ['product', 'segment', 'channel', 'artifact'],
+    title: 'ТЗ на SEO/GEO-страницу', duration: '10–20 мин', minutes: 15,
+    output: 'Структура страницы, источники, метаданные, ссылки и критерии приёмки для автора и разработчика',
+  },
+  'product-search-article': {
+    category: 'promotion', order: 10, targetTypes: ['product', 'segment', 'channel', 'artifact'],
+    title: 'Написать SEO/GEO-статью', duration: 'По объёму статьи', minutes: 25,
+    output: 'Полная статья по теме или ТЗ, метаданные, источники и редакционная проверка в голосе автора',
+  },
 }
+
 const MOVE_CATALOG = {
-  hq: {...SKILL_META['product-status'], skill:'product-status'},
-  ingest: {...SKILL_META['product-context'], skill:'product-context'},
-  custom: {...SKILL_META['product-context'], skill:'product-context'}
+  hq: { ...SKILL_META['product-status'], title: 'Где мы и что дальше?', skill: 'product-status' },
+  deepResearch: { ...SKILL_META['product-deep-research'], title: 'Глубокое исследование', skill: 'product-deep-research' },
+  walkthrough: { ...SKILL_META['product-walkthrough'], title: 'Пройти флоу как сегмент', skill: 'product-walkthrough' },
+  testRisk: { ...SKILL_META['product-risk-analysis'], title: 'Подготовить проверку риска', skill: 'product-risk-analysis' },
+  compare: {
+    title: 'Сравнить по задачам клиентов', skill: 'product-deep-research', duration: '10–20 мин', minutes: 15,
+    output: 'Сравнение по задачам клиентов и открытые слабые места конкурента',
+  },
+  researchGap: {
+    title: 'Уточнить данные исследования', skill: 'product-deep-research', duration: '5–15 мин', minutes: 10,
+    output: 'Ответ на конкретный вопрос, источники и обновлённый раздел досье',
+  },
+  segmentDefinition: {
+    ...SKILL_META['product-segment-hypotheses'], title: 'Уточнить задачу и границы сегмента', skill: 'product-segment-hypotheses',
+    output: 'Определение этого сегмента: ситуация, задача, критерии успеха и отличия от соседних сегментов',
+  },
+  fieldValue: {
+    title: 'Подготовить проверку ценности', skill: 'product-risk-analysis', duration: '5–10 мин', minutes: 8,
+    output: 'План полевой проверки ценности с критерием успеха',
+  },
+  reconsider: {
+    title: 'Пересмотреть вердикт', skill: 'product-context', duration: '5–10 мин', minutes: 8,
+    output: 'Новые свидетельства за и против + обновлённый вердикт на карте',
+  },
+  ingest: {
+    title: 'Добавить выводы отчёта в карту', skill: 'product-context', duration: '2–5 мин', minutes: 4,
+    output: 'Факты из отчёта попадут в карту с источниками и статусами',
+  },
+  custom: {
+    title: 'Выполнить ход', skill: 'custom', duration: '5–10 мин', minutes: 8,
+    output: 'Результат хода и обновлённые знания продукта',
+  },
 }
 
 function hash(value) {
@@ -169,7 +347,7 @@ function isProductStateReport(fm, title, slug, nodes) {
 }
 
 function humanSkillName(slug) {
-  return SKILL_META[slug]?.title || ({'ui-design':'Дизайн интерфейса','runtime-fixes':'Исправления работы системы','analyze-interviews':'Разбор интервью','product-ui-design':'Дизайн интерфейса','product-search-audit':'Аудит поиска'})[slug] || 'Исследование'
+  return SKILL_META[slug]?.title || ({'product-hq':'Состояние продукта (архив)','custom':'Порученная задача','ui-design':'Дизайн интерфейса','runtime-fixes':'Исправления работы системы','analyze-interviews':'Разбор интервью','product-ui-design':'Дизайн интерфейса','product-search-audit':'Аудит поиска'})[slug] || 'Исследование'
 }
 
 function loadReports(workspace, nodes) {
@@ -207,7 +385,7 @@ function loadSkills(repoRoot) {
   const skillsRoot = path.join(repoRoot, 'skills')
   if (!fs.existsSync(skillsRoot)) return []
   // Setup and toolkit UI maintenance remain available in the CLI, outside product tasks.
-  return fs.readdirSync(skillsRoot, { withFileTypes: true }).filter(entry => entry.isDirectory() && SKILL_META[entry.name]?.category !== 'console' && fs.existsSync(path.join(skillsRoot, entry.name, 'SKILL.md'))).map(entry => {
+  return fs.readdirSync(skillsRoot, { withFileTypes: true }).filter(entry => entry.isDirectory() && (entry.name !== 'os-setup' || isPublicEdition(repoRoot)) && SKILL_META[entry.name]?.category !== 'console' && fs.existsSync(path.join(skillsRoot, entry.name, 'SKILL.md'))).map(entry => {
     const slug = entry.name
     const text = safeRead(path.join(skillsRoot, slug, 'SKILL.md')) || ''
     const fm = parseFrontmatter(text)
@@ -307,18 +485,45 @@ function nodeEvidence(nodeId, nodes, edges) {
     .map(edge => ({ ...byId[edge.to], relation: edge.type }))
 }
 
-function moveKeysFor(node) { return node?.type === 'product' ? ['hq'] : [] }
+function moveKeysFor(node) {
+  if (!node) return ['hq']
+  if (node.status === 'dropped' || node.data?.retired) return []
+  if (node.status === 'contradicted') return ['reconsider']
+  if (node.type === 'segment') return ['deepResearch', 'walkthrough']
+  if (node.type === 'assumption') return ['testRisk']
+  if (node.type === 'competitor') return ['compare']
+  if (node.type === 'value') return ['fieldValue']
+  if (node.type === 'product') return ['hq']
+  return []
+}
 
 function moveFor(key, node, workspace, extra = {}) {
-  const catalog = MOVE_CATALOG[key] || MOVE_CATALOG.custom
-  const target = node || {id:'product', type:'product', label:path.basename(workspace)}
-  return { id:extra.id || key+':'+target.id, kind:key, title:extra.title || catalog.title,
-    skill:catalog.skill, output:extra.output || catalog.output, duration:catalog.duration,
-    minutes:8, node:{id:target.id,label:target.label,type:target.type,typeLabel:TYPE_LABELS[target.type],statusLabel:STATUS_LABELS[target.status]},
-    receiptNodeId:target.id, objective:extra.objective || catalog.title, reason:extra.reason || '', gapId:null,
-    prompt:[`Работай в продуктовом воркспейсе: ${workspace}.`, `Запусти /${catalog.skill}.`, extra.report ? `Материал: ${extra.report}.` : '',
-      'Прочитай PRODUCT.md и только относящиеся к вопросу записи. Не запускай новое исследование.',
-      key === 'hq' ? 'Прочитай состояние и предложи один следующий шаг. Не изменяй продуктовую память.' : 'Сохрани предоставленные материалы с источниками. Не выдумывай сведения.'].filter(Boolean).join('\n') }
+  const base = MOVE_CATALOG[key] || MOVE_CATALOG.custom
+  const catalog = extra.skill && SKILL_META[extra.skill] ? { ...base, ...SKILL_META[extra.skill], skill: extra.skill } : base
+  const target = node || { id: 'product', type: 'product', label: path.basename(workspace) }
+  const objective = extra.objective || extra.title || catalog.title
+  const prompt = [
+    `Работай в продуктовом воркспейсе: ${workspace}.`,
+    catalog.skill === 'custom' ? `Выполни порученный ход «${objective}» доступными инструментами; не запускай навык с именем custom.` : `Запусти /${catalog.skill} и выполни ход «${objective}».`,
+    `Целевой узел карты: ${target.label} (id: ${target.id}, тип: ${TYPE_LABELS[target.type] || target.type}).`,
+    target.virtual && target.type === 'value' ? 'Это гипотеза развития, показанная из data.developmentHypotheses продукта или valueIdeas сегмента. Найди её по ID или названию в исходном графе; сохрани связи с сегментами и зависимости.' : '',
+    extra.report ? `Разбери и забери в знания отчёт: ${extra.report}.` : '',
+    extra.reason ? `Пробел, который нужно закрыть: ${extra.reason}` : '',
+    `Ожидаемый результат: ${extra.output || catalog.output}.`,
+    key === 'researchGap' ? 'Это уточнение существующего исследования. Исследуй только указанный вопрос для целевого узла; сохрани остальные результаты. Привяжи каждое новое утверждение к первичному источнику, укажи дату и область применимости. Если данных не найдено, запиши область поиска и оставшийся пробел, не выдумывай ответ.' : '',
+    key === 'researchGap' ? `researchGap: ${JSON.stringify({ nodeId: target.id, section: extra.gapId, question: objective, expectedOutcome: extra.output || catalog.output })}` : '',
+    key === 'researchGap' && extra.gapId === 'messaging' && target.type === 'competitor' ? `Сначала сними сайт кодом: node bin/landing-capture.js ${workspace} --ids ${target.id} (файлы появятся в sources/competitors/ с датой). Передай запись снимка в workflow как args.landingCapture, а в args.targetContext — текущие работы сегментов с ID (jobs), их критерии (criteria) и отличия продукта (differentiators). Цитаты только дословно из снимка; работы только из списка по ID. Если снимок unavailable, не выдумывай обещания: запиши причину.` : '',
+    'Сначала прочитай PRODUCT.md и возьми из research-graph.json только нужный срез вокруг целевого узла.',
+    'Не запускай следующие скиллы автоматически. В конце сообщи результат, изменённые артефакты, выполненную проверку и блокеры.',
+  ].filter(Boolean).join('\n')
+  return {
+    id: extra.id || `${key}:${target.id}`,
+    kind: key, title: extra.title || catalog.title, skill: catalog.skill,
+    output: extra.output || catalog.output, duration: catalog.duration, minutes: catalog.minutes,
+    node: { id: target.id, label: target.label, type: target.type, typeLabel: TYPE_LABELS[target.type] || target.type, statusLabel: STATUS_LABELS[target.status] || 'без статуса' },
+    receiptNodeId: target.virtual && target.type === 'value' ? target.ownerId || target.id : target.id,
+    objective, reason: extra.reason || '', gapId: extra.gapId || null, manualOnly: Boolean(extra.manualOnly), prompt,
+  }
 }
 
 function shellQuote(value) {
@@ -417,8 +622,35 @@ function projection(graph, workspace) {
   return { nodes: graphNodes, edges, product, empty: sourceNodes.length === 0, groups: { risks: risks.map(x => x.id), segments: segments.map(x => x.id), competitors: competitors.map(x => x.id) }, byId }
 }
 
-function suggestionCandidates(projected) {
-  return projected.product ? [{id:'status:'+projected.product.id,priority:1,reason:'Сверить сохранённый контекст и выбрать следующий шаг.',move:moveFor('hq',projected.product,''),node:projected.product}] : []
+function suggestionCandidates(projected, reports, threadItems, moves = {}) {
+  const { edges, product } = projected
+  const nodes = projected.nodes.filter(n => n.status !== 'dropped' && !n.data?.retired)
+  const productIds = new Set(nodes.filter(node => node.type === 'product').map(node => node.id))
+  const waiting = threadItems.filter(item => item.status === 'waiting').map(item => ({
+    id: `waiting:${item.launchId || item.id}`, priority: 0, reason: 'Агент остановился и не может продолжить без твоего ответа.',
+    move: item.move, node: projected.byId[item.node.id] || product, threadId: item.threadId, action: 'open',
+  }))
+  const fatal = nodes.filter(node => isFatalProductRisk(node, productIds, edges)).map(node => ({
+    id: `fatal:${node.id}`, priority: 1,
+    reason: [node.data?.whyFundamental || node.data?.context || 'Это допущение определяет, сможет ли продукт работать.', node.data?.consequence || 'Последствия отмечены как критические, а результат проверки ещё не зафиксирован.', node.data?.testMethod ? `Предлагаемый способ проверки: ${node.data.testMethod}` : 'Нужно определить способ проверки и измеримый порог отказа.'].join(' '),
+    move: moveFor('testRisk', node, ''), node,
+  }))
+  const staleAfter = Date.now() - 90 * 24 * 60 * 60 * 1000
+  const stale = nodes.filter(node => ['validated', 'evidenced'].includes(node.status) && node.data?.updatedAt && new Date(node.data.updatedAt).getTime() < staleAfter).map(node => ({
+    id: `stale:${node.id}`, priority: 2,
+    reason: 'Подтверждение устарело: рынок мог измениться, а решение всё ещё опирается на старые данные.',
+    move: moveFor(node.type === 'segment' ? 'deepResearch' : 'hq', node, ''), node,
+  }))
+  const research = nodes.filter(node => ['segment', 'competitor'].includes(node.type)).flatMap(node => {
+    const move = (moves[node.id] || []).find(item => ['researchGap', 'segmentDefinition'].includes(item.kind) && !item.manualOnly)
+    return move ? [{ id: `${node.type}:${node.id}:${move.gapId}`, priority: node.type === 'segment' ? 3 : 4, reason: move.reason, move, node }] : []
+  })
+  const fallback = product ? [{
+    id: `hq:${product.id}`, priority: 9,
+    reason: reports.length ? 'Карта изменилась — полезно сверить состояние и получить один следующий ход.' : 'Сначала собери состояние продукта и выбери самый дешёвый способ снять неопределённость.',
+    move: moveFor('hq', product, ''), node: product,
+  }] : []
+  return [...waiting, ...fatal, ...stale, ...research, ...fallback]
 }
 
 function loadReceipts(workspace) {
@@ -459,7 +691,8 @@ function todoItems(workspace, projected, reports, state, threads, receipts = loa
     const output = item.expectedOutcome || item.output || item.text.match(/(?:Ожидаемый результат|На выходе|Результат):\s*([^\n]+)/i)?.[1]
     const clarifications = explainMoveIssues(item)
     const move = moveFor(key, node, workspace, { id: item.id, title, objective: item.objective || item.text, output: output || (key === 'custom' ? 'Ожидаемый результат пока не описан в плане задачи.' : undefined), reason: item.reason, gapId: item.gapId })
-    if (item.skill && SKILL_META[item.skill]) { move.skill = item.skill; move.prompt = move.prompt.replace(/Запусти \/[^ ]+/, `Запусти /${item.skill}`) }
+    const itemSkill = item.skill === 'product-hq' ? (item.kind === 'hq' ? 'product-status' : item.kind === 'ingest' ? 'product-context' : 'custom') : item.skill
+    if (itemSkill && SKILL_META[itemSkill]) { move.skill = itemSkill; move.prompt = `Запусти /${itemSkill}.\n` + move.prompt.replace(/^Запусти \/[^\n]+\n?/m, '') }
     const clarifyMove = item.executionReady === false ? attachFallback(moveFor('custom', node, workspace, {
       id: `clarify:${item.id}`, title: `Уточнить план: ${title}`, objective: `Уточни существующую задачу ${item.id} в MOVES.md, сохрани её ID. ${clarifications.join(' ')} Не выполняй исходную задачу до уточнения.`,
       output: 'В той же задаче записаны ожидаемый результат, ответственный, зависимости и недостающие условия; статус готовности обновлён по фактической полноте плана', reason: clarifications.join(' '),
@@ -483,6 +716,7 @@ function todoItems(workspace, projected, reports, state, threads, receipts = loa
 }
 
 function buildSnapshot({ workspace, repoRoot, graph, graphStatus, state, threads, capabilities, scope = '', researchRecords }) {
+  const publicEdition = isPublicEdition(repoRoot)
   const productName = firstHeading(safeRead(path.join(workspace, 'PRODUCT.md')), graph.product || path.basename(workspace))
   const projected = projection(graph, workspace)
   projected.nodes = require('./consideration').withConsideration(projected.nodes, researchRecords || require('../research/store').load(workspace).records)
@@ -496,7 +730,7 @@ function buildSnapshot({ workspace, repoRoot, graph, graphStatus, state, threads
   const dossiers = new Map([...(draftGalaxy.segments || []), ...(draftGalaxy.competitors || []), ...(draftGalaxy.product ? [draftGalaxy.product] : [])].map(item => [item.id, item]))
   const moves = {}
   for (const node of projected.nodes) {
-    const gaps = []
+    const gaps = dossierGaps(node, dossiers.get(node.id))
     const actions = gaps.map(gap => {
       const sectionStatus = gap.status || node.data?.researchSections?.[gap.id]?.status
       const alreadyRun = todo.some(item => item.node?.id === node.id && item.move?.gapId === gap.id && item.status === 'done')
@@ -506,9 +740,9 @@ function buildSnapshot({ workspace, repoRoot, graph, graphStatus, state, threads
       objective: gap.action || gap.label, reason: gap.reason || gap.label, output: gap.output || `Обновлённый раздел «${gap.label || gap.id}»: вывод, первичные источники и оставшиеся неизвестные`,
     }) })
     const regular = moveKeysFor(node).filter(key => !['deepResearch', 'compare'].includes(key))
-    moves[node.id] = [...actions, ...regular.map(key => moveFor(key, node, workspace))].map(move => attachFallback(move, workspace))
+    moves[node.id] = [...actions, ...regular.map(key => moveFor(key, node, workspace))].filter(move => !publicEdition || PUBLIC_SKILLS.includes(move.skill)).map(move => attachFallback(move, workspace))
   }
-  const candidates = suggestionCandidates(projected, reports, todo, moves).sort((a, b) => a.priority - b.priority || a.id.localeCompare(b.id))
+  const candidates = suggestionCandidates(projected, reports, todo, moves).filter(item => !publicEdition || PUBLIC_SKILLS.includes(item.move?.skill)).sort((a, b) => a.priority - b.priority || a.id.localeCompare(b.id))
   const graphSignature = digest(graph)
   const canonical = parseMoves(safeRead(path.join(workspace, 'MOVES.md')))
   const active = todo.filter(item => !['done', 'failed', 'stopped'].includes(item.status))
@@ -545,7 +779,8 @@ function buildSnapshot({ workspace, repoRoot, graph, graphStatus, state, threads
     metrics, graph: { nodes: projected.nodes, edges: projected.edges, productId: projected.product?.id || null, empty: projected.empty, groups: projected.groups },
     moves, hqMove: projected.product ? attachFallback(moveFor('hq', projected.product, workspace), workspace) : null,
     recommended, todo, suggestions, reports, galaxy, communications, humanWork: state.humanWork || {},
-    skills: loadSkills(repoRoot), skillGroups: SKILL_GROUPS, sources: graph.nodes.filter(node => node.type === 'artifact' && node.data?.kind === 'source-material').map(node => ({id:node.id,name:node.label,source:node.source,bytes:node.data.bytes})),
+    skills: loadSkills(repoRoot), skillGroups: SKILL_GROUPS,
+    sources: graph.nodes.filter(node => node.type === 'artifact' && node.data?.kind === 'source-material').map(node => ({ id: node.id, name: node.label, source: node.source, bytes: node.data.bytes })),
     badges: {
       next: todo.filter(item => item.status !== 'done').length,
       waiting: todo.some(item => item.status === 'waiting'),

@@ -44,7 +44,8 @@ import {ProductTabs} from './product-tabs.js'
   const expandedSkills = new Set()
   const skillPresentation = {
     'product-interviews': ['evidence', 'Сохранить интервью, проверить источники и полноту ответов, затем сопоставить результаты.'],
-    'product-hq': ['route', 'Собрать текущую картину продукта и выбрать следующий обоснованный ход.'],
+    'product-status': ['route', 'Прочитать текущий контекст и предложить следующий шаг.'],
+    'product-context': ['evidence', 'Добавить материалы и сведения с источниками.'],
     'product-segment-hypotheses': ['segment', 'Найти сегменты по задачам клиентов и сформулировать гипотезы для проверки.'],
     'product-deep-research': ['evidence', 'Исследовать рынок, конкурентов и потребности клиентов с опорой на источники.'],
     'product-risk-analysis': ['alert', 'Найти слабые места идеи или плана и подготовить проверку самого опасного риска.'],

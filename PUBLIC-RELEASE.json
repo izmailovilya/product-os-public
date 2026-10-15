@@ -1,11 +1,12 @@
 {
   "edition": "public",
+  "version": "0.1.1",
   "skills": [
     "os-setup",
     "product-context",
     "product-status"
   ],
-  "createdAt": "2026-10-15T08:11:21.099Z",
+  "sourceDigest": "a61e94d210fee632c0fbd3e51f12ef739216e7aa98551268fabf7b827d81af16",
   "files": [
     {
       "path": ".gitignore",
@@ -29,7 +30,7 @@
     },
     {
       "path": "bin/console/communications.js",
-      "sha256": "78d145e2c5a6e55502db6f28d3bc05e2a334d5d78096882961b47cfe48b5d609",
+      "sha256": "795d3533b9474846f6a71915edc90af72a4a7c828c8b4f7a633601d4885370d6",
       "origin": "toolkit"
     },
     {
@@ -59,7 +60,7 @@
     },
     {
       "path": "bin/console/model.js",
-      "sha256": "7f34da173dbbd44ab9350088a467624d7c9ae0a938550f8dd9ab444a1b726d4c",
+      "sha256": "cc3605a62168e31196f07c2c06d37e036fac19fa24f9ac0033f057981070b600",
       "origin": "toolkit"
     },
     {
@@ -84,7 +85,7 @@
     },
     {
       "path": "bin/console/public/app.js",
-      "sha256": "a875ded962bb7ac8c27e8cfa971ef7a71bb307c36f4df5c14393bb87f94f58d2",
+      "sha256": "56591e0fd0dd0e149f7074dc1de5eeb6ce3e921643623fdbff26c1a61c155579",
       "origin": "toolkit"
     },
     {
@@ -319,7 +320,7 @@
     },
     {
       "path": "bin/console/public/atlas.js",
-      "sha256": "80fae70af63f34065b348e6dfdcaf501ba2dae12672d895cd7bc3515ea06a811",
+      "sha256": "bb5c06e51e993d05351034df85987ad6a61f6ae2a48027ae898b0180fc524dff",
       "origin": "toolkit"
     },
     {
@@ -344,7 +345,7 @@
     },
     {
       "path": "bin/console/public/communications.js",
-      "sha256": "aa120fdf273cb091e4f636b984146ceab23934194d09b39e80feb77e4f3b9225",
+      "sha256": "6956e0d522487d23d321b52337d958d64b0cafe04441e91db5e65ec39c79a2a1",
       "origin": "toolkit"
     },
     {
@@ -599,7 +600,7 @@
     },
     {
       "path": "bin/console/server.js",
-      "sha256": "51891c7b490210c70c5bd1ebc92a5bc3978672fc0828afde787bb282a42aac5c",
+      "sha256": "fa5cd31aad2ffbcf3c87e8997653b97235e9c4fe0aa69df5c1d401bb74add53e",
       "origin": "toolkit"
     },
     {
@@ -615,6 +616,11 @@
     {
       "path": "bin/customer-profile.js",
       "sha256": "0bcab3438be3d457dafe2c09bc9b3987fa1fd1579aeb0feff2781ed649ae6847",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/edition.js",
+      "sha256": "79ae8ccd3426c89035a5b03156ac2fdfac84d504da3f619440345f5bb25790fc",
       "origin": "toolkit"
     },
     {
@@ -659,7 +665,7 @@
     },
     {
       "path": "bin/graph/writer.js",
-      "sha256": "60b1bb63b9c7dc0884453c8969c656592d31d918fe988fd420d6a841b621cfd4",
+      "sha256": "5674d3e6692f8f39c287571cb4c0991c39b9323c7923ef74e2406c769b646ca7",
       "origin": "toolkit"
     },
     {
@@ -679,12 +685,12 @@
     },
     {
       "path": "bin/product-os.js",
-      "sha256": "867f7b6868a81b2289ee15b7cf26a3262ba94e61038ab6162d5e779f4fe98db4",
+      "sha256": "f1e09d88d3bb6680fb6ef6ce918f2bfa35164d2e10559457455fdea042432cd8",
       "origin": "public-edition"
     },
     {
       "path": "bin/public-workspace.js",
-      "sha256": "f4f258f890d0bf5bc25c812b9b6c2dc80130253e5a47085b04af96d3486c903e",
+      "sha256": "61f4c0ea32ae8437af65cf3a7a5efdd9c7fac3aa76d85fcd4e072a1c03c10164",
       "origin": "public-edition"
     },
     {
@@ -719,7 +725,7 @@
     },
     {
       "path": "bin/research/cli.js",
-      "sha256": "09cbd58f00edb1515e9693263776f37b6c1a3c446e93b8664e881a6b1f287d15",
+      "sha256": "774a56bf748e1e1006ae25b77d2a64c3ea36ab711f0052fe05a4e6d7d13a77ed",
       "origin": "toolkit"
     },
     {
@@ -813,6 +819,11 @@
       "origin": "toolkit"
     },
     {
+      "path": "bin/workspace.js",
+      "sha256": "f4f258f890d0bf5bc25c812b9b6c2dc80130253e5a47085b04af96d3486c903e",
+      "origin": "toolkit"
+    },
+    {
       "path": "BRAND.md",
       "sha256": "b9aac47a3a766e66fecfc135e1c2f061f324abd06db210091e8e9399bab6143d",
       "origin": "toolkit"
@@ -849,7 +860,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "8a9d59b1bab6be49abe577b88e4aa9be9ad32babc7bba851190cc9dba456b28a",
+      "sha256": "02294fa9e2755c0407b20711eabbe0543941684916a2a6e9cb52a97d257f48c3",
       "origin": "public-edition"
     },
     {
@@ -859,7 +870,7 @@
     },
     {
       "path": "scripts/verify-console.js",
-      "sha256": "e74554715afbb968036dac2315334557446ee1fe0bf2ed90cff68d8c658c3472",
+      "sha256": "ccac61756bcd696f7fee91dfc379b768233aae234b8a0f08a4644bab438310f0",
       "origin": "public-edition"
     },
     {
@@ -899,13 +910,13 @@
     },
     {
       "path": "skills/product-context/SKILL.md",
-      "sha256": "c2915dd8d3d0c8fec1137413ff188369de31da417f2000df69a8dd654ab2c8eb",
-      "origin": "public-edition"
+      "sha256": "b5848b161652168a77bcea422561ba2d81a824654a7d02a4297cf02c8e7323e7",
+      "origin": "toolkit"
     },
     {
       "path": "skills/product-status/SKILL.md",
-      "sha256": "4559c8d2db5cd32fd99b713d0bf988bf99a591b955fd296f817267abd5fe7b1d",
-      "origin": "public-edition"
+      "sha256": "af1946cb92696631740b6a7b9e955637d0b5e4a63ba5e43df71c29bc604044d7",
+      "origin": "toolkit"
     },
     {
       "path": "test/public.test.js",

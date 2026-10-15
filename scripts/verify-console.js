@@ -22,11 +22,13 @@ async function main() {
     browser=await chromium.launch({channel:'chrome',headless:true})
     for(const viewport of [{width:1440,height:1000},{width:390,height:844}]) {
       const page=await browser.newPage({viewport}),errors=[]
-      page.on('pageerror',error=>errors.push(error.message))
+      page.setDefaultTimeout(15000)
+      page.on('pageerror',error=>{errors.push(error.message);console.error('Browser error:',error.message)})
       await page.goto(url+'/#product');await page.getByRole('heading',{name:'Обзор продукта',exact:true}).waitFor()
       await page.getByText('Вымышленный сервис для хранения договорённостей команды.',{exact:true}).waitFor()
       await page.screenshot({path:path.join(output,`product-${viewport.width}.png`),fullPage:true})
       await page.goto(url+'/#skills')
+      await page.screenshot({path:path.join(output,`skills-${viewport.width}-loaded.png`),fullPage:true})
       for(const name of ['Настроить рабочее место','Добавить контекст','Где мы и что дальше'])await page.getByRole('heading',{name,exact:true}).waitFor()
       assert.equal(await page.locator('[data-skill-launch]').count(),3)
       assert.equal(await page.locator('[data-skill-toggle]').count(),0)

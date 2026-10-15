@@ -65,7 +65,7 @@ module.exports = { communicationProjection, scopedGalaxyInput, materialPrompt }
 function communicationTaskPrompt(comm, task, skill) {
   const fail = message => { throw Object.assign(new Error(message), { status: 400 }) }
   if (!task || !['job-graph', 'material', 'rubrics'].includes(task.kind) || typeof task.instruction !== 'string' || !task.instruction.trim() || task.instruction.length > 6000) fail('Опишите коротко, что подготовить')
-  const expected = { 'job-graph': 'product-hq', material: 'product-content', rubrics: 'product-channel-concept' }
+  const expected = { 'job-graph': 'product-channel-concept', material: 'product-content', rubrics: 'product-channel-concept' }
   if (skill !== expected[task.kind]) fail('Неподходящий скилл для этой работы')
   const by = new Map(comm.nodes.map(n => [n.id,n]))
   for (const [key,type] of [['channelId','channel'],['segmentId','segment'],['journeyId','journey'],['contactId','touchpoint']]) if (task[key] && by.get(task[key])?.type !== type) fail('Контекст работы не найден')

@@ -30,10 +30,10 @@ async function main(args = process.argv.slice(2)) {
     if (!rest[0] || rest[0].startsWith('-')) throw new Error('Укажите отдельную папку продукта')
     return require('./install').install(rest[0], { agent: option(rest, '--agent', 'both') })
   }
-  if (command === 'init') { const result = require('./public-workspace').init(rest[0] || '.', { agent: option(rest, '--agent', 'both') }); console.log(JSON.stringify(result, null, 2)); return result }
-  if (command === 'import') { if (!rest[0] || !rest[1]) throw new Error('product-os import <workspace> <file>'); const result = require('./public-workspace').importSource(rest[0], rest[1]); console.log(JSON.stringify(result, null, 2)); return result }
-  if (command === 'sources') { const result = require('./public-workspace').sources(rest[0] || '.'); console.log(JSON.stringify(result, null, 2)); return result }
-  if (command === 'status-receipt') { if(!rest[0] || !rest[1])throw new Error('status-receipt <workspace> <receipt.json>');const result=require('./public-workspace').statusReceipt(path.resolve(rest[0]),JSON.parse(fs.readFileSync(rest[1],'utf8')));console.log(JSON.stringify(result,null,2));return result }
+  if (command === 'init') { const result = require('./workspace').init(rest[0] || '.', { agent: option(rest, '--agent', 'both') }); console.log(JSON.stringify(result, null, 2)); return result }
+  if (command === 'import') { if (!rest[0] || !rest[1]) throw new Error('product-os import <workspace> <file>'); const result = require('./workspace').importSource(rest[0], rest[1]); console.log(JSON.stringify(result, null, 2)); return result }
+  if (command === 'sources') { const result = require('./workspace').sources(rest[0] || '.'); console.log(JSON.stringify(result, null, 2)); return result }
+  if (command === 'status-receipt') { if(!rest[0] || !rest[1])throw new Error('status-receipt <workspace> <receipt.json>');const result=require('./workspace').statusReceipt(path.resolve(rest[0]),JSON.parse(fs.readFileSync(rest[1],'utf8')));console.log(JSON.stringify(result,null,2));return result }
   if (command === 'graph-write') return require('./graph-write').main(rest)
   if (command === 'research') return require('./research/cli').main(rest)
   if (['article', 'eval', 'chrome', 'landings', 'research-brief', 'references', 'research-tools'].includes(command)) throw new Error('Эта команда не входит в Product OS Public')

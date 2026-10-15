@@ -41,7 +41,7 @@ const validSource=path=>typeof path==='string'&&!path.includes('..')&&/^(sources
 function sourceTitle(row){
  const path=row.source, label=row.title||row.label;
  if(label&&label!==path&&label!==row.quote&&label!==row.statement)return label;
- const kinds={'analyze-interviews':'Разбор интервью','deep-research':'Исследование рынка','product-hq':'Обзор исследования','meetings':'Запись встречи','competitors':'Материал о конкуренте','interviews':'Интервью'};
+ const kinds={'analyze-interviews':'Разбор интервью','deep-research':'Исследование рынка','product-hq':'Обзор исследования','product-status':'Состояние продукта','product-context':'Новые сведения','meetings':'Запись встречи','competitors':'Материал о конкуренте','interviews':'Интервью'};
  const date=path.match(/\d{4}-\d{2}-\d{2}/)?.[0]?.split('-').reverse().join('.');
  const kind=kinds[path.split('/')[1]]||(path.startsWith('reports/')?'Отчёт исследования':'Материал исследования');
  return kind+(date?' · '+date:'');

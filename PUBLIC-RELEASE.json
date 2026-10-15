@@ -1,12 +1,12 @@
 {
   "edition": "public",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "skills": [
     "os-setup",
     "product-context",
     "product-status"
   ],
-  "sourceDigest": "a61e94d210fee632c0fbd3e51f12ef739216e7aa98551268fabf7b827d81af16",
+  "sourceDigest": "bb6cd482127de6a024509d54674f5b102880b49612ff4b38443c3e9dac74da5c",
   "files": [
     {
       "path": ".gitignore",
@@ -85,8 +85,8 @@
     },
     {
       "path": "bin/console/public/app.js",
-      "sha256": "56591e0fd0dd0e149f7074dc1de5eeb6ce3e921643623fdbff26c1a61c155579",
-      "origin": "toolkit"
+      "sha256": "4453703d6de2d1c54441a917f3231bddc5a403f8b3bfdbe9307ab3147dd5aa68",
+      "origin": "public-edition"
     },
     {
       "path": "bin/console/public/assets/brand/app-icon-16.png",
@@ -425,8 +425,8 @@
     },
     {
       "path": "bin/console/public/index.html",
-      "sha256": "77aab9a63ac0eb7394411c1ff1c1eacade9da8bb7f5cf04161284cac1182caab",
-      "origin": "toolkit"
+      "sha256": "186847739f54edacf87280cc09bc391c7f134f5fba3bfeb270ff6b66a1904c85",
+      "origin": "public-edition"
     },
     {
       "path": "bin/console/public/job-graph-example.js",
@@ -600,7 +600,7 @@
     },
     {
       "path": "bin/console/server.js",
-      "sha256": "fa5cd31aad2ffbcf3c87e8997653b97235e9c4fe0aa69df5c1d401bb74add53e",
+      "sha256": "e2774887bdb2aab0445bbc0acc5d890093ac9828acb1862b56229a63b9a83c6b",
       "origin": "toolkit"
     },
     {
@@ -685,7 +685,7 @@
     },
     {
       "path": "bin/product-os.js",
-      "sha256": "f1e09d88d3bb6680fb6ef6ce918f2bfa35164d2e10559457455fdea042432cd8",
+      "sha256": "2e0862e4a47f9684bc991a8febed66de6a233ded2c3b11f1888c209ddac93345",
       "origin": "public-edition"
     },
     {
@@ -860,17 +860,17 @@
     },
     {
       "path": "package.json",
-      "sha256": "02294fa9e2755c0407b20711eabbe0543941684916a2a6e9cb52a97d257f48c3",
+      "sha256": "7f1aacf9621b0fdc4b2a18b0ef5137c4c7269220e442bf0134fa66f4fd4d714f",
       "origin": "public-edition"
     },
     {
       "path": "README.md",
-      "sha256": "ddb6b595390ec22239ee5aa2fa0b43017479b9b16c4a5e971e238fcb2652b304",
+      "sha256": "34aa73d9f49b94e39fb433e1865d00728ee8f5979d6d7d330a069d2bb2f98b97",
       "origin": "public-edition"
     },
     {
       "path": "scripts/verify-console.js",
-      "sha256": "ccac61756bcd696f7fee91dfc379b768233aae234b8a0f08a4644bab438310f0",
+      "sha256": "bbf7af4527a6f1a4194b7222b2525b658fa611716ec6b1c8156f7b209c162b30",
       "origin": "public-edition"
     },
     {
@@ -920,7 +920,7 @@
     },
     {
       "path": "test/public.test.js",
-      "sha256": "a65b3ba4a46b1b0d91a79e6e3e5c246ab79598cd4129dec0e2ed403dd4172925",
+      "sha256": "e20b54b76fb8a0b020853ba4be588835f8f97e8cd442b332f78820ba451b3603",
       "origin": "public-edition"
     }
   ]

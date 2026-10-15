@@ -41,7 +41,7 @@ async function main(args = process.argv.slice(2)) {
   if (!fs.existsSync(path.join(workspace, 'research-graph.json'))) throw new Error('Воркспейс не найден. Сначала: product-os init <workspace>')
   const port = Number(option(rest, '--port', 0))
   if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('Порт должен быть целым числом от 0 до 65535')
-  const app = await createConsoleServer({ workspace, repoRoot: path.resolve(__dirname, '..'), chromeAgent: false, ...(process.env.PRODUCT_OS_NO_AGENTS === '1' ? { bbPath: false, claudePath: false, codexPath: false } : {}) })
+  const app = await createConsoleServer({ workspace, repoRoot: path.resolve(__dirname, '..'), chromeAgent: false, bbPath: false, claudePath: false, codexPath: false })
   const address = await listen(app.server, port), url = `http://127.0.0.1:${address.port}`
   console.log(`Product OS Public · ${url}`)
   if (!args.includes('--no-open')) openBrowser(url)

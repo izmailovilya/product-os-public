@@ -22,9 +22,26 @@ function passportData(text) {
     constraints: get(['ограничения','constraints (as stated)']), stage: get(['стадия и материалы','стадия','stage & assets']) }
 }
 
+function assertWorkspace(workspace) {
+  workspace = path.resolve(workspace)
+  const tools=fs.realpathSync(path.resolve(__dirname,'..'))
+  let parent=workspace,parts=[]
+  while(!fs.existsSync(parent)){parts.unshift(path.basename(parent));parent=path.dirname(parent)}
+  const resolved=path.join(fs.realpathSync(parent),...parts),relative=path.relative(tools,resolved)
+  if(relative===''||(!relative.startsWith('..'+path.sep)&&relative!=='..'&&!path.isAbsolute(relative)))throw new Error('Создайте отдельную папку продукта вне установленного инструментария')
+  // A different agent's runtime (or an alias to it) must not become product data:
+  // it can be replaced by the next install just like this executing runtime.
+  for(let ancestor=resolved;;ancestor=path.dirname(ancestor)) {
+    let name;try{name=JSON.parse(fs.readFileSync(path.join(ancestor,'package.json'),'utf8')).name}catch{}
+    if(['product-os','product-os-public'].includes(name)&&fs.existsSync(path.join(ancestor,'bin/product-os.js')))throw new Error('Создайте отдельную папку продукта вне установленного инструментария')
+    if(path.dirname(ancestor)===ancestor)break
+  }
+}
+
 function init(workspace, { agent = 'both' } = {}) {
   workspace = path.resolve(workspace)
   if (!['both', 'claude', 'codex'].includes(agent)) throw new Error('Agent must be claude, codex or both')
+  assertWorkspace(workspace)
   fs.mkdirSync(workspace, { recursive: true })
   writeWorkspaceInstructions(workspace, agent)
   for (const name of ['sources', 'reports', 'segments']) fs.mkdirSync(path.join(workspace, name), { recursive: true })
@@ -89,4 +106,4 @@ function statusReceipt(workspace, { runId, nodeId, summary, outcome = 'completed
   } finally { release() }
 }
 
-module.exports = { init, importSource, sources, passportData, statusReceipt }
+module.exports = { init, importSource, sources, passportData, statusReceipt, assertWorkspace }

@@ -1,6 +1,6 @@
 {
   "edition": "public",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "skills": [
     "os-setup",
     "product-brand-identity",
@@ -11,7 +11,7 @@
     "product-segment-hypotheses",
     "product-status"
   ],
-  "sourceDigest": "361d9a82ae63034a4f190bd6c1347f42e8d3366389d269ac8f5f80b44750ecf6",
+  "sourceDigest": "7ca8b93a68ab491ccdecc182ba228c05c33695a2c2d21a052ee38cca3d69b17f",
   "files": [
     {
       "path": ".gitignore",
@@ -760,7 +760,7 @@
     },
     {
       "path": "bin/install.js",
-      "sha256": "1cd41e5fe9135531e1cf17168257226ca2945f36da585d14602fac050fd82a6c",
+      "sha256": "ddfcbb9aebb22fdf052a33e32b52a6ed117be77453307dcc67c7076bd6246a43",
       "origin": "public-edition"
     },
     {
@@ -775,7 +775,7 @@
     },
     {
       "path": "bin/product-os.js",
-      "sha256": "8f39e2fb399beccd6c38d6ebc9fbf4d550872d194886a2bb4c02786d2f03266d",
+      "sha256": "035cb0cba1722152b7c342f8fb2c98f09e8b8c68c9f0617eb75607f06a8d64b6",
       "origin": "public-edition"
     },
     {
@@ -955,7 +955,7 @@
     },
     {
       "path": "bin/workspace.js",
-      "sha256": "f4f258f890d0bf5bc25c812b9b6c2dc80130253e5a47085b04af96d3486c903e",
+      "sha256": "131ba5b00edfe8898817ac1abe89e5d4e932a4c04a2d3534edf6f08a085007ea",
       "origin": "toolkit"
     },
     {
@@ -975,7 +975,7 @@
     },
     {
       "path": "CONTRACT.md",
-      "sha256": "c71d84d68ef7835209f16a31f43683ab18655a1c61c8098ce1d6bbef2018138b",
+      "sha256": "7a27d403d4ea80d6b9e1bac9fc632b88de354cfa273a3aab115ed61df1ddca98",
       "origin": "public-edition"
     },
     {
@@ -995,7 +995,7 @@
     },
     {
       "path": "GRAPH-WRITES.md",
-      "sha256": "928ad32945f6ef2564b69d2f762574334cf9a78264f669e0bb13e2064757483f",
+      "sha256": "80f47337dfa0f91f4798c55b6992f3d124ef0462316cd798a430b5461a308a42",
       "origin": "public-edition"
     },
     {
@@ -1010,12 +1010,12 @@
     },
     {
       "path": "package.json",
-      "sha256": "5da8511d12ec5694d5467191e1823ed00dea2bf7ab862ab4a0de8702cc9dc2ae",
+      "sha256": "ee6337fc916e926b69dc8277a28b2706005144c24d134969ea85244f9e087a65",
       "origin": "public-edition"
     },
     {
       "path": "README.md",
-      "sha256": "846ccf57ac41d9f01dca76d3c7911ca2a3df9194226e2f08655191cd591434ce",
+      "sha256": "a1f36c33d75cbbce36c1d75bd86b6ba56aa74d0a876539665fae4f0221339afa",
       "origin": "public-edition"
     },
     {
@@ -1035,7 +1035,7 @@
     },
     {
       "path": "skills/CONTRACT.md",
-      "sha256": "c71d84d68ef7835209f16a31f43683ab18655a1c61c8098ce1d6bbef2018138b",
+      "sha256": "7a27d403d4ea80d6b9e1bac9fc632b88de354cfa273a3aab115ed61df1ddca98",
       "origin": "public-edition"
     },
     {
@@ -1045,7 +1045,7 @@
     },
     {
       "path": "skills/GRAPH-WRITES.md",
-      "sha256": "928ad32945f6ef2564b69d2f762574334cf9a78264f669e0bb13e2064757483f",
+      "sha256": "80f47337dfa0f91f4798c55b6992f3d124ef0462316cd798a430b5461a308a42",
       "origin": "public-edition"
     },
     {
@@ -1055,12 +1055,12 @@
     },
     {
       "path": "skills/os-setup/SKILL.md",
-      "sha256": "3bf8e10bfbfdb87191c17c003bd0443bb4880c376a1f07ec8145c6ad611a5b1c",
+      "sha256": "b3a65119ad360e1beeeaa6a6396a435e39695c1e4e2b8853fd4d206b02b82820",
       "origin": "public-edition"
     },
     {
       "path": "skills/os-setup/workspace-CLAUDE.md",
-      "sha256": "d0e1483b53a966fc34a3c40742086fe9e220586f1571c51127f8d0907516d339",
+      "sha256": "7ceb0c10c4b90973d578e8c44d97ed6aab156f3ce8de270cbd8a0dd55866e4aa",
       "origin": "public-edition"
     },
     {
@@ -1105,7 +1105,7 @@
     },
     {
       "path": "skills/product-context/SKILL.md",
-      "sha256": "b5848b161652168a77bcea422561ba2d81a824654a7d02a4297cf02c8e7323e7",
+      "sha256": "76eb7b99215345bf047ed0918e79cfca2c3a0da93bd9389f21c72f4b58a51880",
       "origin": "toolkit"
     },
     {
@@ -1210,7 +1210,7 @@
     },
     {
       "path": "skills/product-status/SKILL.md",
-      "sha256": "af1946cb92696631740b6a7b9e955637d0b5e4a63ba5e43df71c29bc604044d7",
+      "sha256": "9e62d76a364fcb68e2d0815e7e4f426b9fe192f90e228c23b314f8f30cfdff8b",
       "origin": "toolkit"
     },
     {
@@ -1220,7 +1220,7 @@
     },
     {
       "path": "test/public.test.js",
-      "sha256": "886fda07a03843e4ade29eb1aaf821e9be61b99d48609feb8387245050f42a4e",
+      "sha256": "639f40d435a5f11e7edae6fec35217ecd194d77ee6c28978cdc138c70a6da63b",
       "origin": "public-edition"
     },
     {

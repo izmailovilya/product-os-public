@@ -20,9 +20,15 @@ description: Create or repair a Product OS workspace, capture the product passpo
 
 ## Создание и восстановление
 
-`<tools>` — установленный каталог product-os-tools: `.agents/product-os-tools` для
-Codex, `.claude/skills/product-os-tools` для Claude, либо checkout Product OS.
-Для запуска используй Node.js и абсолютный путь к `<tools>/bin/product-os.js`.
+`<tools>` — абсолютный путь к установленному каталогу product-os-tools.
+Сначала проверь локальный runtime продукта, затем общий runtime пользователя.
+Обычное расположение — `.claude/skills/product-os-tools` внутри продукта либо
+`~/.claude/skills/product-os-tools` в домашней папке. Используй окружение своего
+агента; при его отсутствии проверь окружение второго агента или checkout Product OS.
+Домашний каталог определяется отдельно от текущей папки продукта. Для запуска
+используй Node.js и абсолютный путь к `<tools>/bin/product-os.js`.
+При общей установке не копируй скиллы/runtime в каждый продукт и не запускай
+там `install`: достаточно `init` и сохранения исходного контекста.
 
 1. Сохрани PRODUCT.md: что делает продукт; для кого; стадия и имеющиеся материалы;
    цель владельца; ограничения; рынок; утверждения, которые пока не проверены.

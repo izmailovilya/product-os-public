@@ -13,7 +13,7 @@ function openBrowser(url) {
 function usage() { return `Product OS
 
   product-os setup [workspace] [--agent both|claude|codex]
-  product-os install <workspace> [--agent both|claude|codex]
+  product-os install [workspace] [--agent both|claude|codex]
   product-os init <workspace> [--agent both|claude|codex]
   product-os <workspace> [--no-open] [--port N]
   product-os import <workspace> <file>
@@ -27,28 +27,31 @@ function usage() { return `Product OS
 Восемь навыков: os-setup, product-context, product-status, product-research,
 product-segment-hypotheses, product-job-map, product-brand-identity и
 product-reference-library.
-setup устанавливает навыки и создаёт рабочее место одной командой.
+install без папки устанавливает навыки один раз для пользователя.
+os-setup настраивает каждый продукт в его отдельной папке.
+setup сохраняет совместимость с прежней установкой в проект.
 Product OS бесплатен, без подписки.
 Node.js 22+. AI работает в вашем установленном агенте.
 ` }
-async function main(args = process.argv.slice(2)) {
+async function main(args = process.argv.slice(2),{userHome}={}) {
   const [command, ...rest] = args
   if (['help', '--help', '-h'].includes(command)) { console.log(usage()); return }
   if (command === 'skills') return require('./custom-skills').main(rest)
   if (command === 'share') return require('./share/cli').main(rest)
   if (command === 'setup') {
-    const workspace = rest[0] && !rest[0].startsWith('-') ? rest[0] : '.'
-    const agent = option(rest, '--agent', 'both')
-    if (!['both', 'claude', 'codex'].includes(agent)) throw new Error('setup [workspace] --agent both|claude|codex')
-    require('./install').install(workspace, { agent })
+    const {install,installedGlobally,installationTargets,parseInstallArgs}=require('./install')
+    const request=parseInstallArgs(rest),workspace=request.workspace||'.',agent=request.agent
+    require('./workspace').assertWorkspace(workspace)
+    const local=installationTargets(path.resolve(workspace),agent).some(({tools})=>fs.existsSync(tools))
+    if(local||!installedGlobally(agent,{userHome}))install(workspace,{agent,userHome})
     const result = require('./workspace').init(workspace, { agent })
     console.log(`Рабочее место готово: ${result.workspace}`)
     console.log('Продолжите разговор с агентом в этой папке: «Настрой Product OS по контексту нашего разговора через os-setup и покажи консоль».')
     return result
   }
   if (command === 'install') {
-    if (!rest[0] || rest[0].startsWith('-')) throw new Error('Укажите отдельную папку продукта')
-    return require('./install').install(rest[0], { agent: option(rest, '--agent', 'both') })
+    const {install,parseInstallArgs}=require('./install'),{workspace,agent}=parseInstallArgs(rest)
+    return install(workspace, {agent,userHome})
   }
   if (command === 'init') { const result = require('./workspace').init(rest[0] || '.', { agent: option(rest, '--agent', 'both') }); console.log(JSON.stringify(result, null, 2)); return result }
   if (command === 'import') { if (!rest[0] || !rest[1]) throw new Error('product-os import <workspace> <file>'); const result = require('./workspace').importSource(rest[0], rest[1]); console.log(JSON.stringify(result, null, 2)); return result }

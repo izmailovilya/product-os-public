@@ -11,7 +11,10 @@ user-invocable: true
 
 Прочитай [CONTRACT.md](../CONTRACT.md), [GRAPH.md](../GRAPH.md) и
 [GRAPH-WRITES.md](../GRAPH-WRITES.md). `<tools>` — runtime в
-`.agents/product-os-tools`, `.claude/skills/product-os-tools` или checkout инструментария.
+`.claude/skills/product-os-tools` своего агентского окружения либо checkout инструментария.
+При отсутствии локального runtime проверь те же каталоги относительно домашней
+папки пользователя. Определи абсолютный путь к `<tools>`; `<workspace>` всегда
+означает выбранную папку продукта. Общая установка не требует локальной копии.
 
 ## Сохранение
 

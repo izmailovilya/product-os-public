@@ -19,7 +19,48 @@ test('only the public skills and reviewed files ship', () => {
     assert.ok(!file.path.startsWith('sources/') && !file.path.startsWith('reports/'))
     assert.equal(createHash('sha256').update(fs.readFileSync(path.join(root,file.path))).digest('hex'),file.sha256,file.path)
   }
-  for(const excluded of ['bin/article','bin/landing-review','bin/research-brief/service.js','evals','WORKSPACES.md'])assert.equal(fs.existsSync(path.join(root,excluded)),false,excluded)
+  for(const excluded of ['bin/article','bin/landing-review','bin/research-brief/service.js','evals','WORKSPACES.md',
+    'COMMUNICATIONS.md','skills/COMMUNICATIONS.md','bin/console/communications.js','bin/graph/communications.js','bin/graph/communications-legacy.js',
+    'bin/console/public/communications.js','bin/console/public/communications.css','bin/console/public/channel-content.js','bin/console/public/communication-job-graph.js',
+    'bin/console/public/atlas.html','bin/console/public/atlas.js','bin/console/public/design-system.html','bin/console/public/design-system-catalog.js',
+    'bin/console/public/product-elements.js',
+    'bin/console/public/assets/fonts/inter','bin/console/public/assets/strategic-job-example.json',
+  ])assert.equal(fs.existsSync(path.join(root,excluded)),false,excluded)
+  assert.equal(JSON.parse(fs.readFileSync(path.join(root,'package.json'))).files.includes('COMMUNICATIONS.md'),false)
+})
+
+test('retired routes and graph operation are unavailable without changing legacy data',async t=>{
+  const dir=temporary(t);init(dir)
+  const graphFile=path.join(dir,'research-graph.json'),graph=JSON.parse(fs.readFileSync(graphFile))
+  graph.nodes.push({id:'old-channel',type:'channel',label:'Legacy channel',status:'hypothesis',data:{}})
+  fs.writeFileSync(graphFile,JSON.stringify(graph,null,2)+'\n')
+  const before=fs.readFileSync(graphFile)
+  assert.throws(()=>require('../bin/graph/writer').applyOperations(dir,{schemaVersion:1,source:'cleanup-test',expectedRevision:graph.revision,operations:[{op:'communication',type:'channel',label:'Unexpected'}]}),/не входят/)
+  assert.throws(()=>require('../bin/graph/writer').applyOperations(dir,{schemaVersion:1,source:'cleanup-test',expectedRevision:graph.revision,operations:[{op:'node',node:{id:'new-channel',type:'channel',label:'Unexpected'}}]}),/не входят/)
+  const {createConsoleServer,listen}=require('../bin/console/server')
+  const app=await createConsoleServer({workspace:dir,repoRoot:root,bbPath:false,claudePath:false,chromeAgent:false})
+  t.after(()=>new Promise(resolve=>app.server.close(resolve)))
+  const address=await listen(app.server),base=`http://127.0.0.1:${address.port}`
+  const snap=await(await fetch(base+'/api/snapshot')).json()
+  assert.equal(Object.hasOwn(snap,'communications'),false)
+  assert.equal(snap.graph.nodes.some(node=>node.id==='old-channel'),false)
+  assert.ok(snap.graph.nodes.some(node=>node.type==='product'))
+  for(const file of ['/communications.js','/communications.css','/channel-content.js','/communication-reading.css','/communication-job-graph.js','/atlas-content','/design-system','/product-elements.js','/api/product-elements'])assert.equal((await fetch(base+file)).status,404,file)
+  assert.equal((await fetch(base+'/api/communications',{method:'POST',headers:{'content-type':'application/json','x-product-os-token':snap.csrfToken},body:JSON.stringify({expectedRevision:graph.revision})})).status,404)
+  assert.deepEqual(fs.readFileSync(graphFile),before)
+})
+
+test('updating removes only an unchanged retired shared document owned by Public',t=>{
+  const userHome=temporary(t),{install}=require('../bin/install')
+  install(undefined,{userHome,agent:'both'})
+  for(const [config,runtime,content] of [['.agents','.agents/product-os-tools','Retired original'],['.claude','.claude/skills/product-os-tools','Owner edited document']]) {
+    fs.writeFileSync(path.join(userHome,runtime,'COMMUNICATIONS.md'),'Retired original')
+    fs.writeFileSync(path.join(userHome,config,'skills/COMMUNICATIONS.md'),content)
+  }
+  install(undefined,{userHome,agent:'both'})
+  assert.equal(fs.existsSync(path.join(userHome,'.agents/skills/COMMUNICATIONS.md')),false)
+  assert.equal(fs.readFileSync(path.join(userHome,'.claude/skills/COMMUNICATIONS.md'),'utf8'),'Owner edited document')
+  for(const runtime of ['.agents/product-os-tools','.claude/skills/product-os-tools'])assert.equal(fs.existsSync(path.join(userHome,runtime,'COMMUNICATIONS.md')),false)
 })
 
 test('init preserves existing passport and custom instructions on repeat',t=>{

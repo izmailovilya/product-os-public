@@ -215,7 +215,7 @@ function entityPage(kind,id) {
 function locationState() {
   let [kind='product',id='',card=''] = location.hash.slice(1).split('?')[0].split('/')
   try{id=decodeURIComponent(id);card=decodeURIComponent(card)}catch{id='';card=''}
-  const aliases={map:'segments',hangar:'competitors',reports:'materials',next:'product',skills:'product',communications:'materials'}
+  const aliases={map:'segments',hangar:'competitors',reports:'materials',next:'product',skills:'product'}
   if(aliases[kind])kind=aliases[kind]
   if(!Object.hasOwn(labels,kind)&&!['segment','competitor'].includes(kind))kind='product'
   if(Object.hasOwn(labels,kind)&&!['research','library'].includes(kind))id=''

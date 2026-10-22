@@ -1,6 +1,6 @@
 {
   "edition": "public",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "skills": [
     "os-setup",
     "product-brand-identity",
@@ -11,7 +11,7 @@
     "product-segment-hypotheses",
     "product-status"
   ],
-  "sourceDigest": "7ca8b93a68ab491ccdecc182ba228c05c33695a2c2d21a052ee38cca3d69b17f",
+  "sourceDigest": "8cb98fa7c10b5ffff4689102a03925894c57d815cb29b353934529c2b0027cea",
   "files": [
     {
       "path": ".gitignore",
@@ -42,11 +42,6 @@
       "path": "bin/console/chrome.js",
       "sha256": "b7fda7ddca05fc407905ac3c0731c126dade598105c7033db6289888dc5bfd9e",
       "origin": "public-edition"
-    },
-    {
-      "path": "bin/console/communications.js",
-      "sha256": "795d3533b9474846f6a71915edc90af72a4a7c828c8b4f7a633601d4885370d6",
-      "origin": "toolkit"
     },
     {
       "path": "bin/console/competitor-compatibility.js",
@@ -80,17 +75,12 @@
     },
     {
       "path": "bin/console/model.js",
-      "sha256": "66e1ae2cabaacd55d957bd23c6f18be918caa6948b2b1b13c59c05ccae7b823b",
+      "sha256": "85e516b8a6a98cfdcf8c7487163629c9e1728b15c1d9fa0e959392319120e174",
       "origin": "toolkit"
     },
     {
       "path": "bin/console/parameter-views.js",
       "sha256": "9ed7f33611973c15bc150e28d8d9e53de97efac833ce446993c6a14741aac0a0",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/product-elements.js",
-      "sha256": "4958b2851c46931da8f7b23d1296c192fa9822538cb8a458b654b4fd21f017a5",
       "origin": "toolkit"
     },
     {
@@ -104,13 +94,8 @@
       "origin": "toolkit"
     },
     {
-      "path": "bin/console/public/annotation-popover.js",
-      "sha256": "3ac56be0e274d66b56f02124e080fd9847de6eeecb88d4b6f17311c869c83f22",
-      "origin": "toolkit"
-    },
-    {
       "path": "bin/console/public/app.js",
-      "sha256": "93607ded597b187ecee6d98ce91dc3a34ac48701ba71b746788e77cbcd415460",
+      "sha256": "730141933c460253b3c1a450ec3688c89d968f13c2e366891c028538cb8de29f",
       "origin": "public-edition"
     },
     {
@@ -179,91 +164,6 @@
       "origin": "toolkit"
     },
     {
-      "path": "bin/console/public/assets/fonts/inter/inter-cyrillic-400-normal.woff2",
-      "sha256": "f0bb586459ce8f09b238285040f17e3e9e9538b2c5a7aae0775194e33c36c3c3",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/fonts/inter/inter-cyrillic-500-normal.woff2",
-      "sha256": "b77a86ec16aadc157f4a99e8898d71cd75ea264753d9bdf13f962f8c3988cbb0",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/fonts/inter/inter-cyrillic-600-normal.woff2",
-      "sha256": "6c2a37f82a676bcd441b735e4e2cda4edb8873a059ab9c362a84f0711f257041",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/fonts/inter/inter-cyrillic-700-normal.woff2",
-      "sha256": "5917871d3cc970d8ce195101cbf65c1f68ec948022eb6070030342bb7edfb3bb",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/fonts/inter/inter-cyrillic-ext-400-normal.woff2",
-      "sha256": "ef572f9187a8be018d9d9c2c6b77c1f6cb2af4199f02fc16c292ea10ab25a2cc",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/fonts/inter/inter-cyrillic-ext-500-normal.woff2",
-      "sha256": "1c2db92d3cd9b237ca7c9c07af556d542f28ded1db54cd4382cf776501c5291f",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/fonts/inter/inter-cyrillic-ext-600-normal.woff2",
-      "sha256": "509fca9c59564f9a846fa69bc647f9b050fc11abf1c9f6f3da71fb2d5ed425bd",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/fonts/inter/inter-cyrillic-ext-700-normal.woff2",
-      "sha256": "a46b99781170971e2c99a87ff7ee9f5cf90a9dfcd18175e1be6300201d030123",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/fonts/inter/inter-latin-400-normal.woff2",
-      "sha256": "8909904ab6c872eb994093482a88a28eca2cd95912d7b6fecd72103b0dc07edc",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/fonts/inter/inter-latin-500-normal.woff2",
-      "sha256": "f3779f1efccc4bdcdf9c0a02ab95bf6bd092ed09c48c08cedc725889edd1d19f",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/fonts/inter/inter-latin-600-normal.woff2",
-      "sha256": "f9a06e79cd3a2a20951c0f0e28f66dd0e6d3fda73911d640a2125c8fcb78f21a",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/fonts/inter/inter-latin-700-normal.woff2",
-      "sha256": "6f56409fd3d64bb85f7d070bce20749db2d66b6d63cec586cc22d1c761be2491",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/fonts/inter/inter-latin-ext-400-normal.woff2",
-      "sha256": "6744a7f509ebc6ab220a6cd4ea77e898adf014f03d88dcda5d45d8a9feefb4e9",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/fonts/inter/inter-latin-ext-500-normal.woff2",
-      "sha256": "2c6fbc42d315528beb06c1096df45487bf4186c4b78b8111d12c9c951f8acca2",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/fonts/inter/inter-latin-ext-600-normal.woff2",
-      "sha256": "e4bdf67b0cd15ca9e184509275be95db942195d3cc2b17f6a0452f2adf75d0bf",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/fonts/inter/inter-latin-ext-700-normal.woff2",
-      "sha256": "143f9504f1377012aa3e39c90c4354ef429cb0494b9ac0e1437f1a81e5412236",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/fonts/inter/LICENSE.txt",
-      "sha256": "3b0a5fca3d17942cde889069889dedbbbd075e9b599968c82a95f4d944e9b345",
-      "origin": "toolkit"
-    },
-    {
       "path": "bin/console/public/assets/fonts/onest/LICENSE.txt",
       "sha256": "071195d8806e226faeee60259c28ca67b458227af5195a73f5cfcab06e3003bc",
       "origin": "toolkit"
@@ -284,11 +184,6 @@
       "origin": "toolkit"
     },
     {
-      "path": "bin/console/public/assets/identity-typography-example.png",
-      "sha256": "9b53842c51b1b09703cea92c303936f1eea0ed10e491c129d32efdf9ddda75e5",
-      "origin": "toolkit"
-    },
-    {
       "path": "bin/console/public/assets/job-flow.css",
       "sha256": "3ddd7c05b98be0071eb1c02bd9fe83b23624c9bc515dfad93358ea27702bdd4e",
       "origin": "toolkit"
@@ -305,118 +200,8 @@
     },
     {
       "path": "bin/console/public/assets/README.md",
-      "sha256": "b0a724fdc532abde8b914faf326227f964bd363fd6668200ab493059d2d5c876",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/reference-example.png",
-      "sha256": "25b5ff90f03d11060f049cb7df6a2ce4292c6742bc62aba5601a2e7eb5a50c7e",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/assets/strategic-job-example.json",
-      "sha256": "e962740ee4c4d5cd29e427ed2abe7d83eebcf98a9a48c7eab4156264e49d27d8",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/atlas-navigation.js",
-      "sha256": "b2ad2e1d8794037b089eabb0c0f968787de1f90aa55f2c3233118d75f44f3c4a",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/atlas-route.js",
-      "sha256": "3ac525080e584cfa4cd8db6fcf49ee5b41d7f1234c6c9398e47eec5bcc26854e",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/atlas-runtime.js",
-      "sha256": "6c4a5269016ba6e2b09e13b26205ff3bec1d416c04bb1253efdf11254abcb42d",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/atlas-shell.css",
-      "sha256": "9c39f7880fbe5dc84972bf9b7ceb759fd4fea8589534835c6b592f059957fe9c",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/atlas-shell.js",
-      "sha256": "581c698a30f48c626e8397a2c3a868b3baefb8e92dcad729401c7ff72b9ee3ef",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/atlas.css",
-      "sha256": "d5adb9e05ae6ae8d40f3d5ffee8ebafb7c34ba5deb3b21f1714382100cb80de7",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/atlas.html",
-      "sha256": "5713af132972a64a460e6df5cacdbe3c82e34187ec6dde058b3f2bcbf6f86763",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/atlas.js",
-      "sha256": "1a265dc7d5eda217069a975355ebba5e00fc148f0dffdb9c4dc48b753835ab6b",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/audience-ideas.js",
-      "sha256": "c852d7ffab1c2d6bf2637d1ff60fe7fcf5ea06a37dba57eb1582ff960b9c1633",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/channel-content.js",
-      "sha256": "15e8b16c2666fbddaa66a8c8854182b6ec1eef777463030488b1c1f41b95f7f0",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/communication-job-graph.js",
-      "sha256": "823a2872e44176c531b9e5c92f671c6b3f2f510cea9025a11b92eeafb9946cf2",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/communication-reading.css",
-      "sha256": "4de1a7b2036b921427eaacf63e6ca5a8d05754861299535fd88105478c53692b",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/communications.css",
-      "sha256": "e6daf00c899a73c474433895505c8b5dd052295b131fcf585d0f6606fde7caf0",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/communications.js",
-      "sha256": "6956e0d522487d23d321b52337d958d64b0cafe04441e91db5e65ec39c79a2a1",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/competitor-landing.js",
-      "sha256": "170db4e562ee5730dbaa34adc010a94c3c8a066888ab8199a0b24f8361d84088",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/competitor-preview.js",
-      "sha256": "c211ea83d7c32f5758988f2bdb07d5d3d94b1d0ec3284e127c423882d032518f",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/competitor-reading.css",
-      "sha256": "f83bb78999fcb48c7e61fd6cbdef5bb3c954a22c8e6b3008c7b43b0cbd297400",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/console-runtime.js",
-      "sha256": "96f2575ba4efaa8f098752726f5b066d33a26f20709b7939b7966d4ec96bfb2c",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/customer-evidence.js",
-      "sha256": "80053ea96cc16f8cccad57c980a0d282e38580ac93a7db20b8912911f1f1ebaf",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/design-system-catalog.js",
-      "sha256": "225d17a425bf56cca95ade8fd19ff3baf40da8faec84dce4ccc6bbb67f7c6069",
-      "origin": "toolkit"
+      "sha256": "e140c5c7e94222b2612d37da4aa8dcac7abfa89741c61c95a7075c785ef71406",
+      "origin": "public-edition"
     },
     {
       "path": "bin/console/public/design-system.css",
@@ -424,48 +209,8 @@
       "origin": "toolkit"
     },
     {
-      "path": "bin/console/public/design-system.html",
-      "sha256": "57a2313bb90b3aa327e0ce99b0b88a7d1e88dea1ec87215c5b09d50d8d693676",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/dossier-content.js",
-      "sha256": "600839fb84643e6fbd522bdb08b115734961e6ea459e73796d0e075a87dc08dc",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/dossier-evidence.js",
-      "sha256": "9d2abddc613b60817de2507cba26036cd4fd7d780076e5722506b1392010bd16",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/dossier-refinement.css",
-      "sha256": "0a4878e680dfc9f81364087ac38b848d354ae324c5cd0618533101384e1b0c28",
-      "origin": "toolkit"
-    },
-    {
       "path": "bin/console/public/fonts.css",
       "sha256": "97ff63ae2b161d242c90fe650e2ce13cb85075eba46e772d523e70491fc441be",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/galaxy-hangar.js",
-      "sha256": "9f2dd902a7337324a7c94dd7b5fdfbdd6c8c2325a87c3402de7c71732ac71408",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/galaxy-icons.js",
-      "sha256": "0c9fd216abe6e1904ccd6c19e76171771cdc67ff8d69cb10887f14b2ef3cd412",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/hangar-refinement.css",
-      "sha256": "5500a5b340a3aafe22c936400a03b53c88028ec9acb5c25750e110b363919d1b",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/identity-example.js",
-      "sha256": "c454591d7f65416e47f9b16131647d10e68d40e11c0755cf60b19ee74a7e918a",
       "origin": "toolkit"
     },
     {
@@ -477,31 +222,6 @@
       "path": "bin/console/public/index.html",
       "sha256": "cd585accd62de9992fd2db8f4bf13dcbfd07fca1879f15cdd25216db625d712e",
       "origin": "public-edition"
-    },
-    {
-      "path": "bin/console/public/job-graph-example.js",
-      "sha256": "c6fb66c939ca17fb908a7aee128e6f1a498c1ccd893bbc5a99e4a9550bb48c00",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/landing-panel-context.js",
-      "sha256": "614862404f6621e2f3f6ca32f9c48ced00fa921e5a3c22c6f0e874ab714212be",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/product-element-example.js",
-      "sha256": "ee05afe37b8be234d2f80269d8b0ef0842b5e1d34e9405eed4d316682045aa65",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/product-elements.css",
-      "sha256": "ff91eede7ce4ff8569788a025c30eef7a19fcaab8892cc8350527c0765354137",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/product-elements.js",
-      "sha256": "34f74f13524433c63cb03fa90784830e0e4283be0348ce3fa18e8b1c08723daa",
-      "origin": "toolkit"
     },
     {
       "path": "bin/console/public/product-library.css",
@@ -519,38 +239,8 @@
       "origin": "toolkit"
     },
     {
-      "path": "bin/console/public/product-tabs.js",
-      "sha256": "274f2e59bdc56bd0cd6bbd3350912b348771f8420dca63c39ab54f2e4e21e4de",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/product-work.css",
-      "sha256": "c0fb7b48cf515873eb192a7b613e6b43993de992eddd521a5a5906febc4b7e7e",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/product-work.js",
-      "sha256": "31bdc1304cba1cef66b2df9be377c050eba3215489271b70c24cf791b25f96a5",
-      "origin": "toolkit"
-    },
-    {
       "path": "bin/console/public/read-resource.js",
       "sha256": "83d6df0eb5731a6210481da08b0d1a4e14b9b49be52487a5b6bc2b653ac3eea0",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/readability.css",
-      "sha256": "cb91a1f4374ed43a1f62f16aa4c7bfdfd96262a4cfb468a75f19a7849a1d6630",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/reading-list.js",
-      "sha256": "8f5dc7d9c1f390508e0695e1877f63b737e373eb299180e7ad0785b1d2bfc31d",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/reference-example.js",
-      "sha256": "d3a6bdf1edc99f2b362caf867a3406886e5d57f48fd9d21e5b16de8ded81dd37",
       "origin": "toolkit"
     },
     {
@@ -561,61 +251,6 @@
     {
       "path": "bin/console/public/report-reading.js",
       "sha256": "2b7cd3d30d1a9aa27a3b1af6570beb73ec6e54b1fb210496dd2fa144de3c42c7",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/research-brief-state.js",
-      "sha256": "45d546702cf4569730860a19e80ee7e2eb4e954c9eec8b798fb1e9c3828d2605",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/research-brief.css",
-      "sha256": "e8c4dbe336442adbc2d37c900392eea7baf69ec6d6d38fb84a05c21d3ff11763",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/research-brief.js",
-      "sha256": "b0f89633556c61d85a38dc091a428e929dee01f95161a1b28e5014473849b6c8",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/research-job-layout.js",
-      "sha256": "b72a4e12a9b3ac3af6600a2b50641bd6a8e1a145e8b9e9df26677b621c0b412b",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/research-reading.css",
-      "sha256": "185a5b7eeff6dd538b4d953169bf3ad496f1700320848635fc7d850983589491",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/research.css",
-      "sha256": "52fe7dc94829f59b56cafeb3a68815badbc5bb717246fafcd29e47ed7bafc552",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/research.js",
-      "sha256": "483d418734466f4bbec2c7ade91123fc05a4a7b7338f87e926be8a67dde1b665",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/segment-collection.js",
-      "sha256": "73bf9af8b0e9e09cc2f1a904563e26d24ed13a0225c3e28865b9064397cfd584",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/segment-discovery.js",
-      "sha256": "e4fc0d5870e9b7c5f00b068484ca96b45289c7039d7cf275b84a50dea7b468f9",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/segment-support.js",
-      "sha256": "5cd3329a966b4836038a61457f9b578196852becc583c98b85533156886b2864",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/console/public/styles.css",
-      "sha256": "0ffe9f1da4c3b225a410d65988ae94b189ad2dc21c16888be1092d4a293f3e2e",
       "origin": "toolkit"
     },
     {
@@ -660,7 +295,7 @@
     },
     {
       "path": "bin/console/server.js",
-      "sha256": "25f3fd4f176ae02e03911e1340c8b7536d5f68ae4b8abd5cf69ca79e5d77d9ca",
+      "sha256": "3adb7fd7747a77f954e25d3d463cea3fbed8bfed7f0c7b7159c20eaf9c0f9541",
       "origin": "toolkit"
     },
     {
@@ -719,16 +354,6 @@
       "origin": "toolkit"
     },
     {
-      "path": "bin/graph/communications-legacy.js",
-      "sha256": "3534b7349a3c51d0b22b2ec590193125133e8915cd91c129f19d55bc77133222",
-      "origin": "toolkit"
-    },
-    {
-      "path": "bin/graph/communications.js",
-      "sha256": "713adb6c47c8e4612ad1df3bee7c27b021844b1a3d792bceca1a69b45b0594ee",
-      "origin": "toolkit"
-    },
-    {
       "path": "bin/graph/competition-normalization.js",
       "sha256": "11e314cf9d92ff71c23b5784a373d14ae0af867f8eb14467cd665c48aad3594c",
       "origin": "toolkit"
@@ -755,12 +380,12 @@
     },
     {
       "path": "bin/graph/writer.js",
-      "sha256": "18ae01fb51de0759085f94d55e6883d087d386085b485ea0e1bd35bf047b35f0",
+      "sha256": "56e76a74fb72c5109a89735722da86eb374961b09728570e023fb96f1bb58813",
       "origin": "toolkit"
     },
     {
       "path": "bin/install.js",
-      "sha256": "ddfcbb9aebb22fdf052a33e32b52a6ed117be77453307dcc67c7076bd6246a43",
+      "sha256": "ad681c6b284043e302136bc9ec47cd02e223b15794c66c0ab98b23ab41e1b699",
       "origin": "public-edition"
     },
     {
@@ -964,11 +589,6 @@
       "origin": "toolkit"
     },
     {
-      "path": "COMMUNICATIONS.md",
-      "sha256": "fe4fcc3a28be7d196f18d8fa60ced8ff7138e6cb09daf4e88dabe4b400519ac6",
-      "origin": "toolkit"
-    },
-    {
       "path": "community-skills/README.md",
       "sha256": "905d8c0cf2b21ef45d44984ce64fba9117720dc2fc3a44966943992d253d3e83",
       "origin": "toolkit"
@@ -990,8 +610,8 @@
     },
     {
       "path": "DESIGN-SYSTEM.md",
-      "sha256": "ccc2b276ee7f8b59f23b9cace3aba92265f7e59cbe26d68de1b98ff5f554084c",
-      "origin": "toolkit"
+      "sha256": "fb861d1b239c0a2be600653da5495958e839dad490dac7a9f13c36a1dc4bfc1a",
+      "origin": "public-edition"
     },
     {
       "path": "GRAPH-WRITES.md",
@@ -1000,7 +620,7 @@
     },
     {
       "path": "GRAPH.md",
-      "sha256": "b04cd11237e47f06174af83ff0d8e876ad013b2798dcea04aa07c53a9e54aa3b",
+      "sha256": "bee4efaf75ccf4bbc335ebe8224933c38768f52746351c9c7dfb4b9ea8eb3e0e",
       "origin": "public-edition"
     },
     {
@@ -1010,7 +630,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "ee6337fc916e926b69dc8277a28b2706005144c24d134969ea85244f9e087a65",
+      "sha256": "9af134dfe429c364bce929d43f3f4441a08ee3e80f437744c4cdc95424bc77f1",
       "origin": "public-edition"
     },
     {
@@ -1019,8 +639,33 @@
       "origin": "public-edition"
     },
     {
+      "path": "scripts/fixtures/identity-example.mjs",
+      "sha256": "c454591d7f65416e47f9b16131647d10e68d40e11c0755cf60b19ee74a7e918a",
+      "origin": "toolkit-test-fixture"
+    },
+    {
+      "path": "scripts/fixtures/identity-typography-example.png",
+      "sha256": "9b53842c51b1b09703cea92c303936f1eea0ed10e491c129d32efdf9ddda75e5",
+      "origin": "toolkit-test-fixture"
+    },
+    {
+      "path": "scripts/fixtures/reference-example.mjs",
+      "sha256": "d3a6bdf1edc99f2b362caf867a3406886e5d57f48fd9d21e5b16de8ded81dd37",
+      "origin": "toolkit-test-fixture"
+    },
+    {
+      "path": "scripts/fixtures/reference-example.png",
+      "sha256": "25b5ff90f03d11060f049cb7df6a2ce4292c6742bc62aba5601a2e7eb5a50c7e",
+      "origin": "toolkit-test-fixture"
+    },
+    {
+      "path": "scripts/fixtures/strategic-job-example.json",
+      "sha256": "e962740ee4c4d5cd29e427ed2abe7d83eebcf98a9a48c7eab4156264e49d27d8",
+      "origin": "toolkit-test-fixture"
+    },
+    {
       "path": "scripts/verify-console.js",
-      "sha256": "7f1795246bf76f58b2b03c7ecc349b0377167348ccea8f60ec171c4df62e1188",
+      "sha256": "e29859e590bd5493fb9ffcbe6e4f6c573ae9aeb9de71bb7147036f4c6354b7ab",
       "origin": "public-edition"
     },
     {
@@ -1029,18 +674,13 @@
       "origin": "toolkit"
     },
     {
-      "path": "skills/COMMUNICATIONS.md",
-      "sha256": "fe4fcc3a28be7d196f18d8fa60ced8ff7138e6cb09daf4e88dabe4b400519ac6",
-      "origin": "public-edition"
-    },
-    {
       "path": "skills/CONTRACT.md",
       "sha256": "7a27d403d4ea80d6b9e1bac9fc632b88de354cfa273a3aab115ed61df1ddca98",
       "origin": "public-edition"
     },
     {
       "path": "skills/DESIGN-SYSTEM.md",
-      "sha256": "032c588f84bff85d329013f4f384ce7bf5b7239a1368dcb9a5eeaa85b99f975b",
+      "sha256": "fb861d1b239c0a2be600653da5495958e839dad490dac7a9f13c36a1dc4bfc1a",
       "origin": "public-edition"
     },
     {
@@ -1050,7 +690,7 @@
     },
     {
       "path": "skills/GRAPH.md",
-      "sha256": "b04cd11237e47f06174af83ff0d8e876ad013b2798dcea04aa07c53a9e54aa3b",
+      "sha256": "bee4efaf75ccf4bbc335ebe8224933c38768f52746351c9c7dfb4b9ea8eb3e0e",
       "origin": "public-edition"
     },
     {
@@ -1070,7 +710,7 @@
     },
     {
       "path": "skills/product-brand-identity/references/artifacts.md",
-      "sha256": "a21087287c1e88e731b17c87e999c7dc2413be831d8762fb0f58b2d443197b55",
+      "sha256": "5fb50186927da71231350c51ad63c639d7a46a4ac601863dc88411cf2317ce3f",
       "origin": "public-edition"
     },
     {
@@ -1100,7 +740,7 @@
     },
     {
       "path": "skills/product-brand-identity/SKILL.md",
-      "sha256": "47742361906df43934ef9c57061dd5220b8083bccaf17346ed7c1054361efcae",
+      "sha256": "94d8941c9c64c7ae089a2405fdf4f2101b648b560bf85130d8ec4047775c3aad",
       "origin": "public-edition"
     },
     {
@@ -1210,7 +850,7 @@
     },
     {
       "path": "skills/product-status/SKILL.md",
-      "sha256": "9e62d76a364fcb68e2d0815e7e4f426b9fe192f90e228c23b314f8f30cfdff8b",
+      "sha256": "5ba9ba0c334dc0c5c44afdd31dfb3d9ed5ce7b21e9efc17eab62b413eea2357a",
       "origin": "toolkit"
     },
     {
@@ -1220,7 +860,7 @@
     },
     {
       "path": "test/public.test.js",
-      "sha256": "639f40d435a5f11e7edae6fec35217ecd194d77ee6c28978cdc138c70a6da63b",
+      "sha256": "00a472bd5aabe38813db7d199f924a1c8cc50975a4d3dd4fd06507bf781d0143",
       "origin": "public-edition"
     },
     {

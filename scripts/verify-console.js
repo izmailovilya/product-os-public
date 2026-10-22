@@ -22,7 +22,7 @@ async function readReferenceImages(page) {
 function resultFixtures(dir, source) {
   const report='reports/consultant-discovery.md'
   fs.writeFileSync(path.join(dir,report),`---\ntitle: Как консультанты находят решение\nskill: product-deep-research\nnodeId: seg-consultants\noutcome: partial\ndate: 2026-10-21\nsummary: Найдены примеры выбора календаря. Готовность платить пока не проверена.\n---\n# Как консультанты находят решение\n\nНайдены примеры выбора календаря. Готовность платить пока не проверена.\n\n## Область и ограничения\nИзучен только поиск решения; удержание не исследовано.\n\n## Источник\n[Учебная заметка](../${source})\n`)
-  const map=JSON.parse(JSON.stringify(require('../bin/console/public/assets/strategic-job-example.json')))
+  const map=JSON.parse(JSON.stringify(require('./fixtures/strategic-job-example.json')))
   map.scope={edition:'full'}
   map.editions={full:'Текущее предложение учебного сервиса',public:'Бесплатное предложение учебного сервиса'}
   map.contexts[0].segmentId='seg-consultants'
@@ -65,16 +65,16 @@ async function offeringScopes(browser,url,dir,output) {
 }
 async function libraryFixtures(dir,url) {
   const write=(file,value)=>{const target=path.join(dir,file);fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,typeof value==='string'?value:JSON.stringify(value))}
-  const identity=(await import('../bin/console/public/identity-example.js')).identityExample()
+  const identity=(await import('./fixtures/identity-example.mjs')).identityExample()
   const profile=identity.profile;profile.product.id='product';profile.presentation=identity.presentation
-  const image=fs.readFileSync(path.resolve(__dirname,'../bin/console/public/assets/identity-typography-example.png'))
+  const image=fs.readFileSync(path.resolve(__dirname,'fixtures/identity-typography-example.png'))
   profile.files=profile.files.map(({previewURL,available,preview,...file})=>({...file,sha256:createHash('sha256').update(image).digest('hex')}))
   write('reports/identity-fixture/identity.json',profile)
   fs.writeFileSync(path.join(dir,'reports/identity-fixture/type.png'),image)
   write(profile.decisionSource,'# Учебный выбор\n\nЭто вымышленное решение для проверки статуса принятия.\n')
   const proposed={...profile,version:2,decision:'proposed'};delete proposed.decisionSource
   write('reports/identity-fixture/proposed.json',proposed)
-  const reference=(await import('../bin/console/public/reference-example.js')).referenceExample({singleTrack:true})
+  const reference=(await import('./fixtures/reference-example.mjs')).referenceExample({singleTrack:true})
   const cards=[reference.cards[0],reference.cards.at(-1)].map(row=>structuredClone(row.card))
   cards.forEach(card=>card.media.forEach(media=>delete media.previewURL))
   const sources=reference.cards[0].sources.map(source=>({...source,url:url+'/source?path=reports%2Freference-fixture%2Foriginal.md'}))
@@ -82,7 +82,7 @@ async function libraryFixtures(dir,url) {
   write('sources/reference-fixture/cards.json',{schemaVersion:1,cards})
   write('sources/reference-fixture/sources.json',{schemaVersion:1,sources})
   write('reports/reference-fixture/original.md','# Учебный исходный каталог\n\nСинтетические данные только для проверки источников и возврата.\n')
-  fs.copyFileSync(path.resolve(__dirname,'../bin/console/public/assets/reference-example.png'),path.join(dir,'sources/reference-fixture/image.png'))
+  fs.copyFileSync(path.resolve(__dirname,'fixtures/reference-example.png'),path.join(dir,'sources/reference-fixture/image.png'))
   return [
     ['fiction-identity','Учебная айдентика',{kind:'visual-profile',artifactKind:'brand-identity',productId:'product',version:1,decision:'accepted',decisionSource:profile.decisionSource,profileFile:'reports/identity-fixture/identity.json'}],
     ['fiction-proposal','Предложение айдентики',{kind:'visual-profile',artifactKind:'brand-identity',productId:'product',version:2,decision:'proposed',profileFile:'reports/identity-fixture/proposed.json'}],
@@ -155,6 +155,7 @@ async function main() {
       assert.deepEqual(await page.getByRole('navigation',{name:'Основные разделы'}).getByRole('link').allTextContents(),['Продукт','Сегменты','Карта работ','Конкуренты','Библиотека'])
       assert.equal(await page.getByRole('heading',{level:1}).count(),1)
       assert.equal(await page.getByText('Что дальше',{exact:true}).count(),0)
+      assert.equal(await page.getByText('Каналы коммуникации',{exact:true}).count(),0)
       assert.equal(await page.locator('[data-skill-launch],#launchOverlay').count(),0)
       await page.screenshot({path:path.join(output,`product-${viewport.width}.png`),fullPage:true})
       await page.getByRole('link',{name:'Открыть паспорт продукта',exact:true}).click()

@@ -1,7 +1,0 @@
-.product-current-state { margin-block: var(--os-space-3) var(--os-space-4); }
-.product-current-state :is(p,h3),.product-work-queue :is(p,h3) { max-width: 68ch; overflow-wrap: anywhere; }
-.product-work-queue { margin-block: var(--os-space-4); }
-.product-work-queue article { padding-block: var(--os-space-2); border-bottom: 1px solid var(--os-line); }
-
-.product-work-details { margin-block: var(--os-space-2); max-width: 68ch; }
-.product-step-preview { max-width: 68ch; }

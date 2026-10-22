@@ -359,6 +359,7 @@ function applyOperations(workspace, input, options = {}) {
   try {
     const refs = new Map()
     for (const operation of input.operations) {
+      if (operation.op === 'node' && (['channel','journey','touchpoint','rubric','reference','communication_decision'].includes(operation.node?.type) || ['communication_material','content-pack','channel-concept','editorial-profile'].includes(operation.node?.data?.kind))) throw new Error('Каналы коммуникации не входят в эту поставку Product OS')
       if (['research-put', 'research-update', 'research-coverage', 'research-checkpoint', 'research-provenance'].includes(operation.op)) require('../research/store').apply(tx, operation)
       else if (operation.op === 'node') {
         const { id, type, label, ...extra } = operation.node || {}
@@ -387,7 +388,7 @@ function applyOperations(workspace, input, options = {}) {
       }
       else if (operation.op === 'complete') tx.complete(operation)
       else if (operation.op === 'move') tx.move(operation)
-      else if (operation.op === 'communication') require('./communications').communication(tx, operation)
+      else if (operation.op === 'communication') throw new Error('Каналы коммуникации не входят в эту поставку Product OS')
       else if (operation.op === 'receipt') tx.receipt(operation)
       else throw new Error(`Неизвестная операция: ${operation.op}`)
     }

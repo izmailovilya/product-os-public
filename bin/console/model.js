@@ -23,194 +23,86 @@ const TYPE_LABELS = {
   value: 'гипотеза ценности',
 }
 
-const SKILL_GROUPS = [
-  { id: 'research', title: 'Исследования', description: 'Аудитория, рынок и путь клиента.' },
-  { id: 'management', title: 'Управление продуктом', description: 'Состояние продукта, риски и приоритеты.' },
-  { id: 'promotion', title: 'Продвижение и контент', description: 'Каналы, контент и SEO/GEO: от задач клиентов до материалов и проверки результата.' },
-  { id: 'other', title: 'Видео', description: 'Показать продукт в действии.' },
-]
-
+const SKILL_GROUPS = [{id:'management',title:'Продукт'},{id:'research',title:'Исследования'},{id:'library',title:'Библиотека'}]
 const SKILL_META = {
-  'os-setup': {
-    category: 'management', order: -3, targetTypes: ['product'], title: 'Настроить рабочее место',
-    description: 'Создать или восстановить структуру и паспорт продукта.',
-    output: 'Рабочее место и паспорт продукта',
+  "os-setup": {
+    "category": "management",
+    "order": -3,
+    "targetTypes": [
+      "product"
+    ],
+    "title": "Настроить рабочее место",
+    "description": "Создать или восстановить структуру и паспорт продукта.",
+    "output": "Рабочее место и паспорт продукта"
   },
-  'product-os-improve': {
-    category: 'console', targetTypes: ['product'],
-    title: 'Улучшить Product OS по итогам треда',
-    description: 'Предложить проверяемые улучшения навыков и workflows по доступному обсуждению.',
-    duration: '5–15 мин', minutes: 10,
-    output: 'Приоритетные предложения с эпизодами, owning paths и проверками; внедрение в порученном scope',
+  "product-context": {
+    "category": "management",
+    "order": -2,
+    "targetTypes": [
+      "product",
+      "segment",
+      "competitor",
+      "artifact"
+    ],
+    "title": "Добавить контекст",
+    "duration": "По объёму материалов",
+    "minutes": 8,
+    "description": "Сохранить новые материалы, факты и уточнения с точными источниками.",
+    "output": "Сохранённые оригиналы и проверяемые изменения продуктовой памяти"
   },
-  'product-telegram-bot-ux': {
-    category: 'management', targetTypes: ['product'],
-    title: 'Telegram-бот: дизайн и UX',
-    description: 'Общие правила кнопок, эмодзи, сообщений, навигации, уведомлений и результатов любого Telegram-бота.',
-    duration: 'По объёму сценария', minutes: 25,
-    output: 'Понятный пользовательский сценарий, реализация в пределах поручения и проверка переходов',
+  "product-status": {
+    "category": "management",
+    "order": -1,
+    "targetTypes": [
+      "product"
+    ],
+    "title": "Где мы и что дальше",
+    "duration": "5–10 мин",
+    "minutes": 8,
+    "description": "Прочитать накопленный контекст и предложить следующий обоснованный шаг.",
+    "output": "Короткий разбор состояния и один обоснованный следующий ход"
   },
-  'product-demo-video': { category: 'other', targetTypes: ['product'], title: 'Демо-ролик продукта', description: 'Сделать короткое видео интерфейса для сайта или презентации.', duration: 'По объёму ролика', minutes: 15, output: 'Редактируемая композиция, MP4 со звуком и проверка экранов' },
-  'product-interviews': { category: 'research', title: 'Обработать интервью', duration: 'По объёму материалов', minutes: 30, output: 'Индивидуальные досье, проверка источников и покрытия; синтез отдельной версией' },
-  'product-status': {
-    category: 'management', order: -1, targetTypes: ['product'],
-    title: 'Где мы и что дальше', duration: '5–10 мин', minutes: 8,
-    description: 'Прочитать накопленный контекст и предложить следующий обоснованный шаг.',
-    output: 'Короткий разбор состояния и один обоснованный следующий ход',
+  "product-research": {},
+  "product-segment-hypotheses": {
+    "category": "research",
+    "title": "Гипотезы сегментов",
+    "duration": "2–5 мин",
+    "minutes": 4,
+    "output": "8–15 сегментов по задачам клиентов, вопросы квалификации и риски"
   },
-  'product-context': {
-    category: 'management', order: -2, targetTypes: ['product', 'segment', 'competitor', 'artifact'],
-    title: 'Добавить контекст', duration: 'По объёму материалов', minutes: 8,
-    description: 'Сохранить новые материалы, факты и уточнения с точными источниками.',
-    output: 'Сохранённые оригиналы и проверяемые изменения продуктовой памяти',
+  "product-job-map": {
+    "category": "research",
+    "targetTypes": [
+      "product"
+    ],
+    "title": "Карта работ",
+    "duration": "Зависит от объёма",
+    "description": "Связать задачи клиентов и увидеть, где продукт помогает, где нужны доработки и что стоит исследовать.",
+    "output": "Стратегическая карта верхних и нижних работ, границы продукта и предварительные связи с сегментами"
   },
-  'product-deep-research': {
-    category: 'research',
-    title: 'Глубокое исследование рынка', duration: '15–30 мин', minutes: 25,
-    output: 'Отчёт: проблемы, каналы, экономика + обновлённые узлы карты',
+  "product-brand-identity": {
+    "category": "library",
+    "order": 11,
+    "targetTypes": [
+      "product"
+    ],
+    "title": "Айдентика бренда",
+    "description": "Создать или развить фирменный стиль продукта: от брифа и визуальных направлений до правил и файлов для команды.",
+    "duration": "По объёму айдентики",
+    "minutes": 30,
+    "output": "Визуальные направления, система бренда, логобук и исходники с проверенными примерами применения"
   },
-  'product-design': {
-    category: 'management', targetTypes: ['product'],
-    title: 'Спроектировать или улучшить интерфейс',
-    description: 'Проектирование и улучшение интерфейса продукта: локальная правка или полный связный дизайн по объёму задачи.',
-    duration: 'По согласованному объёму', minutes: 60,
-    output: 'Проверенная правка интерфейса или связный дизайн с состояниями, действиями и каталогом экранов',
-  },
-  'product-reference-library': {
-    category: 'research', targetTypes: ['product'],
-    title: 'Собрать библиотеку продуктовых референсов',
-    description: 'Конкретные примеры конкурентов с изображениями и источниками; проверка, свои примеры и удобный доступ из консоли.',
-    duration: 'По выбранному объёму', minutes: 45,
-    output: 'Библиотека по направлениям, проверка источников и материалы для проектирования',
-  },
-  'product-walkthrough': {
-    category: 'research',
-    title: 'Пройти путь клиента за сегмент', duration: '5–10 мин', minutes: 8,
-    output: 'Список точек, где сегмент застрянет, — каждая привязана к его критерию',
-  },
-  'product-ui-audit': {
-    category: 'console', order: 20, targetTypes: ['product'],
-    title: 'Проверить интерфейс целиком', duration: '15–30 мин', minutes: 25,
-    output: 'Аудит всех страниц и состояний: потерянные данные, лишние разделы, несогласованные компоненты и системный план исправлений',
-  },
-  'product-risk-analysis': {
-    category: 'management',
-    title: 'Разобрать риски', duration: '5–10 мин', minutes: 8,
-    output: 'Реестр рисков и план проверки главного: метод, критерий успеха и условия отказа',
-  },
-  'product-interview-guide': {
-    category: 'research',
-    title: 'Гайд интервью', duration: '5–10 мин', minutes: 8,
-    description: 'Подготовить вопросы интервью под конкретное решение: блоки с таймингом, подсказки и лист заметок.',
-    output: 'Гайд на час под решение: какую работу копаем, блоки с таймингом, открытые вопросы со шпаргалкой подсказок, показ продукта в конце и лист заметок',
-  },
-  'product-recruiting': {
-    category: 'research',
-    title: 'Найти респондентов', duration: '5–10 мин', minutes: 8,
-    description: 'Найти людей на интервью: где искать по прошлому поведению, скринер, вознаграждение и план каналов.',
-    output: 'План рекрутинга: кого ищем по прошлому поведению, каналы по волнам, тексты, вознаграждение и таблица кандидатов',
-  },
-  'product-segment-hypotheses': {
-    category: 'research',
-    title: 'Гипотезы сегментов', duration: '2–5 мин', minutes: 4,
-    output: '8–15 сегментов по задачам клиентов, вопросы квалификации и риски',
-  },
-  'product-job-map': {
-    category: 'research', targetTypes: ['product'],
-    title: 'Карта работ', duration: 'Зависит от объёма',
-    description: 'Связать задачи клиентов и увидеть, где продукт помогает, где нужны доработки и что стоит исследовать.',
-    output: 'Стратегическая карта верхних и нижних работ, границы продукта и предварительные связи с сегментами',
-  },
-  'product-prioritize': {
-    category: 'management',
-    title: 'Расставить приоритеты', duration: '5–10 мин', minutes: 8,
-    output: 'Предложенный порядок действий под цель и ресурсы команды, отложенные варианты и причины',
-  },
-  'product-channel-concept': {
-    category: 'promotion', order: 1, targetTypes: ['product', 'segment', 'channel'],
-    title: 'Концепция канала', duration: '10–20 мин', minutes: 15,
-    output: 'Варианты концепции, путь читателя в продукт, рубрики, образцы постов и первая проверка',
-  },
-  'product-editorial-voice': {
-    category: 'promotion', order: 2, targetTypes: ['product', 'channel'],
-    title: 'Голос и правила редакции', duration: '5–10 мин', minutes: 8,
-    output: 'Редакционный профиль автора и канала с примерами; предварительные правила отмечены',
-  },
-  'product-content': {
-    category: 'promotion', order: 3, targetTypes: ['product', 'segment', 'channel'],
-    title: 'Подготовить контент', duration: '5–15 мин', minutes: 10,
-    output: 'Темы, посты, серия или редактура в голосе автора, с источниками и отметкой готовности',
-  },
-  'product-visual-style': {
-    category: 'promotion', order: 5, targetTypes: ['product', 'channel'],
-    title: 'Визуальный стиль канала', duration: '10–20 мин', minutes: 15,
-    output: 'Версионный профиль оформления с реальными примерами и основаниями решений',
-  },
-  'product-brand-identity': {
-    category: 'promotion', order: 11, targetTypes: ['product'],
-    title: 'Айдентика бренда', description: 'Создать или развить фирменный стиль продукта: от брифа и визуальных направлений до правил и файлов для команды.',
-    duration: 'По объёму айдентики', minutes: 30,
-    output: 'Визуальные направления, система бренда, логобук и исходники с проверенными примерами применения',
-  },
-  'product-visual': {
-    category: 'promotion', order: 6, targetTypes: ['product', 'channel', 'artifact'],
-    title: 'Визуал к материалу', duration: '5–20 мин', minutes: 12,
-    output: 'Изображения, исходники и проверка на телефоне, связанные с материалом и версией стиля',
-  },
-  'product-landing': {
-    category: 'promotion', order: 3.5, targetTypes: ['product', 'segment'],
-    title: 'Лендинг по работам клиента', duration: '15–30 мин', minutes: 25,
-    output: 'Структура и текст лендинга по работам сегмента и языку поиска, с источником у каждой фразы',
-  },
-  'product-landing-review': {
-    category: 'promotion', order: 4, targetTypes: ['product', 'segment'],
-    title: 'Ревью лендинга по задачам', duration: '5–15 мин', minutes: 10,
-    output: 'Разбор формулировок по сегментам и работам, доля текста о клиенте и правки без раздувания графа',
-  },
-  'product-telegram-ads-targeting': {
-    category: 'promotion', order: 12, targetTypes: ['product', 'segment', 'channel'],
-    title: 'Таргетинг Telegram Ads', duration: 'По объёму проверки', minutes: 20,
-    description: 'Подобрать таргетинг для Telegram Ads: каналы, группы каналов, аудитории, боты и поисковые запросы. Выход — проверенный список кандидатов и группы целей с ограничениями данных.',
-    output: 'Кандидаты, проверка допуска в кабинете и группы целей для рекламного теста',
-  },
-  'product-telegram-ads-launch': {
-    category: 'promotion', order: 13, targetTypes: ['product', 'segment', 'channel', 'artifact'],
-    title: 'Тест Telegram Ads', duration: 'По объёму теста', minutes: 25,
-    description: 'Подготовить или запустить измеримый тест Telegram Ads: предложение, объявления, ссылки, события воронки, бюджет и настройки. Не закупка постов у администраторов и не контент-план своего канала.',
-    output: 'Объявления, ссылки и события, общий бюджет и проверенные настройки в пределах разрешения',
-  },
-  'product-telegram-ads-audit': {
-    category: 'promotion', order: 14, targetTypes: ['product', 'segment', 'channel', 'artifact'],
-    title: 'Аудит Telegram Ads', duration: 'По объёму данных', minutes: 20,
-    description: 'Разобрать результаты Telegram Ads, проверить атрибуцию и решить, что остановить, исправить или масштабировать. Считает только сопоставимые когорты; не общий аудит всех рекламных систем.',
-    output: 'Проверка атрибуции, воронка по когортам и решение о следующем ограниченном шаге',
-  },
-  'product-segment-opportunities': {
-    category: 'research', targetTypes: ['product'],
-    title: 'Сравнить сегменты', duration: '5–10 мин', minutes: 8,
-    description: 'Сравнить существующие и потенциальные сегменты: доставляемая ценность, бюджет на задачу и вклад в экономику. Предложить соседние задачи, которые могут поднять цену, привлечение или удержание.',
-    output: 'Ранжированные сегменты с основаниями и соседние задачи для решения',
-  },
-  'product-search-opportunities': {
-    category: 'promotion', order: 7, targetTypes: ['product', 'segment', 'channel'],
-    title: 'Темы и страницы для SEO/GEO', duration: '15–30 мин', minutes: 25,
-    output: 'Карта тем и недостающих страниц с источниками, задачами клиентов и приоритетом первой проверки',
-  },
-  'product-search-audit': {
-    category: 'promotion', order: 8, targetTypes: ['product', 'segment', 'channel', 'artifact'],
-    title: 'SEO/GEO-аудит страницы', duration: '10–25 мин', minutes: 20,
-    output: 'Проблемы доступности, содержания и доверия с доказательствами, правками и ограничениями проверки',
-  },
-  'product-search-brief': {
-    category: 'promotion', order: 9, targetTypes: ['product', 'segment', 'channel', 'artifact'],
-    title: 'ТЗ на SEO/GEO-страницу', duration: '10–20 мин', minutes: 15,
-    output: 'Структура страницы, источники, метаданные, ссылки и критерии приёмки для автора и разработчика',
-  },
-  'product-search-article': {
-    category: 'promotion', order: 10, targetTypes: ['product', 'segment', 'channel', 'artifact'],
-    title: 'Написать SEO/GEO-статью', duration: 'По объёму статьи', minutes: 25,
-    output: 'Полная статья по теме или ТЗ, метаданные, источники и редакционная проверка в голосе автора',
-  },
+  "product-reference-library": {
+    "category": "library",
+    "targetTypes": [
+      "product"
+    ],
+    "title": "Собрать библиотеку продуктовых референсов",
+    "description": "Конкретные примеры конкурентов с изображениями и источниками; проверка, свои примеры и удобный доступ из консоли.",
+    "duration": "По выбранному объёму",
+    "minutes": 45,
+    "output": "Библиотека по направлениям, проверка источников и материалы для проектирования"
+  }
 }
 
 const MOVE_CATALOG = {
@@ -738,15 +630,16 @@ function buildSnapshot({ workspace, repoRoot, graph, graphStatus, state, threads
       graph: { nodes, edges: [], productId: product?.id || null, empty: !product },
       galaxy: buildGalaxyProjection({ nodes, edges: [], productId: product?.id || null }),
       // Counts are unknown in this view, rather than asserted to be zero.
-      badges: {}, humanWork: {}, communications: null,
+      badges: {}, humanWork: {},
     }
   }
-  const projected = projection(graph, workspace)
+  // Preserve legacy records on disk without publishing a removed feature.
+  const omitted = new Set(graph.nodes.filter(node => ['channel','journey','touchpoint','rubric','reference','communication_decision'].includes(node.type) || ['communication_material','content-pack','channel-concept','editorial-profile'].includes(node.data?.kind)).map(node => node.id))
+  const projected = projection({...graph,nodes:graph.nodes.filter(node=>!omitted.has(node.id)),edges:graph.edges.filter(edge=>!omitted.has(edge.from)&&!omitted.has(edge.to))}, workspace)
   projected.nodes = require('./consideration').withConsideration(projected.nodes, researchRecords || require('../research/store').load(workspace).records)
   const reports = loadReports(workspace, projected.nodes)
   const todo = todoItems(workspace, projected, reports, state, threads)
-  const communications = require('./communications').communicationProjection(graph, scope)
-  const galaxyInput = require('./communications').scopedGalaxyInput({ nodes: projected.nodes, edges: projected.edges.filter(edge => edge.type !== 'overview'), productId: projected.product?.id || null }, communications)
+  const galaxyInput = { nodes: projected.nodes, edges: projected.edges.filter(edge => edge.type !== 'overview'), productId: projected.product?.id || null }
   // Screenshot thumbnails for legacy snapshots exist only if the file is really there.
   const fileExists = relative => { try { return fs.existsSync(path.join(workspace, relative)) } catch { return false } }
   const draftGalaxy = buildGalaxyProjection({ ...galaxyInput, fileExists })
@@ -804,7 +697,7 @@ function buildSnapshot({ workspace, repoRoot, graph, graphStatus, state, threads
     generatedAt: Date.now(), workspace, productName, graphStatus, graphSignature, capabilities,
     metrics, graph: { nodes: projected.nodes, edges: projected.edges, productId: projected.product?.id || null, empty: projected.empty, groups: projected.groups },
     moves, hqMove: projected.product ? attachFallback(moveFor('hq', projected.product, workspace), workspace) : null,
-    recommended, todo, suggestions, reports, galaxy, communications, humanWork: state.humanWork || {},
+    recommended, todo, suggestions, reports, galaxy, humanWork: state.humanWork || {},
     skills: loadSkills(repoRoot), skillGroups: SKILL_GROUPS,
     sources: graph.nodes.filter(node => node.type === 'artifact' && node.data?.kind === 'source-material').map(node => ({ id: node.id, name: node.label, source: node.source, bytes: node.data.bytes })),
     badges: {

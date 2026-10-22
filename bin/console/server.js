@@ -504,17 +504,6 @@ async function createConsoleServer(options) {
         }
         return sendJson(response,200,identity.loadIdentity(workspace,graph,params.productId,params.profile))
       }
-      if (request.method === 'GET' && ['/api/product-elements','/api/product-elements/image'].includes(url.pathname)) {
-        const graph=graphStore.read().graph, elements=require('./product-elements'),params=Object.fromEntries(url.searchParams)
-        if (url.pathname.endsWith('/image')) {
-          const image=elements.elementImage(workspace,graph,params)
-          if (!image) return sendText(response,404,'Изображение недоступно.','text/plain; charset=utf-8')
-          response.setHeader('X-Content-Type-Options','nosniff')
-          response.setHeader('Content-Security-Policy',"default-src 'none'; sandbox")
-          return sendBuffer(response,200,image.buffer,image.mime)
-        }
-        return sendJson(response,200,elements.loadElements(workspace,graph,params.productId))
-      }
       if (request.method === 'GET' && ['/api/product-references','/api/product-references/image'].includes(url.pathname)) {
         const graph = graphStore.read().graph, references = require('./product-references')
         const params = Object.fromEntries(url.searchParams)
@@ -528,18 +517,6 @@ async function createConsoleServer(options) {
         return sendJson(response,200,references.loadLibrary(workspace,graph,params.productId,params.library))
       }
       if (request.method === 'GET' && url.pathname === '/api/snapshot') {const timings={},view=url.searchParams.get('view');const snap=await snapshot(url.searchParams.get('scope') || '',timings,['identity','library','jobs'].includes(view) ? view : '');response.setHeader('Server-Timing',Object.entries(timings).map(([name,ms])=>`${name};dur=${ms.toFixed(1)}`).join(', '));return sendJson(response,200,snap,request)}
-
-      if (request.method === 'POST' && url.pathname === '/api/communications') {
-        const body = await readBody(request)
-        if (!Number.isInteger(body.expectedRevision) || body.expectedRevision < 0) return sendJson(response, 400, { error: 'Нужна текущая revision графа.' })
-        const tx = new GraphTransaction(workspace, { expectedRevision: body.expectedRevision, source: 'communications:manual', strict: true })
-        try {
-          const node = require('../graph/communications').communication(tx, body)
-          const result = tx.commit()
-          return sendJson(response, 200, { ok: true, id: node.id, revision: result.graph.revision })
-        } catch (error) { error.status ||= error.code === 'REVISION_CONFLICT' ? 409 : 400; throw error }
-        finally { tx.close() }
-      }
 
       if (request.method === 'POST' && url.pathname === '/api/move') {
         const body = await readBody(request)
@@ -557,21 +534,6 @@ async function createConsoleServer(options) {
         base.duration = skill.duration
         base.minutes = skill.minutes
         base.prompt += `\nИнструкции скилла: ${path.join(repoRoot, 'skills', skill.slug, 'SKILL.md')}. Прочитай этот файл перед выполнением работы.`
-        if (body.materialId) {
-          if (body.skill !== 'product-content') return sendJson(response, 400, { error: 'Подготовка материала использует product-content.' })
-          const comm = require('./communications')
-          const context = comm.materialPrompt(snap.communications, body.materialId, repoRoot)
-          base.id = `communication:${body.materialId}:${hash(context)}`
-          base.prompt += context
-          base.output = 'Черновик материала в центре связи; документ и история в Отчётах'
-          base.receiptNodeId = body.materialId
-        }
-        if (body.communicationTask) {
-          const task = require('./communications').communicationTaskPrompt(snap.communications, body.communicationTask, body.skill)
-          base.prompt += task
-          base.id = `communication-task:${node.id}:${hash(task)}`
-          base.output = body.communicationTask.kind === 'job-graph' ? 'Вариант графа работ до Core Job с контактами и каналами' : body.communicationTask.kind === 'rubrics' ? 'Рубрики канала в интерфейсе' : 'Материал в интерфейсе коммуникаций'
-        }
         return sendJson(response, 200, issue(attachFallback(base, workspace), snap))
       }
 
@@ -730,21 +692,7 @@ async function createConsoleServer(options) {
         response.setHeader('Content-Disposition', 'attachment; filename="product-os-chrome.zip"')
         return sendBuffer(response, 200, archive, 'application/zip')
       }
-      const staticFiles = {
-        '/audience-ideas.js': 'audience-ideas.js',
-        '/identity-example.js':'identity-example.js','/identity-reading.js':'identity-reading.js','/product-library.js':'product-library.js','/product-library.css':'product-library.css','/read-resource.js':'read-resource.js',
-        '/job-graph-example.js':'job-graph-example.js',
-        '/product-elements.js':'product-elements.js', '/product-elements.css':'product-elements.css', '/product-element-example.js':'product-element-example.js',
-        '/product-references.js':'product-references.js', '/product-references.css':'product-references.css', '/reference-example.js':'reference-example.js',
-        '/annotation-popover.js': 'annotation-popover.js',
-        '/landing-panel-context.js': 'landing-panel-context.js',
-        '/chrome': 'chrome.html', '/chrome.js': 'chrome.js', '/chrome.css': 'chrome.css',
-        '/competitor-reading.css': 'competitor-reading.css', '/communication-reading.css': 'communication-reading.css', '/research-reading.css': 'research-reading.css',
-        '/atlas': 'index.html', '/atlas-content': 'atlas.html', '/atlas-route.js': 'atlas-route.js', '/atlas-navigation.js': 'atlas-navigation.js', '/atlas-shell.js': 'atlas-shell.js', '/atlas-shell.css': 'atlas-shell.css', '/design-system.css': 'design-system.css', '/ui-components.css': 'ui-components.css', '/ui-tokens.css': 'ui-tokens.css', '/ui-components.js': 'ui-components.js', '/design-system-catalog.js': 'design-system-catalog.js', '/design-system': 'design-system.html', '/fonts.css': 'fonts.css', '/product-tabs.js': 'product-tabs.js', '/atlas.js': 'atlas.js', '/research-brief.js':'research-brief.js', '/research-brief-state.js':'research-brief-state.js', '/research-brief.css':'research-brief.css', '/segment-discovery.js': 'segment-discovery.js', '/segment-support.js': 'segment-support.js', '/segment-collection.js': 'segment-collection.js', '/customer-evidence.js': 'customer-evidence.js', '/segment-analysis.js':'segment-analysis.js', '/segment-parameters.js':'segment-parameters.js', '/competitor-preview.js': 'competitor-preview.js', '/competitor-landing.js': 'competitor-landing.js', '/atlas.css': 'atlas.css',
-        '/communication-job-graph.js': 'communication-job-graph.js', '/communications.js': 'communications.js', '/channel-content.js': 'channel-content.js', '/communications.css': 'communications.css', '/': 'index.html', '/app.js': 'app.js', '/styles.css': 'styles.css',
-        '/research-job-layout.js': 'research-job-layout.js', '/research.js': 'research.js', '/research.css': 'research.css', '/readability.css': 'readability.css', '/dossier-content.js': 'dossier-content.js', '/dossier-evidence.js': 'dossier-evidence.js', '/dossier-refinement.css': 'dossier-refinement.css', '/hangar-refinement.css': 'hangar-refinement.css',
-        '/report-reading.css':'report-reading.css','/report-reading.js':'report-reading.js','/reading-list.js':'reading-list.js', '/product-work.css':'product-work.css', '/product-work.js': 'product-work.js', '/console-runtime.js': 'console-runtime.js', '/atlas-runtime.js': 'atlas-runtime.js', '/galaxy-icons.js': 'galaxy-icons.js', '/galaxy-hangar.js': 'galaxy-hangar.js',
-      }
+      const staticFiles = {"/app.js":"app.js","/index.html":"index.html","/ui-components.js":"ui-components.js","/ui-components.css":"ui-components.css","/ui-tokens.css":"ui-tokens.css","/fonts.css":"fonts.css","/design-system.css":"design-system.css","/identity-reading.js":"identity-reading.js","/read-resource.js":"read-resource.js","/product-library.css":"product-library.css","/product-references.js":"product-references.js","/product-references.css":"product-references.css","/report-reading.js":"report-reading.js","/report-reading.css":"report-reading.css","/":"index.html","/atlas":"index.html"}
       if (request.method === 'GET' && staticFiles[url.pathname]) {
         const file = path.join(staticRoot, staticFiles[url.pathname])
         const type = file.endsWith('.html') ? 'text/html; charset=utf-8' : file.endsWith('.css') ? 'text/css; charset=utf-8' : 'text/javascript; charset=utf-8'

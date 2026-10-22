@@ -3,7 +3,7 @@ const path = require('node:path')
 const os = require('node:os')
 const { renderWorkspaceInstructions, mergeWorkspaceInstructions, writeWorkspaceInstructions } = require('./workspace-instructions')
 const SKILLS = ['os-setup','product-context','product-status','product-research','product-segment-hypotheses','product-job-map','product-brand-identity','product-reference-library']
-const SHARED = ['CONTRACT.md','GRAPH.md','GRAPH-WRITES.md','COMMUNICATIONS.md','DESIGN-SYSTEM.md','CUSTOM-SKILLS.md','SHARING.md']
+const SHARED = ['CONTRACT.md','GRAPH.md','GRAPH-WRITES.md','DESIGN-SYSTEM.md','CUSTOM-SKILLS.md','SHARING.md']
 
 function parseInstallArgs(args) {
   let workspace,agent='both'
@@ -71,6 +71,11 @@ function install(workspace, {agent='both',userHome=os.homedir()}={}) {
   const samePhysical=(a,b)=>{try{return fs.realpathSync(a)===fs.realpathSync(b)}catch{return false}}
   for(const {name,config,target,tools} of targets) {
     const adapt=text=>text.replace(/\.claude\/skills\/product-os-tools|\.agents\/(?:skills\/)?product-os-tools/g,name==='codex'?'.agents/product-os-tools':'.claude/skills/product-os-tools')
+    // Retire only a byte-identical document owned by the previous Public install.
+    // User-authored changes in the discovery directory are never deleted.
+    const retired=path.join(target,'COMMUNICATIONS.md'),old=path.join(tools,'COMMUNICATIONS.md')
+    const oldEdition=(()=>{try{return JSON.parse(fs.readFileSync(path.join(tools,'package.json'),'utf8')).name}catch{return null}})()
+    const removeRetired=oldEdition==='product-os-public'&&fs.lstatSync(retired,{throwIfNoEntry:false})?.isFile()&&fs.lstatSync(old,{throwIfNoEntry:false})?.isFile()&&fs.readFileSync(retired,'utf8')===adapt(fs.readFileSync(old,'utf8'))
     fs.mkdirSync(target,{recursive:true})
     // Installing from this very runtime (e.g. installed CLI repeating setup):
     // its own copy is already in place; replacing it deletes the running source.
@@ -88,6 +93,7 @@ function install(workspace, {agent='both',userHome=os.homedir()}={}) {
       const file=path.join(target,skill,'SKILL.md');fs.writeFileSync(file,adapt(fs.readFileSync(file,'utf8')))
     }
     for(const file of SHARED)fs.writeFileSync(path.join(target,file),adapt(fs.readFileSync(path.join(root,file),'utf8')))
+    if(removeRetired)fs.unlinkSync(retired)
     const adaptTree=dir=>{for(const entry of fs.readdirSync(dir,{withFileTypes:true})){const file=path.join(dir,entry.name);if(entry.isDirectory())adaptTree(file);else if(entry.name.endsWith('.md'))fs.writeFileSync(file,adapt(fs.readFileSync(file,'utf8')))}}
     adaptTree(path.join(tools,'skills'))
     for(const script of ['pages','segments','graph-write','product-os'])fs.writeFileSync(path.join(tools,script+'.js'),`#!/usr/bin/env node\n${['graph-write','product-os'].includes(script)?`Promise.resolve().then(()=>require('./bin/${script}').main()).catch(error=>{console.error(error.message);process.exitCode=1})`:`require('./bin/${script}')`}\n`)

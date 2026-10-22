@@ -1,4 +1,4 @@
-import {pageHeader,topicNav,escapeHTML,sourceNote,sourceList} from './ui-components.js'
+import {pageHeader,topicNav,escapeHTML,sourceNote,sourceList,sourceReferenceHref} from './ui-components.js'
 /* Addressable product topics, rendered by the shared component contract. */
 export const ProductTabs={
  jobs(jobs=[]){
@@ -11,10 +11,10 @@ export const ProductTabs={
   return pageHeader({title:title||topicTitle,className:'product-head',back,backTight,context:workspaceName&&name&&name!==workspaceName?`Продукт: ${escapeHTML(name)}`:''})
  },
  description(product){
-  const text=product.description?.what||product.summary||'',entries=(product.description?.evidence||[]).map(raw=>{const row=typeof raw==='string'?{source:raw}:raw,ref=row.url||row.source||'';return {title:row.title||row.label||'Описание продукта',quote:row.quote||'',author:row.author||'',href:/^https?:\/\//.test(ref)?ref:/^(sources|reports|research)\//.test(ref)&&!ref.includes('..')?'/source?path='+encodeURIComponent(ref):'',meta:ref}})
+  const text=product.description?.what||product.summary||'',entries=(product.description?.evidence||[]).map(raw=>{const row=typeof raw==='string'?{source:raw}:raw,ref=row.url||row.source||'';return {title:row.title||row.label||'Описание продукта',quote:row.quote||'',author:row.author||'',href:sourceReferenceHref(ref),meta:ref}})
   return text?`<section class="product-summary"><h2>Что делает продукт</h2><p>${entries.length?sourceNote({text,content:sourceList({entries})}):escapeHTML(text)}</p></section>`:''
  },
- topics:[['overview','Обзор'],['goals','Цели и ограничения'],['positioning','Позиционирование'],['brief','Бриф исследования'],['development','Развитие'],['elements','Элементы продукта'],['materials','Материалы продукта'],['references','Референсы конкурентов']],
+ topics:[['overview','Обзор'],['goals','Цели и ограничения'],['positioning','Позиционирование'],['brief','Бриф исследования'],['development','Развитие']],
  render(active='overview',{library=''}={}){return topicNav({label:'Разделы продукта',className:'product-tabs',active,items:this.topics.map(([id,label])=>({id,label,attributes:{'data-product-tab':id,...(library&&['references','materials'].includes(id)?{'data-product-route':'product/'+id+'?'+new URLSearchParams({library})}:{})}}))})}
 };
 

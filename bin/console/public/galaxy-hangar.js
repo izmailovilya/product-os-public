@@ -242,7 +242,7 @@ function renderDeck() {
   if (deckSignature === nextSignature) { updateCount(all.filter(matchesFilters).length, all.length); refreshSelectionMarks(); return }
   deckSignature = nextSignature
   if (!all.length) {
-    deck.innerHTML = window.OSUI.emptyState({kind:'first-use',title:'Пока нет решений для сравнения',description:'Добавь конкурентов или изучи, какими способами клиенты решают свою задачу сегодня.'})
+    deck.innerHTML = window.OSUI.emptyState({kind:'first-use',title:'Карточки альтернатив пока не связаны',description:'Сохранённый обзор может находиться в отчётах, даже если карточки решений ещё не созданы.',actions:textLink({label:'Посмотреть сохранённые исследования',href:'#reports'})})
     updateCount(0, 0)
     return
   }

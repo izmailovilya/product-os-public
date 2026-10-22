@@ -1,6 +1,6 @@
 {
   "name": "product-os-public",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "A product workspace, source-backed context and local visual console",
   "license": "MIT",
   "engines": {
@@ -23,6 +23,10 @@
   "files": [
     "bin",
     "skills",
+    "community-skills",
+    "CUSTOM-SKILLS.md",
+    "SHARING.md",
+    "CONTRIBUTING.md",
     "CONTRACT.md",
     "GRAPH.md",
     "GRAPH-WRITES.md",

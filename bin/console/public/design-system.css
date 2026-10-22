@@ -119,7 +119,7 @@ html:has(>body.atlas-console),html:has(>body.atlas-content),html:has(>body.atlas
 :is(body.atlas-console,body.atlas-content,body.atlas-document,body.os-catalog){--read-body:var(--os-body);--read-label:var(--os-label);--ui-body:var(--os-body);--ui-small:var(--os-label);--ui-micro:var(--os-label);--map-control-scale:1;--dossier-scale:1}
 .atlas-console :is(#communicationsCenter,#galaxyPanel,#galaxyHangar){zoom:1!important}
 .atlas-console :is(.content-view,#communicationsCenter,#atlasObjectPage){font-family:var(--os-font);font-size:var(--os-body)}
-.atlas-console :is(.content-view,#communicationsCenter,#atlasObjectPage) :is(p,blockquote,dd,li,.skill-description,.comm-reading-text),.atlas-content :is(p,dd,li),.atlas-document :is(p,li){font-size:var(--os-body);line-height:var(--os-leading)}
+.atlas-console :is(.content-view,#communicationsCenter,#atlasObjectPage) :is(p,blockquote,dd,li,.skill-description,.comm-reading-text):not(.os-brand-type-specimen *),.atlas-content :is(p,dd,li):not(.os-brand-type-specimen *),.atlas-document :is(p,li){font-size:var(--os-body);line-height:var(--os-leading)}
 .atlas-console #atlasObjectPage :is(button,summary,a),.atlas-console :is(.content-view,#communicationsCenter) :is(button,label,small,summary),.atlas-content :is(button,label,small,summary){font-size:var(--os-label)!important}
 .atlas-console #communicationsCenter h1{font-size:var(--os-h1);line-height:1.25}
 .atlas-console #communicationsCenter h2{font-size:var(--os-h2);line-height:1.35}

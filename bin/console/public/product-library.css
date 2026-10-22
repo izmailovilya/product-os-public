@@ -1,0 +1,53 @@
+/* Presentation geometry only. Shared surfaces, sections and controls own their rhythm. */
+.brand-utility{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:var(--os-space-2)}
+.brand-utility p,.brand-caption{font:400 var(--os-label)/1.5 var(--os-font);color:var(--os-muted);margin:0}
+.brand-book{min-width:0;display:grid;gap:var(--os-space-4)}
+.brand-cover,.brand-application{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:var(--os-space-4);min-height:27rem;overflow:hidden}
+.brand-cover-copy{min-width:0;display:grid;gap:var(--os-space-2)}
+.brand-cover-copy p{color:inherit;font:400 var(--os-body)/1.5 var(--os-font);margin:0;max-width:30ch}
+.brand-cover-copy .brand-name{font:600 clamp(2rem,5vw,4.5rem)/1.1 var(--os-font);letter-spacing:-.03em;overflow-wrap:anywhere}
+.brand-cover-copy .brand-cover-caption{font-size:var(--os-label);margin-top:var(--os-space-3)}
+.brand-wordmark{max-width:30rem}
+.brand-cover-compact{grid-template-columns:1fr;min-height:0}
+.brand-cover-compact .brand-wordmark{max-width:20rem}
+.brand-cover-compact .brand-cover-copy p{max-width:68ch}
+.brand-media{min-width:0;position:relative;overflow:hidden}
+.brand-media img{display:block;max-width:100%;width:100%;height:auto;object-fit:contain}
+.brand-media img[hidden],.brand-media [data-brand-loading][hidden],.brand-media [data-brand-error][hidden]{display:none}
+.brand-media [data-brand-loading]{min-height:10rem;display:grid;align-items:center}
+.brand-sprite{aspect-ratio:1}
+.brand-sprite img{position:absolute;max-width:none;object-fit:fill}
+.brand-cover-art{width:100%;align-self:end;max-width:34rem;justify-self:center}
+.brand-cover-art:not(.brand-sprite) img{max-height:30rem;object-fit:contain}
+.brand-showcase,.brand-gallery,.brand-applications{display:grid;gap:var(--os-space-3);grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));min-width:0}
+.brand-showcase{grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr))}
+.brand-example{min-width:0;display:grid;align-content:start;gap:var(--os-space-2)}
+.brand-example-copy{display:grid;gap:var(--os-space-2);justify-items:start;min-width:0}
+.brand-example-copy p{margin:0;overflow-wrap:anywhere}
+.brand-example-copy h3{font:600 var(--os-h3)/1.4 var(--os-heading-font);margin:0;overflow-wrap:anywhere}
+.brand-example-art{min-width:0}
+.brand-example-logo{display:grid;place-items:center;min-height:12rem}
+.brand-example-logo .brand-media{width:100%;max-width:14rem}
+.brand-example-logo img{max-height:8rem}
+.brand-example-detail .brand-media{max-width:28rem}
+.brand-example-detail img{max-height:24rem}
+.brand-guidance{min-width:0;max-width:68ch;margin-top:var(--os-space-3)}
+.brand-guidance p{margin:0 0 var(--os-space-1);overflow-wrap:anywhere}
+.brand-swatches{display:grid;gap:var(--os-space-2);grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));min-width:0}
+.brand-swatch{display:flex;flex-direction:column;justify-content:space-between;gap:var(--os-space-4);min-height:13rem}
+.brand-swatch p{color:inherit;font:400 var(--os-label)/1.5 var(--os-font);margin:0;overflow-wrap:anywhere}
+.brand-swatch .brand-color-code{white-space:nowrap;overflow-wrap:normal}
+.brand-applications{grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr))}
+.brand-application{min-height:24rem;grid-template-columns:1fr;align-content:space-between;gap:var(--os-space-2)}
+.brand-application .brand-cover-copy>p{font-size:var(--os-h2);font-weight:600;max-width:14ch;overflow-wrap:anywhere}
+.brand-application .brand-cover-copy>p+p{font-size:var(--os-label);font-weight:400}
+.brand-application .brand-wordmark{max-width:9rem}
+.brand-application .brand-cover-art{width:55%;max-width:16rem;justify-self:end}
+.brand-applications .brand-caption{margin-top:var(--os-space-2)}
+.brand-downloads{border-top:1px solid var(--os-line)}
+.brand-download-row{display:flex;align-items:center;justify-content:space-between;gap:var(--os-space-3);padding-block:var(--os-space-3);border-bottom:1px solid var(--os-line)}
+.brand-download-row>div{min-width:0}
+.brand-download-row h3{font:600 var(--os-h3)/1.35 var(--os-heading-font);margin:0;overflow-wrap:anywhere}
+.brand-download-row p{margin:var(--os-space-1) 0 0;max-width:54ch;overflow-wrap:anywhere}
+.brand-detail-media{max-width:28rem;margin-inline:auto}
+@media(max-width:44rem){.brand-cover{grid-template-columns:1fr;min-height:0}.brand-cover-art{width:min(100%,24rem)}.brand-cover-copy .brand-name{font-size:2.5rem}.brand-download-row{align-items:start;flex-direction:column}.brand-application{min-height:0}.brand-utility{align-items:start}.brand-utility p{max-width:100%}}

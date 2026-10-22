@@ -51,8 +51,22 @@ export function mountCustomerProfiles(element){
   if(trigger.hasAttribute('data-customer-evidence'))return {title:'Основания профиля',content:customerEvidenceContent(JSON.parse(trigger.dataset.customerEvidence))}
   if(!trigger.hasAttribute('data-customer-fact'))return null
   const f=JSON.parse(trigger.dataset.customerFact)
-  return {title:'Основание утверждения',content:`<p><strong>${e(basis[f.basis]||'Основание не уточнено')}</strong></p><p>${e(f.text)}</p>${f.sourceRefs?.length?`<ul>${f.sourceRefs.map(ref=>`<li>${refLink(ref)?textLink({href:refLink(ref),label:ref}):e('Запись: '+ref)}</li>`).join('')}</ul>`:'<p>Источник пока не связан. Это не подтверждённое свойство клиентов.</p>'}`}
+  return {title:'Основание утверждения',content:customerFactSources(f)}
  }})
+}
+
+export function customerFactSources(f){
+ const details=f.sourceDetails||[],records=details.filter(item=>item.kind==='record'),materials=details.filter(item=>item.kind!=='record')
+ // Old snapshots still show direct links. Unresolved IDs are not human-readable sources.
+ if(!f.sourceDetails)for(const ref of f.sourceRefs||[]){const link=refLink(ref);if(link)materials.push({label:ref,href:link})}
+ const list=(items,record=false)=>`<ul>${items.map(item=>`<li>${record?`<p>${e(item.label)}</p>`:''}${textLink({href:item.href,label:record?'Полный документ исследования':item.label})}${item.excerpt?`<blockquote>${e(item.excerpt)}</blockquote>`:''}</li>`).join('')}</ul>`
+ const unresolved=f.unresolvedSourceCount??(f.sourceRefs||[]).filter(ref=>!refLink(ref)).length
+ return `<p><strong>${e(basis[f.basis]||'Основание не уточнено')}</strong></p><p>${e(f.text)}</p>`+
+  (f.basis==='hypothesis'?'<p>Это предположение агента. Связанные материалы объясняют его происхождение, но сами по себе не подтверждают потребность клиентов.</p>':'')+
+  (records.length?`<h3>Исходная запись</h3><p>Ссылка открывает документ целиком. Точный переход к записи внутри него пока не поддерживается.</p>${list(records,true)}`:'')+
+  (materials.length?`<h3>Связанные материалы</h3>${list(materials)}`:'')+
+  (unresolved?'<p>Часть ссылок на основания не удалось найти. Это пробел в данных.</p>':'')+
+  (!details.length&&!materials.length?'<p>Доступный источник не связан с этим утверждением.</p>':'')
 }
 
 

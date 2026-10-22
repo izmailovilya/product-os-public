@@ -10,6 +10,7 @@ import {segmentSupportSummary} from './segment-support.js';
 import './ui-components.js';
 import {renderSegmentHierarchy,segmentConditions,renderCustomerProfile,renderCustomerReading,mountCustomerProfiles} from './segment-collection.js';
 import {mountSegmentDiscovery} from './segment-discovery.js';
+import {renderAudienceIdeas} from './audience-ideas.js';
 import {SEGMENT_TOPICS,segmentTopicNav,segmentReading} from './segment-collection.js';
 /* Optional, read-only console concept. No writes or second research store. */
 (() => {
@@ -20,7 +21,14 @@ const profileReadingPreview=new URLSearchParams(location.search).get('profile-re
 const reader=document.querySelector('#atlasReadingPage')||document.body;
 const tell=data=>window.dispatchEvent(new CustomEvent('atlas:action',{detail:data}));
 const $=s=>reader.querySelector(s), e=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let briefMount, referencesMount, elementsMount;
+let briefMount, referencesMount, elementsMount, libraryMount;
+let libraryModule;
+async function loadLibraryModule(){
+ // A transient failed module fetch stays cached in the browser's module map.
+ // Retry with a fresh URL once; a full reload can also reset failed dependencies.
+ if(!libraryModule)libraryModule=import('./product-library.js').catch(()=>import('./product-library.js?retry='+Date.now())).catch(()=>{libraryModule=null;throw Object.assign(new Error('Библиотека продукта не загрузилась'),{code:'library-module-unavailable'})});
+ return libraryModule;
+}
 let snapshot, registry, syntheses=[], turn=0, researchSummary, discoveryMount, profileMount;
 const summary=()=>researchSummary ||= Promise.all([get('/api/research?type=Person&limit=1'),records({type:'SynthesisRevision'})]).then(([r,s])=>{registry=r;syntheses=s}).catch(error=>{researchSummary=null;throw error});
 let receiveSnapshot;const initialSnapshot=mounted?(window.__productGalaxySnapshot?Promise.resolve(window.__productGalaxySnapshot):new Promise(resolve=>{receiveSnapshot=resolve})):get('/api/snapshot');
@@ -91,7 +99,7 @@ function product(topic='overview'){
   {id:'product-audience',title:'Для кого',content:`<p>${sourced(d.forWhom||raw.market||'Пока не записано.',d.evidence||[])}</p>`},
   {id:'product-result',title:'Какой результат даёт',content:`<p>${sourced(d.outcome||'Пока не записано.',d.evidence||[])}</p>`},
   {id:'product-pricing',title:'Цены и оплата',content:`<p>${sourced(pricing||'Цены и условия оплаты пока не записаны.',pricingEvidence,{title:'Основания цены и условия оплаты',attributes:{'data-product-pricing-source':true}})}</p>${pricingConflict?window.OSUI.notice({kind:'warning',message:'В источниках цены есть расхождения. Сопоставьте условия перед решением.'}):''}`},
-  {id:'product-capabilities',title:'Возможности продукта',content:`<div class="capability-list">${capabilities.map((c,i)=>capabilityCard(c,i)).join('')||empty('Возможности ещё не записаны.')}</div>`},
+  {id:'product-capabilities',title:'Возможности продукта',content:`<div class="capability-list">${capabilities.map((c,i)=>capabilityCard(c,i)).join('')||empty('Структурированный каталог возможностей пока не заполнен.')}</div>`},
   ...(childProductSections(p.id)?[{id:'product-offerings',title:'Отдельные предложения',content:childProductSections(p.id)}]:[]),
   {id:'product-jobs',title:'Какие работы помогает выполнить',content:p.jobs?.length?window.ProductTabs.jobs(p.jobs):empty('Связанные работы ещё не указаны.')},
  ]
@@ -101,7 +109,7 @@ function product(topic='overview'){
 
 function segmentCollection(){
  const all=segments(),roots=all.filter(s=>!s.parentId)
- return window.OSUI.collectionLayout({content:`<div id="results">${renderSegmentHierarchy(roots,all)}</div>${roots.length?'':empty('Сегменты пока не добавлены.')}<div id="noResults" hidden>${window.OSUI.emptyState({kind:'no-results',title:'Совпадений нет',description:'Попробуйте другое название сегмента или подсегмента.'})}</div>`})
+ return window.OSUI.collectionLayout({content:`<div id="results">${renderSegmentHierarchy(roots,all)}</div>${roots.length?'':empty('Сегменты пока не добавлены.')}${renderAudienceIdeas(snapshot.audienceIdeas||[])}<div id="noResults" hidden>${window.OSUI.emptyState({kind:'no-results',title:'Совпадений нет',description:'Попробуйте другое название сегмента или подсегмента.'})}</div>`})
 }
 function map(){return `<div class="customer-catalog">`+head('','Сегменты','Клиенты, их задачи и путь к покупке.')+segmentCollection()+`<p class="muted">Описания включают гипотезы и открытые вопросы. Основание каждого утверждения доступно рядом с ним.</p><p>${window.OSUI.textLink({href:'#people',label:'Все материалы исследования →'})} · ${window.OSUI.textLink({href:'#product/brief',label:'Бриф исследования'})}</p></div>`}
 
@@ -137,7 +145,7 @@ function segment(id,tab='overview') {
   {id:'segment-research-materials',title:'Материалы о клиентах',intro:'Откройте досье, чтобы прочитать ответы и увидеть их источники. Несколько материалов могут относиться к одному человеку.',content:peopleRows(ps)+window.OSUI.textLink({label:'Все материалы исследования',href:'#people'})+window.OSUI.disclosure({title:'Источники, связанные с сегментом',content:sources(s.sources)})}
  ],{contentsTitle:'В исследовании'});
 
- else if(tab==='competitors')content=`<p class="section-intro">Способы решения, связанные с этим сегментом. В карточке альтернативы — причины выбора и основания.</p>`+(cs.length?groupedAlternatives(cs):empty('Альтернативы пока не связаны с сегментом.'));
+ else if(tab==='competitors')content=`<p class="section-intro">Способы решения, связанные с этим сегментом. В карточке альтернативы — причины выбора и основания.</p>`+(cs.length?groupedAlternatives(cs):empty('Карточки альтернатив пока не связаны с сегментом.')+'<p><a href="#reports">Посмотреть сохранённые исследования →</a></p>');
  else if(tab==='channels')content=segmentReading([
   {id:'segment-search-history',title:'Поиск решений в интервью',intro:'Где клиенты узнавали о решениях и что пробовали.',content:`<div data-segment-discovery="${e(id)}" aria-label="История каналов из интервью"></div>`},
   {id:'segment-search-planned',title:'Каналы, запланированные для продукта',intro:'Запланированные каналы продвижения продукта показаны отдельно от истории поиска в интервью.',content:channelRows(chs)+(embedded?window.OSUI.button({label:'Работать с каналами в разделе «Коммуникации» →',attributes:{'data-segment-comms':id}}):'')}
@@ -162,7 +170,7 @@ function references(){return head('Визуальное направление',
 async function exactSource(id){const d=await get('/api/research/source?id='+encodeURIComponent(id));return head('Основания','Исходный ответ','Фрагмент источника с соседними строками. Нумерация соответствует оригиналу.')+`<div class="rows">${d.context.map(x=>`<div class="row"><small>${x.line}</small><p>${e(x.text)}</p></div>`).join('')}</div>`+source(d.document?.path)}
 function disposeDiscovery(){briefMount?.destroy();briefMount=null;discoveryMount?.destroy();discoveryMount=null;profileMount?.destroy();profileMount=null}
 async function render(saved){
- referencesMount?.destroy();referencesMount=null;elementsMount?.destroy();elementsMount=null;
+ libraryMount?.destroy();libraryMount=null;referencesMount?.destroy();referencesMount=null;elementsMount?.destroy();elementsMount=null;
  if(saved?.graphMode)jobGraphMode=saved.graphMode;
  const seq=++turn;
  disposeDiscovery();
@@ -173,14 +181,17 @@ async function render(saved){
   if(!snapshot)return;
 
   if(kind==='segment'&&tab==='people'){const selected=segments().find(s=>s.id===id);if(selected)await loadSegmentPeople(selected);}
-  const html=kind==='research-brief'?'<div data-research-brief></div>':kind==='job'?segmentJob(id,new URLSearchParams(location.hash.split('?')[1]||'').get('segment')):kind==='product'?product(id||'overview'):kind==='segment'?segment(id,tab):kind==='hangar'?hangar():kind==='competitor'?competitor(id):kind==='comms'?comms():kind==='channel'?channel(id):kind==='person'?await person(id):kind==='source'?await exactSource(id):kind==='people'?head('Реестр','Все респонденты','Включая людей, пока не связанных с сегментами.')+peopleRows(await records({type:'Person'})):kind==='references'?references():map();
+  const html=kind==='library'?'<section data-product-library aria-label="Библиотека продукта"></section>':kind==='jobs'?head('','Карта работ','')+window.JobFlow.strategicMarkup(snapshot.galaxy.product.id,undefined,{versionKey:snapshot.graphStatus?.mtime?JSON.stringify([snapshot.workspace,snapshot.graphStatus.mtime]):''}):kind==='research-brief'?'<div data-research-brief></div>':kind==='job'?segmentJob(id,new URLSearchParams(location.hash.split('?')[1]||'').get('segment')):kind==='product'?product(id||'overview'):kind==='segment'?segment(id,tab):kind==='hangar'?hangar():kind==='competitor'?competitor(id):kind==='comms'?comms():kind==='channel'?channel(id):kind==='person'?await person(id):kind==='source'?await exactSource(id):kind==='people'?head('Реестр','Все респонденты','Включая людей, пока не связанных с сегментами.')+peopleRows(await records({type:'Person'})):kind==='references'?references():map();
   if(seq!==turn)return;
   $('#main').innerHTML=window.OSUI.detailLayout({content:html});
   profileMount=mountCustomerProfiles(reader);
-  const referencesElement=$('[data-product-references]');
-  if(referencesElement){const q=new URLSearchParams(location.hash.split('?')[1]||'');referencesMount=mountReferences(referencesElement,{productId:snapshot.galaxy.product.id,view:referencesElement.dataset.referenceView,state:{filtersOpen:Boolean(saved?.filtersOpen),library:q.get('library')||'',track:q.get('track')||'',competitor:q.get('competitor')||'',page:Number(q.get('page'))||1,card:decode(window.AtlasRouteState.read().route.split('?')[0].split('/')[2]||'')},navigate:route=>embedded?tell({action:'navigate',route}):location.hash=route});await referencesMount.ready;if(seq!==turn)return;}
-  const elementsElement=$('[data-product-elements]');
-  if(elementsElement){const q=new URLSearchParams(location.hash.split('?')[1]||'');elementsMount=mountElements(elementsElement,{product:snapshot.galaxy.product,workspaceName:snapshot.productName,nav:window.ProductTabs.render('elements'),productId:snapshot.galaxy.product.id,state:{filtersOpen:Boolean(saved?.filtersOpen),category:q.get('category')||'',status:q.get('status')||'',role:q.get('role')||'',page:Number(q.get('page'))||1,element:decode(window.AtlasRouteState.read().route.split('?')[0].split('/')[2]||''),step:q.get('step')||''},navigate:route=>embedded?tell({action:'navigate',route}):location.hash=route});await elementsMount.ready;if(seq!==turn)return;}
+  const versionKey=JSON.stringify([snapshot.workspace,snapshot.graphStatus?.mtime||'',snapshot.graphStatus?.state||'',snapshot.researchRevision??0]);
+  const libraryElement=$('[data-product-library]');
+  if(libraryElement){const {mountLibrary}=await loadLibraryModule();if(seq!==turn)return;const q=new URLSearchParams(location.hash.split('?')[1]||'');libraryMount=mountLibrary(libraryElement,{productId:snapshot.galaxy.product.id,versionKey,product:snapshot.galaxy.product,workspaceName:snapshot.productName,topic:id,state:{filtersOpen:Boolean(saved?.filtersOpen),library:q.get('library')||'',profile:q.get('profile')||'',documents:q.get('documents')==='1',category:q.get('category')||'',status:q.get('status')||'',role:q.get('role')||'',page:Number(q.get('page'))||1,element:id==='elements'&&tab!=='overview'?tab:'',card:id==='references'&&tab!=='overview'?tab:'',step:q.get('step')||'',track:q.get('track')||'',competitor:q.get('competitor')||''},navigate:route=>embedded?tell({action:'navigate',route}):location.hash=route});await libraryMount.ready;if(seq!==turn)return;}
+  const referencesElement=libraryElement?null:$('[data-product-references]');
+  if(referencesElement){const q=new URLSearchParams(location.hash.split('?')[1]||'');referencesMount=mountReferences(referencesElement,{productId:snapshot.galaxy.product.id,versionKey,view:referencesElement.dataset.referenceView,state:{filtersOpen:Boolean(saved?.filtersOpen),library:q.get('library')||'',track:q.get('track')||'',competitor:q.get('competitor')||'',page:Number(q.get('page'))||1,card:decode(window.AtlasRouteState.read().route.split('?')[0].split('/')[2]||'')},navigate:route=>embedded?tell({action:'navigate',route}):location.hash=route});await referencesMount.ready;if(seq!==turn)return;}
+  const elementsElement=libraryElement?null:$('[data-product-elements]');
+  if(elementsElement){const q=new URLSearchParams(location.hash.split('?')[1]||'');elementsMount=mountElements(elementsElement,{product:snapshot.galaxy.product,workspaceName:snapshot.productName,nav:window.ProductTabs.render('elements'),productId:snapshot.galaxy.product.id,versionKey,state:{filtersOpen:Boolean(saved?.filtersOpen),category:q.get('category')||'',status:q.get('status')||'',role:q.get('role')||'',page:Number(q.get('page'))||1,element:decode(window.AtlasRouteState.read().route.split('?')[0].split('/')[2]||''),step:q.get('step')||''},navigate:route=>embedded?tell({action:'navigate',route}):location.hash=route});await elementsMount.ready;if(seq!==turn)return;}
   const briefReading=$('[data-research-brief-reading]');
   if(briefReading){const mounted=await mountResearchBriefReading(briefReading,{id:tab==='overview'?'':tab,product:snapshot.galaxy.product});if(seq!==turn){mounted.destroy();return}briefMount=mounted;}
   const briefElement=$('[data-research-brief]');
@@ -194,14 +205,14 @@ async function render(saved){
   reader.scrollTop=0;
   if(kind==='product'&&id==='terms')document.getElementById('product-pricing')?.scrollIntoView();
   if(!mounted)$('#main').focus({preventScroll:true});
- }catch(err){if(seq===turn){disposeDiscovery();$('#main').innerHTML=window.OSUI.notice({kind:'error',message:err.message})}}
+ }catch(err){if(seq===turn){disposeDiscovery();$('#main').innerHTML=err.code==='library-module-unavailable'?window.OSUI.emptyState({kind:'unavailable',title:err.message,description:'Не удалось загрузить интерфейс. Перезагрузите страницу, чтобы повторить попытку.',actions:window.OSUI.button({label:'Перезагрузить страницу',attributes:{'data-library-reload':''}})}):window.OSUI.notice({kind:'error',message:err.message})}}
 }
 window.AtlasContent={
  render,ready:false,
- async update(value){const changed=JSON.stringify([snapshot?.productName,snapshot?.galaxy,snapshot?.communications,snapshot?.researchRevision])!==JSON.stringify([value?.productName,value?.galaxy,value?.communications,value?.researchRevision]);snapshot=value;if(window.AtlasRouteState.read().kind==='research-brief'&&briefMount)return;if(receiveSnapshot){receiveSnapshot(value);receiveSnapshot=null;return}if(!changed)return;researchSummary=null;if(!reader.hidden){const saved=this.capture();await render(saved);this.restore(saved)}},
+ async update(value){const previous=snapshot;const changed=JSON.stringify([snapshot?.productName,snapshot?.galaxy,snapshot?.communications,snapshot?.researchRevision,snapshot?.audienceIdeas])!==JSON.stringify([value?.productName,value?.galaxy,value?.communications,value?.researchRevision,value?.audienceIdeas]);snapshot=value;if(window.AtlasRouteState.read().kind==='jobs'&&reader.querySelector('[data-strategic-job-map]')&&previous?.workspace===value.workspace&&previous?.galaxy?.product?.id===value.galaxy?.product?.id&&previous?.graphStatus?.mtime===value.graphStatus?.mtime)return;if(window.AtlasRouteState.read().kind==='research-brief'&&briefMount)return;if(receiveSnapshot){receiveSnapshot(value);receiveSnapshot=null;return}const catalogueChanged=window.AtlasRouteState.read().kind==='library'&&(previous?.workspace!==value.workspace||previous?.graphStatus?.mtime!==value.graphStatus?.mtime||previous?.graphStatus?.state!==value.graphStatus?.state);if(!changed&&!catalogueChanged&&window.AtlasRouteState.read().kind!=='jobs')return;researchSummary=null;if(!reader.hidden){const saved=this.capture();await render(saved);this.restore(saved)}},
  capture:()=>({filtersOpen:Boolean(reader.querySelector('.os-filter-disclosure')?.open),readingLists:captureReadingLists(reader),scroll:reader.scrollTop,graphMode:jobGraphMode,discoveryDetails:[...reader.querySelectorAll('[data-discovery-event]')].filter(el=>el.querySelector('details')?.open).map(el=>el.dataset.discoveryEvent),details:[...reader.querySelectorAll('details')].flatMap((el,index)=>el.matches('.os-filter-disclosure')?[]:[{index,open:el.open}])}),
  restore(value){restoreReadingLists(reader,value?.readingLists);if(value?.graphMode)jobGraphMode=value.graphMode;for(const item of value?.details||[]){const el=reader.querySelectorAll('details')[item.index];if(el&&!el.matches('.os-filter-disclosure'))el.open=item.open}const filters=reader.querySelector('.os-filter-disclosure');if(filters)filters.open=Boolean(value?.filtersOpen);reader.scrollTop=value?.scroll||0},
- unmount(){turn++;referencesMount?.destroy();referencesMount=null;elementsMount?.destroy();elementsMount=null;disposeDiscovery();reader.hidden=true;$('#main').replaceChildren();document.querySelector('.product-source-dialog[open]')?.close()}
+ unmount(){turn++;libraryMount?.destroy();libraryMount=null;referencesMount?.destroy();referencesMount=null;elementsMount?.destroy();elementsMount=null;disposeDiscovery();reader.hidden=true;$('#main').replaceChildren();document.querySelector('.product-source-dialog[open]')?.close()}
 };
 document.addEventListener('toggle',async event=>{
  const details=event.target;if(!details.matches?.('[data-source-document]')||!details.open||details.dataset.loaded)return
@@ -209,6 +220,7 @@ document.addEventListener('toggle',async event=>{
  try{const response=await fetch('/source?path='+encodeURIComponent(details.dataset.sourceDocument));if(!response.ok)throw Error('Источник не удалось загрузить. Закройте и откройте текст для повторной попытки.');let text=await response.text();if(response.headers.get('content-type')?.includes('text/html')){const doc=new DOMParser().parseFromString(text,'text/html');doc.querySelector('.back')?.remove();text=doc.querySelector('main')?.textContent||doc.body.textContent}if(body.isConnected)body.innerHTML=`<pre>${e(text)}</pre>`}catch(error){delete details.dataset.loaded;if(body.isConnected)body.textContent=error.message}
 },true);
 reader.addEventListener('click',async event=>{
+ if(event.target.closest('[data-library-reload]'))return location.reload();
  const productTab=event.target.closest('[data-product-tab]');if(productTab){const route=productTab.dataset.productRoute||'product/'+productTab.dataset.productTab;if(embedded)tell({action:'navigate',route});else location.hash=route;return}
  if(event.target.closest('[data-manage-products]')){tell({action:'manage-products'});return}
  const mode=event.target.closest('[data-graph-mode]');if(mode){jobGraphMode=mode.dataset.graphMode;render();return}

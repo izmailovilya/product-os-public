@@ -1,0 +1,24 @@
+{
+  "productId": "fictional-product",
+  "libraryId": "fictional-library",
+  "title": "Selected exercise examples",
+  "productContext": "Fictional practice app; existing archive supplied for manual review.",
+  "purpose": "Compare captured answer and feedback mechanisms before choosing a design experiment.",
+  "runKey": "supplied-run-01",
+  "asOf": "2026-01-15",
+  "mode": "reuse",
+  "competitors": [{"id": "fictional-rival", "name": "Fictional Rival", "kind": "app"}],
+  "directions": [{
+    "key": "exercises",
+    "title": "Answer and feedback",
+    "brief": "Concrete captured stimulus, action, response and unknown retry; preserve single-screen examples.",
+    "competitorIds": ["fictional-rival"],
+    "quotas": {"cards": null, "sources": null, "examples": null},
+    "limits": {"collectionQueries": 0, "collectionSources": 0, "verificationQueries": 0, "verificationSources": 0}
+  }],
+  "existingArchives": ["sources/fictional-archive/index.json"],
+  "access": {"mode": "public-only"},
+  "limits": {"maxAgentCalls": 5, "maxQueries": 0, "maxSources": 0},
+  "design": {"enabled": false, "existingBrandProfile": null},
+  "consoleRun": null
+}

@@ -79,9 +79,9 @@ body.atlas-console .atlas-enabled #galaxyPanel{top:16px;bottom:16px;max-height:c
 .atlas-console #atlasObjectPage :is(h1,h2,h3,h4,strong,td,dd){color:var(--os-text)!important}
 .atlas-console #atlasObjectPage :is(p:not(.os-reading-section p:not(.dossier-note)):not(.os-prose-facts p),small,dt,label,.research-kicker,.research-muted){color:var(--os-muted)}
 .atlas-console #atlasObjectPage :is(p,blockquote,li){font-size:16px;line-height:1.65}
-.atlas-console #atlasObjectPage :is(button,summary,a):not(.os-button):not(.os-source-trigger):not(.os-topic-nav > *){color:var(--os-accent);font-size:var(--os-label);min-height:var(--os-target);letter-spacing:0;text-transform:none}
-.atlas-console #atlasObjectPage button:not(.os-button):not(.os-source-trigger):not(.os-topic-nav > button){background:var(--os-surface);border:1px solid var(--os-control)}
-.atlas-console #atlasObjectPage :is(button[aria-pressed=true],button[aria-selected=true]):not(.os-topic-nav > button){background:var(--os-selected);border-color:var(--os-accent)}
+.atlas-console #atlasObjectPage :is(button,summary,a):not(.os-button):not(.os-source-trigger):not(.os-topic-nav > *):not(.strategic-job-map *){color:var(--os-accent);font-size:var(--os-label);min-height:var(--os-target);letter-spacing:0;text-transform:none}
+.atlas-console #atlasObjectPage button:not(.os-button):not(.os-source-trigger):not(.os-topic-nav > button):not(.strategic-job-map *){background:var(--os-surface);border:1px solid var(--os-control)}
+.atlas-console #atlasObjectPage :is(button[aria-pressed=true],button[aria-selected=true]):not(.os-topic-nav > button):not(.strategic-job-map *){background:var(--os-selected);border-color:var(--os-accent)}
 .atlas-console #atlasObjectPage :is(.research-record,.research-story-card,.research-job-card,.research-context-reading,.research-context-browser,.research-stimulus,.research-reaction,.research-choice-card){background:var(--os-surface)!important;color:var(--os-text)!important;border-color:var(--os-line)!important}
 .atlas-console #atlasObjectPage :is(.research-job-card header,.research-job-card footer){background:var(--os-sidebar)!important;color:var(--os-accent)!important}
 .atlas-console #atlasObjectPage .research-job-edge{stroke:var(--os-accent)}.atlas-console #atlasObjectPage .research-edge-label{fill:var(--os-accent)}

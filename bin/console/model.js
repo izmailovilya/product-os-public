@@ -115,6 +115,12 @@ const SKILL_META = {
     title: 'Гипотезы сегментов', duration: '2–5 мин', minutes: 4,
     output: '8–15 сегментов по задачам клиентов, вопросы квалификации и риски',
   },
+  'product-job-map': {
+    category: 'research', targetTypes: ['product'],
+    title: 'Карта работ', duration: 'Зависит от объёма',
+    description: 'Связать задачи клиентов и увидеть, где продукт помогает, где нужны доработки и что стоит исследовать.',
+    output: 'Стратегическая карта верхних и нижних работ, границы продукта и предварительные связи с сегментами',
+  },
   'product-prioritize': {
     category: 'management',
     title: 'Расставить приоритеты', duration: '5–10 мин', minutes: 8,
@@ -318,7 +324,8 @@ function reportParagraphs(markdown) {
 }
 
 function reportSummary(markdown) {
-  return reportParagraphs(markdown).slice(0, 2).join(' ').slice(0, 700)
+  const text=reportParagraphs(markdown).slice(0, 2).join(' ')
+  return text.length>700?text.slice(0,700).replace(/\s+\S*$/,'')+'…':text
 }
 
 function reportNextStep(markdown) {
@@ -356,6 +363,9 @@ function loadReports(workspace, nodes) {
     const text = safeRead(file) || ''
     const fm = parseFrontmatter(text)
     const relative = path.relative(workspace, file).split(path.sep).join('/')
+    // Keep working prompts and review exchanges at their original URLs, outside
+    // the reader's research report list. They are provenance, not deliverables.
+    if (['internal','archive'].includes(fm.visibility) || /(?:^|\/)(?:critic|generator)\//.test(relative) || /^reports\/segmentation\/.*\/state\.md$/i.test(relative) || /\/(?:prompt|full-preparation-context|review-responses|(?:.+-)?request(?:-v\d+)?)\.md$/i.test(relative)) return null
     const stat = fs.statSync(file)
     // filename dates are day-precision ("2026-09-02" = midnight); a launch at 10:39 must still
     // claim a report written at 10:49 the same day — so keep the file's own timestamp too
@@ -372,13 +382,13 @@ function loadReports(workspace, nodes) {
     const mentions = nodes.filter(node => node.label && summary.toLocaleLowerCase('ru').includes(node.label.toLocaleLowerCase('ru')))
       .map(node => ({ id: node.id, label: node.label })).slice(0, 8)
     return {
-      path: relative, title, productState, stateSummary: productState ? (fm.summary ? reportText(fm.summary) : reportParagraphs(text)[0] || '') : null,
+      path: relative, title, outcome:['partial','completed','failed'].includes(fm.outcome)?fm.outcome:null, productState, stateSummary: productState ? (fm.summary ? reportText(fm.summary) : reportParagraphs(text)[0] || '') : null,
       date, written, dateLabel: humanDate(date), method: humanSkillName(slug), skill: slug,
       skillSlug: slug, runId: fm.runId || null, nodeId: fm.nodeId || null, summary, mentions,
       nextStep: reportNextStep(text),
       integrated: nodes.some(node => !['artifact', 'move'].includes(node.type) && (node.source === relative || Object.values(node.data?.research || {}).some(run => run.report === relative && run.outcome === 'completed'))),
     }
-  }).sort((a, b) => b.date - a.date || b.written - a.written)
+  }).filter(Boolean).sort((a, b) => b.date - a.date || b.written - a.written)
 }
 
 function loadSkills(repoRoot) {
@@ -715,9 +725,22 @@ function todoItems(workspace, projected, reports, state, threads, receipts = loa
   return combined.sort((a, b) => (statusOrder[a.status] ?? 9) - (statusOrder[b.status] ?? 9) || (a.order ?? 999) - (b.order ?? 999))
 }
 
-function buildSnapshot({ workspace, repoRoot, graph, graphStatus, state, threads, capabilities, scope = '', researchRecords }) {
+function buildSnapshot({ workspace, repoRoot, graph, graphStatus, state, threads, capabilities, scope = '', researchRecords, view = '' }) {
   const publicEdition = isPublicEdition(repoRoot)
   const productName = firstHeading(safeRead(path.join(workspace, 'PRODUCT.md')), graph.product || path.basename(workspace))
+  // Identity and the strategic board have their own scoped readers. Do not build
+  // reports, communications, dossiers and suggestions just to obtain their shell.
+  // The explicit view marker prevents this subset being used by other routes.
+  if (['identity','library','jobs'].includes(view)) {
+    const product = graph.nodes.find(node => node.type === 'product')
+    const nodes = product ? [{ id: product.id, type: product.type, label: product.label, status: product.status, source: product.source }] : []
+    return { snapshotView: view, generatedAt: Date.now(), workspace, productName, graphStatus, capabilities,
+      graph: { nodes, edges: [], productId: product?.id || null, empty: !product },
+      galaxy: buildGalaxyProjection({ nodes, edges: [], productId: product?.id || null }),
+      // Counts are unknown in this view, rather than asserted to be zero.
+      badges: {}, humanWork: {}, communications: null,
+    }
+  }
   const projected = projection(graph, workspace)
   projected.nodes = require('./consideration').withConsideration(projected.nodes, researchRecords || require('../research/store').load(workspace).records)
   const reports = loadReports(workspace, projected.nodes)
@@ -773,7 +796,10 @@ function buildSnapshot({ workspace, repoRoot, graph, graphStatus, state, threads
     segments: activeNodes.filter(node => node.type === 'segment').length,
   }
   const galaxy = buildGalaxyProjection({ ...galaxyInput, moves, fileExists })
+  const profileSources = require('./customer-profile-sources').customerProfileSources(workspace, projected.nodes)
+  for (const segment of galaxy.segments) segment.customerProfile = profileSources(segment.customerProfile, [segment.customerProfileSource, projected.nodes.find(node => node.id === segment.id)?.source])
   return {
+    audienceIdeas: require('./audience-ideas').audienceIdeas(workspace, graph),
     researchCounts:{people:(researchRecords||[]).filter(r=>r.type==='Person').length,sessions:(researchRecords||[]).filter(r=>r.type==='Session'&&r.status==='completed').length},
     generatedAt: Date.now(), workspace, productName, graphStatus, graphSignature, capabilities,
     metrics, graph: { nodes: projected.nodes, edges: projected.edges, productId: projected.product?.id || null, empty: projected.empty, groups: projected.groups },

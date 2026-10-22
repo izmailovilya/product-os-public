@@ -7,11 +7,12 @@ const { execFileSync } = require('node:child_process')
 const { createHash } = require('node:crypto')
 const root = path.resolve(__dirname, '..')
 const { init, importSource, sources } = require('../bin/public-workspace')
-const expected = ['os-setup','product-context','product-status']
+const expected = ['os-setup','product-brand-identity','product-context','product-job-map','product-reference-library','product-research','product-segment-hypotheses','product-status']
+const skillDirs = dir => fs.readdirSync(dir,{withFileTypes:true}).filter(e=>e.isDirectory()).map(e=>e.name).sort((a,b)=>a.localeCompare(b,'en'))
 function temporary(t) { const dir=fs.mkdtempSync(path.join(os.tmpdir(),'product-os-public-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));return dir }
 
-test('only the three public skills and reviewed files ship', () => {
-  assert.deepEqual(fs.readdirSync(path.join(root,'skills'),{withFileTypes:true}).filter(e=>e.isDirectory()).map(e=>e.name).sort(),expected)
+test('only the public skills and reviewed files ship', () => {
+  assert.deepEqual(skillDirs(path.join(root,'skills')),expected)
   const manifest=JSON.parse(fs.readFileSync(path.join(root,'PUBLIC-RELEASE.json')))
   assert.deepEqual(manifest.skills,expected)
   for(const file of manifest.files) {
@@ -61,11 +62,108 @@ test('both agent installations contain only public skills and run independently'
   execFileSync(process.execPath,[path.join(root,'bin/product-os.js'),'install',dir,'--agent','both'])
   for(const [base,tools] of [['.agents','.agents/product-os-tools'],['.claude','.claude/skills/product-os-tools']]) {
     const skillDir=path.join(dir,base,'skills')
-    assert.deepEqual(fs.readdirSync(skillDir,{withFileTypes:true}).filter(e=>e.isDirectory()&&e.name!=='product-os-tools').map(e=>e.name).sort(),expected)
+    assert.deepEqual(skillDirs(skillDir).filter(name=>name!=='product-os-tools'),expected)
     const runtime=path.join(dir,tools)
     assert.deepEqual(fs.readdirSync(path.join(runtime,'skills'),{withFileTypes:true}).filter(e=>e.isDirectory()).map(e=>e.name).sort(),expected)
-    assert.match(execFileSync(process.execPath,[path.join(runtime,'bin/product-os.js'),'help'],{encoding:'utf8'}),/Product OS Public/)
+    assert.match(execFileSync(process.execPath,[path.join(runtime,'bin/product-os.js'),'help'],{encoding:'utf8'}),/Product OS/)
   }
+})
+test('custom skills and their sharing decision survive Public updates from either runtime',t=>{
+  const dir=temporary(t),workspace=path.join(dir,'product'),source=path.join(dir,'team-check')
+  fs.mkdirSync(workspace);fs.mkdirSync(source)
+  fs.writeFileSync(path.join(source,'SKILL.md'),'---\nname: team-check\ndescription: Check one team task.\n---\n\nUse PRODUCT.md.\n')
+  const cli=path.join(root,'bin/product-os.js')
+  execFileSync(process.execPath,[cli,'setup',workspace,'--agent','both'])
+  execFileSync(process.execPath,[cli,'skills','add',workspace,source])
+  execFileSync(process.execPath,[cli,'skills','verify',workspace,'team-check','--evidence','Checked a fictional task.'])
+  execFileSync(process.execPath,[cli,'skills','decline',workspace,'team-check'])
+  const canonical=path.join(workspace,'.product-os/custom-skills/team-check/SKILL.md'),bytes=fs.readFileSync(canonical)
+  for(const runtime of ['.agents/product-os-tools','.claude/skills/product-os-tools']) {
+    const installed=path.join(workspace,runtime,'bin/product-os.js')
+    execFileSync(process.execPath,[installed,'setup',workspace,'--agent','both'])
+    assert.deepEqual(fs.readFileSync(canonical),bytes)
+    const offer=JSON.parse(execFileSync(process.execPath,[installed,'skills','offer',workspace,'team-check'],{encoding:'utf8'}))
+    assert.equal(offer.shouldAsk,false);assert.equal(offer.verified,true)
+    assert.equal(fs.existsSync(path.join(workspace,runtime,'CUSTOM-SKILLS.md')),true)
+    for(const agent of ['.agents','.claude'])assert.deepEqual(fs.readFileSync(path.join(workspace,agent,'skills/team-check/SKILL.md')),bytes)
+  }
+})
+test('installed Public can prepare and preview a standalone read-only sharing bundle',async t=>{
+  const dir=temporary(t),workspace=path.join(dir,'product'),cli=path.join(root,'bin/product-os.js')
+  execFileSync(process.execPath,[cli,'setup',workspace,'--agent','codex'])
+  const installed=path.join(workspace,'.agents/product-os-tools/bin/product-os.js')
+  const bundle=JSON.parse(execFileSync(process.execPath,[installed,'share','prepare',workspace,'--access','open','--name','fictional-public-console'],{encoding:'utf8'}))
+  assert.equal(bundle.readOnly,true);assert.equal(bundle.published,false)
+  const {preview}=require('../bin/share/cli'),app=await preview(bundle.directory)
+  t.after(()=>new Promise(resolve=>app.server.close(resolve)))
+  const response=await fetch(app.url+'/api/snapshot')
+  assert.equal(response.status,200)
+  assert.equal((await response.json()).sharedSnapshot.access,'open')
+  assert.equal((await fetch(app.url+'/api/launch',{method:'POST'})).status,405)
+  assert.equal(fs.existsSync(path.join(workspace,'.agents/product-os-tools/SHARING.md')),true)
+})
+
+test('setup prepares one workspace for both agents and preserves user work on repeat',t=>{
+  const dir=temporary(t),workspace=path.join(dir,'my-product')
+  fs.mkdirSync(workspace)
+  fs.writeFileSync(path.join(workspace,'PRODUCT.md'),'# My product\n\nOwner description\n')
+  fs.writeFileSync(path.join(workspace,'AGENTS.md'),'Personal instructions\n')
+  const cli=path.join(root,'bin/product-os.js')
+  const output=execFileSync(process.execPath,[cli,'setup',workspace,'--agent','both'],{encoding:'utf8'})
+  assert.match(output,/Рабочее место готово/)
+  const graph=fs.readFileSync(path.join(workspace,'research-graph.json'),'utf8')
+  const notes=path.join(workspace,'notes.md');fs.writeFileSync(notes,'Original user material\n')
+  const saved=importSource(workspace,notes)
+  const withSource=fs.readFileSync(path.join(workspace,'research-graph.json'),'utf8')
+  execFileSync(process.execPath,[cli,'setup',workspace,'--agent','both'])
+  assert.equal(fs.readFileSync(path.join(workspace,'PRODUCT.md'),'utf8'),'# My product\n\nOwner description\n')
+  assert.ok(fs.readFileSync(path.join(workspace,'AGENTS.md'),'utf8').startsWith('Personal instructions\n'))
+  assert.equal(fs.readFileSync(path.join(workspace,'research-graph.json'),'utf8'),withSource)
+  assert.equal(fs.readFileSync(path.join(workspace,saved.source),'utf8'),'Original user material\n')
+  assert.equal(JSON.parse(graph).nodes.find(n=>n.type==='product').label,'My product')
+  for(const runtime of ['.agents/product-os-tools','.claude/skills/product-os-tools']) {
+    const installed=path.join(workspace,runtime,'bin/product-os.js')
+    assert.match(execFileSync(process.execPath,[installed,'sources',workspace],{cwd:dir,encoding:'utf8'}),/notes.md/)
+  }
+})
+
+test('installed runtimes repeat setup for both agents without self-deletion',t=>{
+  const dir=temporary(t)
+  fs.writeFileSync(path.join(dir,'PRODUCT.md'),'# Мой продукт\n\nОписание владельца\n')
+  fs.writeFileSync(path.join(dir,'AGENTS.md'),'Personal instructions\n')
+  execFileSync(process.execPath,[path.join(root,'bin/product-os.js'),'setup',dir,'--agent','both'])
+  const notes=path.join(dir,'notes.md');fs.writeFileSync(notes,'Материал владельца\n')
+  const saved=importSource(dir,notes)
+  for(const cli of ['.agents/product-os-tools/bin/product-os.js','.claude/skills/product-os-tools/bin/product-os.js'])
+    execFileSync(process.execPath,[path.join(dir,cli),'setup',dir,'--agent','both'])
+  for(const [base,runtime] of [['.agents','.agents/product-os-tools'],['.claude','.claude/skills/product-os-tools']]) {
+    assert.equal(fs.existsSync(path.join(dir,runtime,'bin','product-os.js')),true,base)
+    assert.match(execFileSync(process.execPath,[path.join(dir,runtime,'bin','product-os.js'),'help'],{encoding:'utf8'}),/Product OS/)
+    assert.deepEqual(skillDirs(path.join(dir,base,'skills')).filter(name=>name!=='product-os-tools'),expected)
+  }
+  assert.equal(fs.readFileSync(path.join(dir,'PRODUCT.md'),'utf8'),'# Мой продукт\n\nОписание владельца\n')
+  assert.ok(fs.readFileSync(path.join(dir,'AGENTS.md'),'utf8').startsWith('Personal instructions\n'))
+  assert.equal(fs.readFileSync(path.join(dir,saved.source),'utf8'),'Материал владельца\n')
+  execFileSync(process.execPath,[path.join(dir,'.agents/product-os-tools/bin/graph-write.js'),dir,'--check'])
+})
+
+test('setup defaults to the current folder and respects the chosen agent',t=>{
+  const dir=temporary(t)
+  execFileSync(process.execPath,[path.join(root,'bin/product-os.js'),'setup','--agent','codex'],{cwd:dir})
+  assert.ok(fs.existsSync(path.join(dir,'research-graph.json')))
+  assert.ok(fs.existsSync(path.join(dir,'.agents/skills/product-context/SKILL.md')))
+  assert.equal(fs.existsSync(path.join(dir,'.claude')),false)
+  assert.equal(fs.existsSync(path.join(dir,'CLAUDE.md')),false)
+})
+
+test('setup rejects another edition or an invalid agent without initializing product data',t=>{
+  const dir=temporary(t),foreign=path.join(dir,'.agents/product-os-tools')
+  fs.mkdirSync(foreign,{recursive:true});fs.writeFileSync(path.join(foreign,'package.json'),'{"name":"product-os"}')
+  const cli=path.join(root,'bin/product-os.js')
+  assert.throws(()=>execFileSync(process.execPath,[cli,'setup',dir,'--agent','both'],{stdio:'pipe'}),/другой Product OS/)
+  for(const file of ['PRODUCT.md','research-graph.json','CLAUDE.md','AGENTS.md'])assert.equal(fs.existsSync(path.join(dir,file)),false,file)
+  assert.throws(()=>execFileSync(process.execPath,[cli,'setup',path.join(dir,'invalid'),'--agent','missing'],{stdio:'pipe'}),/setup/)
+  assert.equal(fs.existsSync(path.join(dir,'invalid')),false)
 })
 
 test('installation refuses another edition before changing either agent',t=>{
@@ -76,7 +174,7 @@ test('installation refuses another edition before changing either agent',t=>{
   assert.equal(fs.readFileSync(path.join(foreign,'package.json'),'utf8'),'{"name":"product-os"}')
 })
 
-test('console serves source and three basic skills; advanced routes are unavailable',async t=>{
+test('console serves source and public skills; advanced routes are unavailable',async t=>{
   const dir=temporary(t);init(dir)
   const original=path.join(dir,'note.md');fs.writeFileSync(original,'# Test source\nExact source.\n');const imported=importSource(dir,original)
   const {createConsoleServer,listen}=require('../bin/console/server')
@@ -101,4 +199,62 @@ test('console serves source and three basic skills; advanced routes are unavaila
   const response=await fetch(base+'/api/research-briefs',{method:'POST',headers:{'content-type':'application/json','x-product-os-token':snap.csrfToken},body:'{"action":"create"}'})
   assert.equal(response.status,404)
   assert.ok(Object.values(snap.moves).flat().every(move=>expected.includes(move.skill)))
+})
+
+test('native job map round-trips through the public reader with a saved offering scope',t=>{
+  const dir=temporary(t);init(dir)
+  fs.mkdirSync(path.join(dir,'reports/job-map/run-1'),{recursive:true})
+  const map={version:1,title:'Карта работ',basis:'Гипотезы из описания продукта.',scope:{productId:'product',goal:'Выбрать работы для исследования',edition:'full'},
+    editions:{full:'Текущий продукт',public:'Отдельная версия не описана'},
+    jobs:{'job-plan':{id:'job-plan',label:'Спланировать следующий шаг',kind:'original',description:'Человек решает, что делать дальше.',input:'Сохранённый контекст продукта.',output:'Выбранное направление.',mechanism:'Продукт собирает контекст в одном месте.',alternatives:'Заметки в разных файлах.',basis:'hypothesis',sourceRefs:['product-description'],
+      full:{state:'assist',contribution:'Хранит контекст и решения с источниками.',limit:'Не выбирает направление за человека.',sources:['product-description']},
+      public:{state:'unknown',contribution:'Отдельная версия не описана.',limit:'Возможности этой версии неизвестны.',sources:[]}}},
+    graphs:[{id:'job-plan',title:'Спланировать следующий шаг',jobIds:['job-plan'],edges:[],note:'Один фрагмент.',boundary:'Решение остаётся за человеком.'}],
+    contexts:[],sources:{'product-description':{kind:'owner',title:'PRODUCT.md',text:'Описание продукта владельцем.'}},inventory:[],
+    review:{status:'unreviewed',sourceRefs:[]}}
+  const mapFile=path.join(dir,'reports/job-map/run-1/map.json'),mapBytes=Buffer.from(JSON.stringify(map,null,2)+'\n')
+  fs.writeFileSync(mapFile,mapBytes)
+  fs.writeFileSync(path.join(dir,'reports/job-map/run-1/report.md'),'---\ntitle: Карта работ\ndate: 2026-10-21\nskill: product-job-map\nnodeId: product\noutcome: partial\nsummary: Черновик карты без независимой проверки.\n---\n\nЧерновик.\n')
+  const operations=path.join(dir,'map-ops.json')
+  fs.writeFileSync(operations,JSON.stringify({schemaVersion:1,expectedRevision:1,source:'reports/job-map/run-1/report.md',operations:[{op:'node',node:{id:'artifact-job-map-product',type:'artifact',label:'Карта работ',status:'hypothesis',data:{confidence:'ai',artifactKind:'strategic-job-map',version:1,productId:'product',mapPath:'reports/job-map/run-1/map.json',mapSha256:createHash('sha256').update(mapBytes).digest('hex')}}}]},null,2))
+  execFileSync(process.execPath,[path.join(root,'bin/product-os.js'),'graph-write',dir,operations])
+  const {strategicJobs}=require('../bin/console/strategic-jobs')
+  const graph=JSON.parse(fs.readFileSync(path.join(dir,'research-graph.json'),'utf8'))
+  const reading=strategicJobs(dir,graph,'product')
+  assert.equal(reading.state,'ready')
+  assert.equal(reading.map.scope.edition,'full')
+  assert.equal(reading.map.jobs['job-plan'].full.state,'assist')
+  assert.equal(reading.map.jobs['job-plan'].full.contribution,'Хранит контекст и решения с источниками.')
+  assert.equal(reading.map.jobs['job-plan'].public.state,'unknown')
+  const rejected=JSON.parse(mapBytes.toString());rejected.scope.edition='free'
+  assert.throws(()=>require('../bin/console/strategic-jobs').validateMap(rejected),/Некорректная структура/)
+})
+
+test('focused research persists with the evidence op and reaches the console report list',async t=>{
+  const dir=temporary(t);init(dir)
+  const reportPath='reports/research/2026-10-21_probe.md'
+  fs.mkdirSync(path.join(dir,'reports/research'),{recursive:true})
+  fs.writeFileSync(path.join(dir,reportPath),'---\ntitle: Проверка вопроса\ndate: 2026-10-21\nskill: product-research\nnodeId: seg-probe\noutcome: partial\nsummary: Часть фактов подтверждена; независимая проверка не выполнялась.\n---\n\nОтвет на вопрос.\n')
+  const operations=path.join(dir,'research-ops.json')
+  fs.writeFileSync(operations,JSON.stringify({schemaVersion:1,expectedRevision:1,source:reportPath,operations:[
+    {op:'node',node:{id:'seg-probe',type:'segment',label:'Возможные клиенты',status:'hypothesis',source:'PRODUCT.md',data:{confidence:'ai',customerProfileSource:'PRODUCT.md',customerProfile:{version:1,group:{id:'g',label:'Группа'},summary:{text:'Практика людей, которым продукт может помочь.',basis:'hypothesis',sourceRefs:[]},context:{text:'Рабочий контекст.',basis:'hypothesis',sourceRefs:[]},recognition:{text:'Узнаются по ситуации.',basis:'hypothesis',sourceRefs:[]},whySeparate:{text:'Другая ценность.',basis:'hypothesis',sourceRefs:[]},primaryJob:{text:'Сделать шаг.',basis:'hypothesis',sourceRefs:[]},productFit:{text:'Помощь контекстом.',basis:'hypothesis',sourceRefs:[]},alternatives:{text:'Заметки.',basis:'hypothesis',sourceRefs:[]},successCriteria:[],otherJobs:[],roles:{user:{text:'Пользуется сам в своей работе.',basis:'hypothesis',sourceRefs:[]},decisionMaker:{text:'Кто решает о покупке — неизвестно.',basis:'unknown',sourceRefs:[]},payer:{text:'Кто платит — неизвестно.',basis:'unknown',sourceRefs:[]}},journey:{trigger:{text:'Возникает задача.',basis:'hypothesis',sourceRefs:[]},discovery:{text:'Как находят — неизвестно.',basis:'unknown',sourceRefs:[]},firstUse:{text:'Первый сценарий не описан.',basis:'unknown',sourceRefs:[]},purchase:{text:'Покупка не описана.',basis:'unknown',sourceRefs:[]},retention:{text:'Повторное использование не описано.',basis:'unknown',sourceRefs:[]}},unknowns:['Кто платит']}}}},
+    {op:'evidence',target:'seg-probe',text:'Публичная страница описывает практику.',source:'https://example.com/practice',origin:'web',relation:'evidenced_by'},
+    {op:'complete',nodeId:'seg-probe',skill:'product-research',report:reportPath,outcome:'completed'}
+  ]},null,2))
+  execFileSync(process.execPath,[path.join(root,'bin/product-os.js'),'graph-write',dir,operations])
+  const graph=JSON.parse(fs.readFileSync(path.join(dir,'research-graph.json'),'utf8'))
+  assert.equal(graph.nodes.find(n=>n.id==='seg-probe').data.research['product-research'].report,reportPath)
+  assert.ok(graph.nodes.some(n=>n.type==='evidence'&&n.source==='https://example.com/practice'))
+  const {createConsoleServer,listen}=require('../bin/console/server')
+  const app=await createConsoleServer({workspace:dir,repoRoot:root,bbPath:false,claudePath:false,chromeAgent:false})
+  t.after(()=>new Promise(resolve=>app.server.close(resolve)))
+  const address=await listen(app.server),base=`http://127.0.0.1:${address.port}`
+  const snap=await(await fetch(base+'/api/snapshot')).json()
+  const report=snap.reports.find(item=>item.path===reportPath)
+  assert.equal(report.nodeId,'seg-probe')
+  assert.equal(report.skill,'product-research')
+  const identity=await(await fetch(base+'/api/product-identity?productId=product')).json()
+  assert.equal(identity.state,'unregistered')
+  const references=await(await fetch(base+'/api/product-references?productId=product')).json()
+  assert.equal(references.state,'unregistered')
 })

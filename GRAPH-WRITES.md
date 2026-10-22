@@ -61,3 +61,46 @@ Writer выполняет валидацию, блокировку и согла
 
 Простое чтение через product-status не создаёт отчёт, receipt, задачи или записи.
 Результат чтения остаётся в ответе владельцу.
+
+## Отчёты навыков
+
+Отчёт навыка — Markdown в `reports/` с frontmatter: `title`, `date` (YYYY-MM-DD),
+`skill` (slug навыка), `nodeId` цели, `outcome: completed|partial|failed`, `summary`.
+Список исследований в консоли строится из этих полей; `visibility: internal` убирает
+рабочие материалы из списка, не удаляя файл. Свяжите отчёт с узлом операцией
+`complete`: `{op:"complete", nodeId, skill, report:"reports/…​.md", outcome}`.
+
+## Стратегическая карта работ
+
+У продукта — один действующий `artifact` с `data.artifactKind: "strategic-job-map"`,
+`version: 1`, `productId` и `mapPath` на существующий `reports/job-map/<run>/map.json`
+(плюс `mapSha256` точных байтов). Прежнюю активную карту отставляйте явно. Формат
+карты — в навыке `product-job-map` (`references/map-format.md`); там же скрипт
+проверки. Необязательное `scope.edition: "full"|"public"` выбирает охват
+предложения; отсутствующее поле читается как `full`. Читается в консоли в разделе
+«Карта работ».
+
+## Отложенные идеи аудитории
+
+Обещающие, но пока не выбранные применения сохраняйте как `artifact` с
+`data.artifactKind: "audience-ideas"`, `version: 1` и `data.ideas:
+[{id, title, focus: "deferred", benefit, deferredReason, report}]`; `report` —
+существующий `reports/*.md` этой идеи. Полные профили не выдумывайте; консоль
+показывает идеи под картой сегментов.
+
+## Айдентика бренда
+
+`artifact` с `data.kind: "visual-profile"`, `artifactKind: "brand-identity"`,
+`productId`, `profileFile` на identity.json, `version`, `decision: proposed|accepted`
+(`accepted` — только с `decisionSource` — явным решением владельца). Формат
+identity.json и валидатор — в навыке `product-brand-identity`. Консоль читает
+профиль в разделе «Библиотека» → «Айдентика»; предложенные и принятые версии
+показываются раздельно.
+
+## Библиотека референсов
+
+`artifact` с `data.kind: "content-pack"`, `artifactKind: "product-reference-library"`,
+`productId`, `manifestFile` на manifest schemaVersion 1 (`tracks[].cardsPath/
+sourcesPath/…`). Формат файлов — контракт навыка `product-reference-library`.
+Библиотека без независимой проверки сохраняется с `readiness: "draft"`.
+Читается в разделе «Библиотека» → «Референсы» и через `product-os references read`.

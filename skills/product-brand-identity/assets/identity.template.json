@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 3,
+  "product": {
+    "id": null,
+    "name": ""
+  },
+  "version": 1,
+  "basedOn": null,
+  "scope": "brand",
+  "stage": "brief",
+  "readiness": "draft",
+  "decision": "proposed",
+  "decisionSource": null,
+  "selectedDirection": null,
+  "selectionSource": null,
+  "waitingFor": null,
+  "requestedDeliverables": [
+    "brief",
+    "concepts",
+    "identity-system",
+    "logobook",
+    "asset-pack",
+    "applications"
+  ],
+  "sources": [
+    {
+      "id": "method-johnson-93",
+      "kind": "method",
+      "locator": "KNOWLEDGE_BASE_ROOT/brand-identity/raw/books/johnson-branding-five-half-steps/pages/0097.txt",
+      "viewed": true,
+      "note": "Пример: шесть вопросов бренда, печ. с. 93. Без базы допустимо «Johnson, с. 93» из knowledge.md. Удали пример перед заполнением."
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "example-reading",
+      "statement": "Пример: человек из сегмента понимает по обложке, чем занимается продукт",
+      "basis": "предположение агента",
+      "fatal": true,
+      "status": "open",
+      "check": "Показать обложку 5 секунд пяти людям из сегмента, спросить «что за компания и что делает». Порог: 3 из 5 называют суть предложения.",
+      "checkResult": null
+    }
+  ],
+  "rules": [
+    {
+      "id": "example-color-pair",
+      "topic": "color",
+      "value": "Пример: основной текст #101410 на фоне #F7F8F3",
+      "rationale": "Пример правила с парой для контраста; удали перед заполнением",
+      "sourceIds": [
+        "method-johnson-93"
+      ],
+      "strength": "required",
+      "demoFileIds": [],
+      "pairs": [
+        {
+          "fg": "#101410",
+          "bg": "#F7F8F3",
+          "role": "основной текст",
+          "minRatio": 4.5
+        }
+      ]
+    }
+  ],
+  "directions": [],
+  "files": [],
+  "deliverables": [],
+  "qa": [],
+  "presentation": null
+}

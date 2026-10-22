@@ -4,10 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="light">
-  <title>Product OS Public</title>
+  <title>Product OS</title>
   <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/design-system.css">
   <link rel="stylesheet" href="/ui-components.css">
+  <link rel="stylesheet" href="/assets/job-flow.css">
+  <link rel="stylesheet" href="/product-library.css">
+  <link rel="stylesheet" href="/product-references.css">
   <style>
     *{box-sizing:border-box}html,body{margin:0;min-height:100%}[hidden]{display:none!important}
     .public-shell{display:grid;grid-template-columns:15rem minmax(0,1fr);min-height:100dvh}
@@ -17,8 +20,9 @@
     .public-navigation a:hover{background:var(--os-hover)}.public-navigation a[aria-current=page]{background:var(--os-selected);border-color:var(--os-control);color:var(--os-accent)}
     .public-main{min-width:0;padding:clamp(1.25rem,3vw,3rem);overflow-wrap:anywhere}.public-main>section{max-width:76rem;margin:auto}
     .public-main h1{font:600 var(--os-h1)/1.2 var(--os-heading-font)}.public-main h2{font:600 var(--os-h2)/1.3 var(--os-heading-font)}
-    .public-main :is(p,li){max-width:72ch}.public-main a{color:var(--os-accent)}.public-main :is(p,ul){margin-block:.5rem 1rem}
+    .public-main :is(p,li){max-width:72ch}.public-main a:not(.os-button){color:var(--os-accent)}.public-main :is(p,ul){margin-block:.5rem 1rem}
     .public-records{display:grid;gap:1.5rem}.public-source{color:var(--os-muted);font-size:var(--os-label)}
+    .public-document{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}
     .public-feedback:not(:empty){margin-bottom:1.5rem}.public-skip{position:fixed;left:1rem;top:-10rem;z-index:10;padding:1rem;background:var(--os-surface);color:var(--os-accent)}.public-skip:focus{top:1rem}
     button,input,select{font:inherit}a:focus-visible,button:focus-visible{outline:3px solid var(--os-accent);outline-offset:3px}
     @media(max-width:767px){.public-shell{display:block}.public-sidebar{position:relative;height:auto;padding:1rem;border-right:0;border-bottom:1px solid var(--os-line)}.public-sidebar .os-brand{padding:0}.public-workspace{padding:.5rem 0;margin:.5rem 0;border:0}.public-navigation{flex-direction:row;flex-wrap:wrap;gap:.25rem}.public-navigation a{flex:1 1 8rem}.public-main{padding:1.25rem}}
@@ -33,7 +37,9 @@
       <nav class="public-navigation" aria-label="Основные разделы">
         <a href="#product" data-page="product">Продукт</a>
         <a href="#segments" data-page="segments">Сегменты</a>
+        <a href="#jobs" data-page="jobs">Карта работ</a>
         <a href="#competitors" data-page="competitors">Конкуренты</a>
+        <a href="#library/identity" data-page="library">Библиотека</a>
       </nav>
     </aside>
     <main class="public-main" id="publicContent" tabindex="-1">
@@ -41,6 +47,7 @@
       <section id="publicPage" aria-busy="true"><h1>Продукт</h1><p role="status">Загрузка данных…</p></section>
     </main>
   </div>
+  <script defer src="/assets/job-flow.js"></script>
   <script type="module" src="/app.js"></script>
 </body>
 </html>

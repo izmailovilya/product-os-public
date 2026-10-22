@@ -1,0 +1,8 @@
+import { button, detailLayout, escapeHTML, field, pageHeader, readingSection } from '../console/public/ui-components.js'
+import { safeNext } from './auth.mjs'
+
+export function loginPage({ error = '', next = '/', salt = '', iterations = 600000 } = {}) {
+  const form = `<form method="post" action="/_share/login" class="share-login-form" data-salt="${escapeHTML(salt)}" data-iterations="${iterations}"><input type="hidden" name="next" value="${escapeHTML(safeNext(next))}">${field({ name: 'password', label: 'Пароль', type: 'password', required: true, error, attributes: { id: 'share-password', autocomplete: 'current-password', maxlength: 512, autofocus: true } })}${button({ label: 'Открыть консоль', variant: 'primary', type: 'submit' })}</form>`
+  const content = detailLayout({ header: pageHeader({ title: 'Доступ к консоли' }), content: readingSection({ intro: 'Введите пароль, который вам передал владелец.', content: form }) })
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Доступ к консоли · Product OS</title><link rel="stylesheet" href="/design-system.css"><link rel="stylesheet" href="/ui-components.css"><link rel="stylesheet" href="/_share/login.css"></head><body class="atlas-console"><main class="share-login"><div class="os-brand" role="img" aria-label="Product OS"><img src="/assets/brand/mark-ink.svg" width="32" height="32" alt=""><span aria-hidden="true">Product OS</span></div>${content}</main><script type="module" src="/_share/login.js"></script></body></html>`
+}

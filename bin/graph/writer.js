@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const { atomicWrite, workspaceLock, recoverPending, commitFiles } = require('./storage')
+const { workspaceLock, recoverPending, commitFiles } = require('./storage')
 const { criterionId, digest, edgeKey, scopedId, nonempty, evidenceUsable, validateGraph, STATUSES } = require('./schema')
 const clone = value => JSON.parse(JSON.stringify(value))
 const { mergeCompetitors } = require('./competitors')
@@ -123,6 +123,7 @@ class GraphTransaction {
       this.before = clone(this.graph)
       this.source = options.source || null; this.pending = []; this.decisions = []
       this.files = new Map()
+      this.designCompletions = new Map()
       this.removals = new Set()
     } catch (error) { this.release(); throw error }
   }
@@ -140,6 +141,11 @@ class GraphTransaction {
     if (n?.type === 'criterion' && label && label !== n.label) throw new Error('Изменение критерия требует нового ID')
     if (n?.type === 'criterion' && ['segmentId', 'jobId', 'level'].some(k => extra.data?.[k] !== undefined && extra.data[k] !== n.data?.[k])) throw new Error('Смена контекста или порога требует нового критерия')
     if (n && n.type !== type) throw new Error(`Тип узла ${id} нельзя изменить`)
+    if (type === 'artifact' && (extra.data?.kind || n?.data?.kind) === 'research-reading-review') {
+      const candidate = { source: extra.source || this.source || n?.source, data: mergeData(n?.data || {}, extra.data || {}) }
+      const issue = require('../research-brief/reading-review').readingReviewIssue(this.workspace, candidate)
+      if (issue) throw new Error(issue)
+    }
     if (!n) {
       n = { id, type, label, status: 'hypothesis', source: extra.source || this.source, data: {} }
       this.graph.nodes.push(n)
@@ -212,14 +218,15 @@ class GraphTransaction {
     return n
   }
 
-  complete({ nodeId, skill, report, runId, outcome = 'completed' }) {
+  complete({ nodeId, skill, report, runId, outcome = 'completed', storage }) {
     const n = this.graph.nodes.find(n => n.id === nodeId)
     this.validateReport(report)
     if (!['completed', 'failed'].includes(outcome)) throw new Error('Неверный исход исследования')
     if (!n || !nonempty(skill) || !/^reports\/.+\.md$/.test(report || '')) throw new Error('Завершению нужны узел, скилл и отчёт')
+    if (skill === 'product-design' && outcome === 'completed' && !runId) throw new Error('Завершению product-design нужен runId и проверяемое закрытие хранения')
     n.data.research ||= {}
     n.data.research[skill] = { report, runId: runId || null, completedAt: new Date().toISOString(), outcome }
-    if (runId) this.receipt({ runId, nodeId, skill, report, outcome })
+    if (runId) this.receipt({ runId, nodeId, skill, report, outcome, storage })
     return n
   }
 
@@ -236,9 +243,14 @@ class GraphTransaction {
     this.files.set(relative, { path: relative, content, before: old?.before || digest(fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : null) })
   }
 
-  receipt({ runId, nodeId, skill, report = null, summary, outcome = 'completed' }) {
+  receipt({ runId, nodeId, skill, report = null, summary, outcome = 'completed', storage }) {
     if (!/^run-[a-z0-9-]+$/i.test(runId || '') || !['completed', 'failed'].includes(outcome) || !this.graph.nodes.some(n => n.id === nodeId) || !nonempty(skill)) throw new Error('Неверный результат запуска')
     if (!report && !nonempty(summary)) throw new Error('Результату нужен отчёт или содержательное резюме')
+    const stateFile = path.join(this.workspace, '.product-os', 'state.json')
+    if (fs.existsSync(stateFile)) {
+      const launch = JSON.parse(fs.readFileSync(stateFile, 'utf8')).launches?.find(l => (l.runId || l.id) === runId)
+      if (launch && (launch.move?.skill !== skill || (launch.move?.receiptNodeId || launch.move?.node?.id) !== nodeId)) throw new Error('Результат не совпадает со скиллом/узлом фактического запуска')
+    }
     if (report) {
       this.validateReport(report)
       const root = path.join(this.workspace, '.product-os', 'runs')
@@ -253,6 +265,7 @@ class GraphTransaction {
     const relative = `.product-os/runs/${runId}.json`
     if (fs.existsSync(path.join(this.workspace, relative)) || this.files.has(relative)) throw new Error('Результат этого запуска уже записан')
     this.stageFile(relative, JSON.stringify({ runId, nodeId, skill, report, summary, outcome, graphRevision: (this.original.revision || 0) + 1, completedAt: new Date().toISOString() }, null, 2))
+    if (skill === 'product-design' && outcome === 'completed') this.designCompletions.set(relative, clone({ runId, nodeId, skill, report, storage }))
   }
 
   move(move) {
@@ -319,15 +332,20 @@ class GraphTransaction {
       if (this.research && this.files.size === 0 && JSON.stringify(this.graph) === JSON.stringify(this.original)) return { graph: this.graph, warnings: this.warnings, research: { revision: this.research.revision, factRevision: this.research.factRevision, path: 'research/research-data.json', unchanged: true } }
       this.graph.revision = (this.original.revision || 0) + 1
       if (!this.options.dry) {
-        if (this.raw) atomicWrite(path.join(this.workspace, '.product-os', 'graph-history', `${String(this.original.revision || 0).padStart(8, '0')}-${digest(this.raw)}.json`), this.raw)
         const files = [...this.files.values()]
         for (const entry of files) {
           const file = path.join(this.workspace, entry.path)
           if (digest(fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : null) !== entry.before) throw Object.assign(new Error(`${entry.path} изменён во время транзакции`), { code: 'REVISION_CONFLICT' })
         }
+        for (const [relative, request] of this.designCompletions) {
+          const completion = require('../design-completion').finalize(this.workspace, request)
+          const entry = this.files.get(relative)
+          entry.content = JSON.stringify({ ...JSON.parse(entry.content), storage: completion }, null, 2)
+        }
         files.push({ path: 'research-graph.json', before: digest(this.raw), content: `${JSON.stringify(this.graph, null, 2)}\n` })
         commitFiles(this.workspace, files)
       }
+      else for (const request of this.designCompletions.values()) require('../design-completion').finalize(this.workspace, request, { dryRun: true })
       return { graph: this.graph, warnings: this.warnings, ...(this.research ? { research: { path: 'research/research-data.json', revision: this.research.revision, factRevision: this.research.factRevision, checkpoints: this.research.checkpoints.map(c=>({id:c.id,status:c.status})) } } : {}) }
     } finally { this.close() }
   }

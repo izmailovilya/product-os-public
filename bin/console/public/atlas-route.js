@@ -1,7 +1,7 @@
 /* Route-derived shell state must be available before workspace data loads. */
 (() => {
  const roots={
-  'research-brief':'tab-skills',product:'atlasProductToggle',map:'galaxyMapToggle',job:'galaxyMapToggle',segment:'galaxyMapToggle',
+  'research-brief':'tab-skills',product:'atlasProductToggle',library:'atlasLibraryToggle',jobs:'atlasJobsToggle',map:'galaxyMapToggle',job:'galaxyMapToggle',segment:'galaxyMapToggle',
   people:'galaxyMapToggle',person:'galaxyMapToggle',competitor:'galaxyFleetToggle',hangar:'galaxyFleetToggle',
   communications:'galaxyCommunicationsToggle',channel:'galaxyCommunicationsToggle',material:'galaxyCommunicationsToggle',
   next:'tab-next',reports:'tab-reports',skills:'tab-skills'
@@ -10,6 +10,11 @@
  function read(hash=location.hash){
   let route=String(hash||'').replace(/^#/,'')||'product';
   if(route==='product/actions')route='next';
+  if(route.split('?')[0]==='product/jobs')route='jobs'+(route.includes('?')?'?'+route.split('?')[1]:'');
+  const [legacyPath,legacyQuery='']=route.split('?');
+  if(/^product\/(elements|references)(\/|$)/.test(legacyPath))route=legacyPath.replace(/^product\//,'library/')+(legacyQuery?'?'+legacyQuery:'');
+  if(legacyPath==='product/materials'){const q=new URLSearchParams(legacyQuery);q.set('documents','1');route='library/elements?'+q;}
+  if(/^library\/?(\?|$)/.test(route))route='library/identity'+(route.includes('?')?'?'+route.split('?')[1]:'');
   if(route==='comms')route='communications';
   if(route.startsWith('product-detail/'))route='product';
   if(route.startsWith('segment-detail/')){const [path,search]=route.split('?');route='segment/'+path.split('/')[1]+'/checks'+(search?'?'+search:'')}

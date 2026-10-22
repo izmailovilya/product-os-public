@@ -86,10 +86,15 @@ function reserved(url) {
 
 // Local sources (interviews, notes) are read from the workspace itself; the file is its own snapshot.
 function localPage(workspace, source) {
-  const relative = String(source).split('#')[0]
-  const file = path.resolve(workspace, relative)
-  if (!file.startsWith(path.resolve(workspace) + path.sep) || !fs.existsSync(file) || !fs.statSync(file).isFile()) return null
-  return { url: relative, status: 200, text: fs.readFileSync(file, 'utf8'), snapshot: relative, fetchedAt: null, local: true }
+  // Historical results appended line annotations. Resolve only that unambiguous
+  // locator syntax; retain the original source and never interpret shell text.
+  const locator = require('./source-locator').localSourceLocator(source)
+  try {
+    const root = fs.realpathSync(workspace), file = fs.realpathSync(path.resolve(root, locator))
+    if (!file.startsWith(root + path.sep) || !fs.statSync(file).isFile()) return null
+    const relative = path.relative(root, file).split(path.sep).join('/')
+    return { url: String(source), status: 200, text: fs.readFileSync(file, 'utf8'), snapshot: relative, fetchedAt: null, local: true }
+  } catch { return null }
 }
 
 // Adds check.pageCheck = { status: found | not-found | unavailable, snapshot, checkedAt } to every

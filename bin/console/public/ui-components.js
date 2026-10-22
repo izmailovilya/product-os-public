@@ -183,6 +183,26 @@ if(typeof document!=='undefined')document.addEventListener('click',event=>{
 })
 /** Paper surface: owns background, hairline and padding when reading content sits on a distinct surface. Content is a trusted slot. */
 export function paperSurface({content='',id='',className='',attributes=''} = {}) {return `<div class="${classes('os-paper-surface',className)}"${id?` id="${escapeHTML(id)}"`:''} ${attrs(attributes)}>${content}</div>`}
+/** Isolated artwork surface; brand colours never recolour the console shell. */
+export function brandCanvas({content='',theme={},className='',attributes={},density='display'}={}){
+ const hex=value=>typeof value==='string'&&/^#[a-f0-9]{6}$/i.test(value)
+ const style=hex(theme.background)&&hex(theme.foreground)?`--os-surface:${theme.background};--os-text:${theme.foreground};color:${theme.foreground};background:${theme.background}`:''
+ return paperSurface({content,className:classes('os-brand-canvas'+(density==='compact'?' os-brand-canvas-compact':''),className),attributes:{...attributes,...(style?{style}:{})}})
+}
+/** Registered raster/sprite viewport; region numbers never become arbitrary CSS. */
+export function previewImage({src,alt='',region,className=''}={}){
+ const r=region,sprite=r&&['columns','rows','column','row'].every(k=>Number.isInteger(r[k]))&&r.columns>0&&r.columns<=12&&r.rows>0&&r.rows<=12&&r.column>=0&&r.column<r.columns&&r.row>=0&&r.row<r.rows
+ const style=sprite?`width:${r.columns*100}%;height:${r.rows*100}%;left:${-r.column*100}%;top:${-r.row*100}%`:''
+ return `<div data-brand-media class="${classes('brand-media',(sprite?'brand-sprite ':'')+className)}"><div data-brand-loading>${loadingState({label:'Загрузка изображения…'})}</div><img data-brand-image src="${escapeHTML(src)}" alt="${escapeHTML(alt)}" ${attrs(style?{style}:{})} hidden><div data-brand-error hidden>${notice({kind:'warning',message:'Изображение не загрузилось. Можно открыть исходный файл и повторить просмотр.'})}</div></div>`
+}
+export function applyPreviewFont(element,alias){if(/^brand-preview-\d+$/.test(alias))element.style.setProperty('--brand-font-family',alias)}
+/** A font specimen is brand artwork, with independent type roles and its own face. */
+export function brandTypography({family='',sample='',specimen,fontFileId='',fontWeightRange,theme={}}={}){
+ const attributes=fontFileId?{'data-brand-font':fontFileId,...(Array.isArray(fontWeightRange)?{'data-brand-font-weight':fontWeightRange.join(' ')}:{})}:{}
+ const name=`<p class="os-brand-type-family">${escapeHTML(family)}</p>`
+ const content=specimen?`<div class="os-brand-type-nameplate">${name}<p class="os-brand-type-glyphs">${escapeHTML(specimen.glyphs)}</p>${specimen.secondaryGlyphs?`<p class="os-brand-type-secondary">${escapeHTML(specimen.secondaryGlyphs)}</p>`:''}</div><div class="os-brand-type-example"><p class="os-brand-type-title">${escapeHTML(specimen.title)}</p><div class="os-brand-type-exercise">${specimen.heading?`<p class="os-brand-type-heading">${escapeHTML(specimen.heading)}</p>`:''}<p class="os-brand-type-body">${escapeHTML(specimen.body)}</p></div></div><div class="os-brand-type-characters">${(specimen.characters||[]).map(line=>`<span>${escapeHTML(line)}</span>`).join('')}</div>`:`${name}<p class="os-brand-type-sample">${escapeHTML(sample)}</p>`
+ return brandCanvas({theme,className:'os-brand-type-specimen'+(specimen?' os-brand-type-composed':''),attributes,content:content+(fontFileId?'<div class="os-brand-type-font-status" data-brand-font-status role="status">Шрифт загружается…</div>':'')})
+}
 /** A filter that navigates: link semantics with shared control geometry; the active state comes from aria-current. */
 export function filterLink({label,href='#',active=false,attributes='',className=''} = {}) {
   const target=/^(?:#|\/(?!\/)|https?:\/\/)/i.test(href)?href:'#'
@@ -205,10 +225,10 @@ let activeSourcePreview=null
 if(typeof document!=='undefined')document.addEventListener('keydown',event=>{
  const top=dialogStack.at(-1)
  if(event.key==='Escape'&&activeSourcePreview&&(!top||top.element.contains(activeSourcePreview.trigger))){event.preventDefault();event.stopImmediatePropagation();activeSourcePreview.close(true);return}
- if(event.key==='Escape'&&top){event.preventDefault();event.stopImmediatePropagation();top.close()}
+ if(event.key==='Escape'&&top){event.preventDefault();event.stopImmediatePropagation();top.escape()}
 },true)
 /** Native dialog owns trapping/inert siblings. Controller owns history, dismissal and focus return. */
-export function dialog(element, {background=[],onClose,initialFocus} = {}) {
+export function dialog(element, {background=[],onClose,initialFocus,onEscape} = {}) {
  if(!element)return null
  if(dialogs.has(element))return dialogs.get(element)
  let trigger,disposed=false,active=false,overflow,historyId,restoreFocus=true,returnScroll=[],returnURL
@@ -254,7 +274,7 @@ export function dialog(element, {background=[],onClose,initialFocus} = {}) {
  // keyboard loop explicit for both variants; nested source handlers keep ownership.
  const keyboard=event=>{if(!active||event.defaultPrevented||dialogStack.at(-1)!==controller||event.key!=='Tab')return;const items=focusables();if(!items.length){event.preventDefault();return}if(event.shiftKey&&(document.activeElement===items[0]||!items.includes(document.activeElement))){event.preventDefault();items.at(-1).focus()}else if(!event.shiftKey&&(document.activeElement===items.at(-1)||!items.includes(document.activeElement))){event.preventDefault();items[0].focus()}}
  element.addEventListener('close',restore);element.addEventListener('cancel',cancel);element.addEventListener('click',click);element.addEventListener('keydown',keyboard)
- const controller={element,open(from=document.activeElement){
+ const controller={element,escape(){if(onEscape?.()!==true)close()},open(from=document.activeElement){
   if(disposed||active)return controller;trigger=from;active=true;restoreFocus=true;dialogCycle++;dialogStack.push(controller)
   returnURL=location.href
   returnScroll=[];for(let parent=trigger?.parentElement;parent;parent=parent.parentElement)if(parent.scrollHeight>parent.clientHeight||parent.scrollWidth>parent.clientWidth)returnScroll.push({element:parent,left:parent.scrollLeft,top:parent.scrollTop})
@@ -290,7 +310,7 @@ export function imageFocus({src,alt='',title='Изображение',context=''
  if(image.complete)settle(!image.naturalWidth)
  return panel
 }
-export const OSUI={brandSignature,hierarchyList,escapeHTML,button,textLink,badge,field,setFieldError,notice,pageHeader,topicNav,emptyState,filterBar,setFilterActive,pagination,collectionLayout,detailLayout,readingSection,readingSections,summaryCard,readingLayout,paperSurface,filterLink,disclosure,proseFacts,factLine,editorLayout,loadingState,dialog,evidencePanel,imageFocus}
+export const OSUI={brandTypography,previewImage,applyPreviewFont,brandCanvas,brandSignature,hierarchyList,escapeHTML,button,textLink,badge,field,setFieldError,notice,pageHeader,topicNav,emptyState,filterBar,setFilterActive,pagination,collectionLayout,detailLayout,readingSection,readingSections,summaryCard,readingLayout,paperSurface,filterLink,disclosure,proseFacts,factLine,editorLayout,loadingState,dialog,evidencePanel,imageFocus}
 if(typeof window!=='undefined')window.OSUI=OSUI
 
 /** A compact citation marker, an information icon, or a named textual action. Index is supplied by the source adapter, never counted here. */
@@ -437,6 +457,13 @@ function sourceHref(href) {
  if(/[\u0000-\u0020\u007f\\]/.test(value))return ''
  if(value.startsWith('/source?'))return value
  try{const url=new URL(value);return ['http:','https:'].includes(url.protocol)?value:''}catch{return ''}
+}
+export function sourceReferenceHref(reference) {
+ if(typeof reference!=='string')return ''
+ if(/^https?:\/\//i.test(reference))return sourceHref(reference)
+ if(reference.includes('\\')||reference.split('/').includes('..'))return ''
+ const locator=reference.replace(/\s+\([^)]*(?:строк[аи]?|lines?)\s+\d[^)]*\)\s*$/i,'').split('#')[0].replace(/:\d+(?:-\d+)?$/,'')
+ return /^(?:(?:sources|reports|research|segments)\/.*\.(?:md|txt|json|csv|html|log)|[^/]+\.md|RESEARCH-RUNS\.json)$/i.test(locator)?'/source?path='+encodeURIComponent(reference):''
 }
 /** Source identity and source text stay separate. context/details are trusted, escaped-by-caller HTML slots. */
 export function sourceEntry({title='',relation='',author='',meta='',quote='',quotes=[],href='',linkLabel='Открыть оригинал',context='',details=''} = {}) {

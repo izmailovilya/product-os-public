@@ -1,12 +1,17 @@
 {
   "edition": "public",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "skills": [
     "os-setup",
+    "product-brand-identity",
     "product-context",
+    "product-job-map",
+    "product-reference-library",
+    "product-research",
+    "product-segment-hypotheses",
     "product-status"
   ],
-  "sourceDigest": "69fe22127b2d64a9785b6178eea5814af0117238acf4addea21617f98c512cb9",
+  "sourceDigest": "361d9a82ae63034a4f190bd6c1347f42e8d3366389d269ac8f5f80b44750ecf6",
   "files": [
     {
       "path": ".gitignore",
@@ -19,8 +24,18 @@
       "origin": "toolkit"
     },
     {
+      "path": "bin/brand-presentation.js",
+      "sha256": "ba5e745d365d2ae5e54fc4c904b30ff1dc0ec5d0645dc7589eac8569d736645b",
+      "origin": "toolkit"
+    },
+    {
       "path": "bin/competitor-key.js",
       "sha256": "45e8c4313dd039c3fb3eb6c1245acc83c048ee5b17e1ca35ea01675432181a27",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/audience-ideas.js",
+      "sha256": "1b255bd22090c00cf59fac6562822782fe6df64fc95efdd6bb3e0c82ad92aef3",
       "origin": "toolkit"
     },
     {
@@ -49,6 +64,11 @@
       "origin": "toolkit"
     },
     {
+      "path": "bin/console/customer-profile-sources.js",
+      "sha256": "462f81ca832d6a032bc8f4161a31db3d717673da7f149d34d9cea9ffc5b65a89",
+      "origin": "toolkit"
+    },
+    {
       "path": "bin/console/evidence.js",
       "sha256": "d00805b0712ab1bb6bcd2d80e831044cbff6d9db57e1eb8528a8d73769a3399d",
       "origin": "toolkit"
@@ -60,7 +80,7 @@
     },
     {
       "path": "bin/console/model.js",
-      "sha256": "cc3605a62168e31196f07c2c06d37e036fac19fa24f9ac0033f057981070b600",
+      "sha256": "66e1ae2cabaacd55d957bd23c6f18be918caa6948b2b1b13c59c05ccae7b823b",
       "origin": "toolkit"
     },
     {
@@ -71,6 +91,11 @@
     {
       "path": "bin/console/product-elements.js",
       "sha256": "4958b2851c46931da8f7b23d1296c192fa9822538cb8a458b654b4fd21f017a5",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/product-identity.js",
+      "sha256": "d73d7f5dcfdb492479aa83ae9b1a8b48802cbba1d5dca2378a937345fb1506fa",
       "origin": "toolkit"
     },
     {
@@ -85,7 +110,7 @@
     },
     {
       "path": "bin/console/public/app.js",
-      "sha256": "4453703d6de2d1c54441a917f3231bddc5a403f8b3bfdbe9307ab3147dd5aa68",
+      "sha256": "93607ded597b187ecee6d98ce91dc3a34ac48701ba71b746788e77cbcd415460",
       "origin": "public-edition"
     },
     {
@@ -259,23 +284,28 @@
       "origin": "toolkit"
     },
     {
+      "path": "bin/console/public/assets/identity-typography-example.png",
+      "sha256": "9b53842c51b1b09703cea92c303936f1eea0ed10e491c129d32efdf9ddda75e5",
+      "origin": "toolkit"
+    },
+    {
       "path": "bin/console/public/assets/job-flow.css",
-      "sha256": "2329a748348259ff141e35806baeeb94c7cd1e291c754fd8457ee45d4280fb02",
+      "sha256": "3ddd7c05b98be0071eb1c02bd9fe83b23624c9bc515dfad93358ea27702bdd4e",
       "origin": "toolkit"
     },
     {
       "path": "bin/console/public/assets/job-flow.js",
-      "sha256": "4bb445b879f9dc81e675a6571eb468a538ffd4f6231076253ab0f329d4650bd8",
+      "sha256": "35afd6bd756c2e10db541bd0b30f716133471d1e219004ad632c01e5f7e8b221",
       "origin": "toolkit"
     },
     {
       "path": "bin/console/public/assets/job-flow.js.LEGAL.txt",
-      "sha256": "27d3d15f586aa32b54c7c4531a30cd8e4de9eb4361b7b9d9c7623c33195046c1",
+      "sha256": "fd6cf364e720f6a0b121cef96118acb0a0044f3753b8dfa526e304c24b17542c",
       "origin": "toolkit"
     },
     {
       "path": "bin/console/public/assets/README.md",
-      "sha256": "040f161b51b508e4d842b0ff2ad954baa9d14f8a3fb740aadc4571904a3c0b9d",
+      "sha256": "b0a724fdc532abde8b914faf326227f964bd363fd6668200ab493059d2d5c876",
       "origin": "toolkit"
     },
     {
@@ -284,13 +314,18 @@
       "origin": "toolkit"
     },
     {
+      "path": "bin/console/public/assets/strategic-job-example.json",
+      "sha256": "e962740ee4c4d5cd29e427ed2abe7d83eebcf98a9a48c7eab4156264e49d27d8",
+      "origin": "toolkit"
+    },
+    {
       "path": "bin/console/public/atlas-navigation.js",
-      "sha256": "8f7d44b4a08a60b537a2483adb7b48169eb9cbf0b778f9c6b4f0ae5e5f7e4996",
+      "sha256": "b2ad2e1d8794037b089eabb0c0f968787de1f90aa55f2c3233118d75f44f3c4a",
       "origin": "toolkit"
     },
     {
       "path": "bin/console/public/atlas-route.js",
-      "sha256": "6f86016a8c1ca86876360ad6b954b3d02db1ff57e45f678797c13fc8f571b6ac",
+      "sha256": "3ac525080e584cfa4cd8db6fcf49ee5b41d7f1234c6c9398e47eec5bcc26854e",
       "origin": "toolkit"
     },
     {
@@ -300,7 +335,7 @@
     },
     {
       "path": "bin/console/public/atlas-shell.css",
-      "sha256": "6c730215caab7f9d0ad2f02405fed5738e48079b7153a38fbe4a63242c5e8f04",
+      "sha256": "9c39f7880fbe5dc84972bf9b7ceb759fd4fea8589534835c6b592f059957fe9c",
       "origin": "toolkit"
     },
     {
@@ -320,7 +355,12 @@
     },
     {
       "path": "bin/console/public/atlas.js",
-      "sha256": "bb5c06e51e993d05351034df85987ad6a61f6ae2a48027ae898b0180fc524dff",
+      "sha256": "1a265dc7d5eda217069a975355ebba5e00fc148f0dffdb9c4dc48b753835ab6b",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/audience-ideas.js",
+      "sha256": "c852d7ffab1c2d6bf2637d1ff60fe7fcf5ea06a37dba57eb1582ff960b9c1633",
       "origin": "toolkit"
     },
     {
@@ -375,17 +415,17 @@
     },
     {
       "path": "bin/console/public/design-system-catalog.js",
-      "sha256": "d161df6e2660734f8d509f89e831d38722a5cadcb363c14de60e625c05d2d3a3",
+      "sha256": "225d17a425bf56cca95ade8fd19ff3baf40da8faec84dce4ccc6bbb67f7c6069",
       "origin": "toolkit"
     },
     {
       "path": "bin/console/public/design-system.css",
-      "sha256": "bc6d0991377b5e215fd5a2761ad0e0432ed7677fe7101f1e2b542da03f153643",
+      "sha256": "67663bd8c603a600192518d8e753c641854540ead35b70b6bf32ebba4d669502",
       "origin": "toolkit"
     },
     {
       "path": "bin/console/public/design-system.html",
-      "sha256": "62b072b39474b20400ee33c9f4ba04b20d7515f0030233cba1d927789b90f0d1",
+      "sha256": "57a2313bb90b3aa327e0ce99b0b88a7d1e88dea1ec87215c5b09d50d8d693676",
       "origin": "toolkit"
     },
     {
@@ -410,7 +450,7 @@
     },
     {
       "path": "bin/console/public/galaxy-hangar.js",
-      "sha256": "e23f674563170b19bb4de1d5b5f79a052d7fa7f6ca097419c7e6af55d9b29e39",
+      "sha256": "9f2dd902a7337324a7c94dd7b5fdfbdd6c8c2325a87c3402de7c71732ac71408",
       "origin": "toolkit"
     },
     {
@@ -424,8 +464,18 @@
       "origin": "toolkit"
     },
     {
+      "path": "bin/console/public/identity-example.js",
+      "sha256": "c454591d7f65416e47f9b16131647d10e68d40e11c0755cf60b19ee74a7e918a",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/identity-reading.js",
+      "sha256": "6e37d60416b7eb1620bc26d03f43855378295e74b0f3bec828d88b2f593ba8ca",
+      "origin": "toolkit"
+    },
+    {
       "path": "bin/console/public/index.html",
-      "sha256": "564653cfb66ec3ed1e9667d36250000a68040c015a795801f2bc26613749e256",
+      "sha256": "cd585accd62de9992fd2db8f4bf13dcbfd07fca1879f15cdd25216db625d712e",
       "origin": "public-edition"
     },
     {
@@ -450,7 +500,12 @@
     },
     {
       "path": "bin/console/public/product-elements.js",
-      "sha256": "3b93fff26673493970c6436bac059959e785f9af751ded976bb6b6f20dc7b39e",
+      "sha256": "34f74f13524433c63cb03fa90784830e0e4283be0348ce3fa18e8b1c08723daa",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/product-library.css",
+      "sha256": "28e12e8f825f1f82cd78b89f6a555c2e5480f2ab951863227959274dda18baf1",
       "origin": "toolkit"
     },
     {
@@ -460,12 +515,12 @@
     },
     {
       "path": "bin/console/public/product-references.js",
-      "sha256": "f68b999735cf5320179e7344d14ec77e76e8ba2f601e3eb4d68d1bafa893bb76",
+      "sha256": "93139e3976849d480a916ecaea0e5f812be7b99786f4ce4a3a33846f4e1d075a",
       "origin": "toolkit"
     },
     {
       "path": "bin/console/public/product-tabs.js",
-      "sha256": "6af5123fecfece823cf2e536f9da7a7bf0df0bdcec6f54c86091e6178619e4fc",
+      "sha256": "274f2e59bdc56bd0cd6bbd3350912b348771f8420dca63c39ab54f2e4e21e4de",
       "origin": "toolkit"
     },
     {
@@ -476,6 +531,11 @@
     {
       "path": "bin/console/public/product-work.js",
       "sha256": "31bdc1304cba1cef66b2df9be377c050eba3215489271b70c24cf791b25f96a5",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/public/read-resource.js",
+      "sha256": "83d6df0eb5731a6210481da08b0d1a4e14b9b49be52487a5b6bc2b653ac3eea0",
       "origin": "toolkit"
     },
     {
@@ -515,7 +575,7 @@
     },
     {
       "path": "bin/console/public/research-brief.js",
-      "sha256": "be4814975615c85ad790b0650d8fcb6d602d8852d6ea9297263684bcb2c1f7a5",
+      "sha256": "b0f89633556c61d85a38dc091a428e929dee01f95161a1b28e5014473849b6c8",
       "origin": "toolkit"
     },
     {
@@ -540,7 +600,7 @@
     },
     {
       "path": "bin/console/public/segment-collection.js",
-      "sha256": "f018f5104ebfa5bccf8d16e111cef963d10e517c2f2c05df5f056d68f0f0618d",
+      "sha256": "73bf9af8b0e9e09cc2f1a904563e26d24ed13a0225c3e28865b9064397cfd584",
       "origin": "toolkit"
     },
     {
@@ -550,7 +610,7 @@
     },
     {
       "path": "bin/console/public/segment-support.js",
-      "sha256": "30f25f62f78b0766a26900bdda631c0da5de39c5362d5e4ba29de63f3c6e3a2e",
+      "sha256": "5cd3329a966b4836038a61457f9b578196852becc583c98b85533156886b2864",
       "origin": "toolkit"
     },
     {
@@ -560,12 +620,12 @@
     },
     {
       "path": "bin/console/public/ui-components.css",
-      "sha256": "58468d3b9813ec7cfd0f01c4a397e97e5d03a8dfc95240986636cf7d3fbf40db",
+      "sha256": "27761db0e763226d248ace55b175ebb744475325135daadc2f012d4b418b9a19",
       "origin": "toolkit"
     },
     {
       "path": "bin/console/public/ui-components.js",
-      "sha256": "f646fa016de9f105b980f09ed2dcc43680c0392ffc618eb24c5a3557f9879d5a",
+      "sha256": "b171abeb397a04e0f59a07d8646d9ef343c3e7fd815d010fe157fad9927a4adb",
       "origin": "toolkit"
     },
     {
@@ -575,7 +635,7 @@
     },
     {
       "path": "bin/console/report-assets.js",
-      "sha256": "4f08feb187a6b75d300cb0f23e076e806d8e6d99de7cf4eb6d5d9a904c7f3c64",
+      "sha256": "4eef32ff37af9778b87547b5091d1eca7c8d5fa6fc47445190c48613c596588d",
       "origin": "toolkit"
     },
     {
@@ -600,7 +660,22 @@
     },
     {
       "path": "bin/console/server.js",
-      "sha256": "e2774887bdb2aab0445bbc0acc5d890093ac9828acb1862b56229a63b9a83c6b",
+      "sha256": "25f3fd4f176ae02e03911e1340c8b7536d5f68ae4b8abd5cf69ca79e5d77d9ca",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/snapshot-projector.js",
+      "sha256": "4aaeacccfe681481f94259d04d0b2800b997a6176a218b235adbabdae44f8c85",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/snapshot-worker.js",
+      "sha256": "bd59885f561122847712ba012e29fa2dc230460dd6dbbdc89f4fe8a5baf94cfd",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/source-path.js",
+      "sha256": "f18f6f5a7b17de24e047c694f2507367691eefe58361b6036fc84eeafa0053fe",
       "origin": "toolkit"
     },
     {
@@ -609,18 +684,33 @@
       "origin": "toolkit"
     },
     {
+      "path": "bin/console/strategic-jobs.js",
+      "sha256": "d30018cddafb5878820e731f2cc6aea8a860d53d2486f0cc2a899020756c4d0e",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/console/transport.js",
+      "sha256": "90777c13c0bff7454142b4a8bebd99906fbc8f03e6f5937d1c4c01a68d3b1a7c",
+      "origin": "toolkit"
+    },
+    {
       "path": "bin/console/work.js",
       "sha256": "bc218dc0326917a1a01cec81593a7c4054c899db07eb053b5c229e4cc20bdedb",
       "origin": "toolkit"
     },
     {
+      "path": "bin/custom-skills.js",
+      "sha256": "887bbffb87ab6374132767ca90006ba2f67d973703e3b6a242479e67ace4b936",
+      "origin": "toolkit"
+    },
+    {
       "path": "bin/customer-profile.js",
-      "sha256": "0bcab3438be3d457dafe2c09bc9b3987fa1fd1579aeb0feff2781ed649ae6847",
+      "sha256": "6d05d4a2dea20d16f86ebb2408c9dea47243c15ca8642d92bbe87a39a6494b56",
       "origin": "toolkit"
     },
     {
       "path": "bin/edition.js",
-      "sha256": "79ae8ccd3426c89035a5b03156ac2fdfac84d504da3f619440345f5bb25790fc",
+      "sha256": "1fd97471f14f1efe85e0aaf4ca50d2431d921bc59c9262a94f4d07b79eeafa21",
       "origin": "toolkit"
     },
     {
@@ -665,12 +755,12 @@
     },
     {
       "path": "bin/graph/writer.js",
-      "sha256": "5674d3e6692f8f39c287571cb4c0991c39b9323c7923ef74e2406c769b646ca7",
+      "sha256": "18ae01fb51de0759085f94d55e6883d087d386085b485ea0e1bd35bf047b35f0",
       "origin": "toolkit"
     },
     {
       "path": "bin/install.js",
-      "sha256": "ada7d9cbfffe3e0ebc2800a83273869ee53648d85729d7693cc3f5c39a323a6b",
+      "sha256": "1cd41e5fe9135531e1cf17168257226ca2945f36da585d14602fac050fd82a6c",
       "origin": "public-edition"
     },
     {
@@ -685,7 +775,7 @@
     },
     {
       "path": "bin/product-os.js",
-      "sha256": "2e0862e4a47f9684bc991a8febed66de6a233ded2c3b11f1888c209ddac93345",
+      "sha256": "8f39e2fb399beccd6c38d6ebc9fbf4d550872d194886a2bb4c02786d2f03266d",
       "origin": "public-edition"
     },
     {
@@ -710,12 +800,12 @@
     },
     {
       "path": "bin/research-result.js",
-      "sha256": "3f9cbc092d35e63c59a60cc4b95b88970b11e0b91abb8a77a0a06029091453a5",
+      "sha256": "e876d588dfb91ab34283a420763fbdcad41a17dd35647498377ecb3725990d54",
       "origin": "toolkit"
     },
     {
       "path": "bin/research-schemas.js",
-      "sha256": "7beda827262a216cc4ba32d9f297a513caf3739e255c52925397f9ab4b9d35ca",
+      "sha256": "b8d95d2858b57ff3ca8a78488b731cb853d1c06d610066c0bf155e18255453a0",
       "origin": "toolkit"
     },
     {
@@ -804,13 +894,58 @@
       "origin": "toolkit"
     },
     {
+      "path": "bin/share/auth.mjs",
+      "sha256": "5c73972a438197ee92f059787b1dd5fd0f86474b197926be6e526e4a32992353",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/share/cli.js",
+      "sha256": "f97c97383363ff84df54cf44f982ad9896fa61288e60ec8be5ceaf5076df1150",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/share/client.js",
+      "sha256": "37fd9094fb45015f59046387f5b71312f820093a2af291471c83ab3f8cf228ea",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/share/login.css",
+      "sha256": "ace445b196ea2b4053ddb7213c2176e78ba4e26c4238cea809abfaaaec035917",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/share/login.js",
+      "sha256": "74562968f2d73005c95a92378d1966333f274bba895e2e5dc7176f42a4b3c56e",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/share/login.mjs",
+      "sha256": "f5e1c16ab67e5b9cec31e6e9ac2ace2e913717f558163b0bb97cef173b3f775a",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/share/prepare.js",
+      "sha256": "a8a90ba1f1b726e689cb7f55624d400c9949c3e0ad022a764e7178d98a00b6b7",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/share/worker.mjs",
+      "sha256": "be76d0939c6e43c0695c4c940e56756e975fcdc07c39dc3be6b8edb38619e45a",
+      "origin": "toolkit"
+    },
+    {
+      "path": "bin/source-locator.js",
+      "sha256": "ced31d7650e19daea02b4cea6b0c1bd98e075622e89b9695674a70a2274110a4",
+      "origin": "toolkit"
+    },
+    {
       "path": "bin/source-snapshot.js",
-      "sha256": "410b7ddef273f7cb00d3b97c76e1937bc95ea3d4792ae25b4bea8cf57638719a",
+      "sha256": "54c85ddefc69f251ba57f7fbc7255872e1c47566f13cb4744f89fd00ab46efa8",
       "origin": "toolkit"
     },
     {
       "path": "bin/verification.js",
-      "sha256": "6bf946a8745843d399e345e0013b736b1642f544b38d1aaf1cb84af249ae27b5",
+      "sha256": "4fec08e384debd5ee22a697781bde5d3e50f8fe9312e9754dad66d70fefce9f0",
       "origin": "toolkit"
     },
     {
@@ -834,23 +969,38 @@
       "origin": "toolkit"
     },
     {
+      "path": "community-skills/README.md",
+      "sha256": "905d8c0cf2b21ef45d44984ce64fba9117720dc2fc3a44966943992d253d3e83",
+      "origin": "toolkit"
+    },
+    {
       "path": "CONTRACT.md",
-      "sha256": "4f133c25ac7b0771dcf4b00ac6f959980a953a4e1362db38fda4ad98014c45d0",
+      "sha256": "c71d84d68ef7835209f16a31f43683ab18655a1c61c8098ce1d6bbef2018138b",
       "origin": "public-edition"
     },
     {
+      "path": "CONTRIBUTING.md",
+      "sha256": "9cb0f16277913939f51918add54bc6fb76428238d2c4123d9b553d5534e2ba6b",
+      "origin": "public-edition"
+    },
+    {
+      "path": "CUSTOM-SKILLS.md",
+      "sha256": "cee2cc92e1dc273ec47291b1c0229dd6ff9fc1d8d9cc00b2b7312b4b7e105dfb",
+      "origin": "toolkit"
+    },
+    {
       "path": "DESIGN-SYSTEM.md",
-      "sha256": "258eba6d640a3e6788109f0c16aa7655da2b7c4fefca0baa89ebbdf0b9bc613c",
+      "sha256": "ccc2b276ee7f8b59f23b9cace3aba92265f7e59cbe26d68de1b98ff5f554084c",
       "origin": "toolkit"
     },
     {
       "path": "GRAPH-WRITES.md",
-      "sha256": "87affc7ff212e771bb2675c0f3e277e6cfb7eef34b85fa362cd8dc8f8752984f",
+      "sha256": "928ad32945f6ef2564b69d2f762574334cf9a78264f669e0bb13e2064757483f",
       "origin": "public-edition"
     },
     {
       "path": "GRAPH.md",
-      "sha256": "af6dd8f187698842427a92514c39c1dfd8fa3f3457e878f1537ec72a87b395c8",
+      "sha256": "b04cd11237e47f06174af83ff0d8e876ad013b2798dcea04aa07c53a9e54aa3b",
       "origin": "public-edition"
     },
     {
@@ -860,18 +1010,23 @@
     },
     {
       "path": "package.json",
-      "sha256": "9152168b0d1439b3304c073d51850ad8feef8a56dadffc16a0e1d3d063f9770f",
+      "sha256": "5da8511d12ec5694d5467191e1823ed00dea2bf7ab862ab4a0de8702cc9dc2ae",
       "origin": "public-edition"
     },
     {
       "path": "README.md",
-      "sha256": "8b20ad31e98eaf0ff84a2456f76b1d0ef994942b1459a7fab6c3676b8bafc82b",
+      "sha256": "846ccf57ac41d9f01dca76d3c7911ca2a3df9194226e2f08655191cd591434ce",
       "origin": "public-edition"
     },
     {
       "path": "scripts/verify-console.js",
-      "sha256": "183beb19369e63af97e38ac53308f8ea04ab463497115b1fca19e58b1036eb9b",
+      "sha256": "7f1795246bf76f58b2b03c7ecc349b0377167348ccea8f60ec171c4df62e1188",
       "origin": "public-edition"
+    },
+    {
+      "path": "SHARING.md",
+      "sha256": "862a2dfc07afb50a80593fbeab5b3265b6b03d8cbc096fab5727476903ff9070",
+      "origin": "toolkit"
     },
     {
       "path": "skills/COMMUNICATIONS.md",
@@ -880,32 +1035,72 @@
     },
     {
       "path": "skills/CONTRACT.md",
-      "sha256": "4f133c25ac7b0771dcf4b00ac6f959980a953a4e1362db38fda4ad98014c45d0",
+      "sha256": "c71d84d68ef7835209f16a31f43683ab18655a1c61c8098ce1d6bbef2018138b",
       "origin": "public-edition"
     },
     {
       "path": "skills/DESIGN-SYSTEM.md",
-      "sha256": "200cabf2bc0c0b5daf9b8e9118ee094e26a3f2be9fd36b86cd373ed0379c6434",
+      "sha256": "032c588f84bff85d329013f4f384ce7bf5b7239a1368dcb9a5eeaa85b99f975b",
       "origin": "public-edition"
     },
     {
       "path": "skills/GRAPH-WRITES.md",
-      "sha256": "87affc7ff212e771bb2675c0f3e277e6cfb7eef34b85fa362cd8dc8f8752984f",
+      "sha256": "928ad32945f6ef2564b69d2f762574334cf9a78264f669e0bb13e2064757483f",
       "origin": "public-edition"
     },
     {
       "path": "skills/GRAPH.md",
-      "sha256": "af6dd8f187698842427a92514c39c1dfd8fa3f3457e878f1537ec72a87b395c8",
+      "sha256": "b04cd11237e47f06174af83ff0d8e876ad013b2798dcea04aa07c53a9e54aa3b",
       "origin": "public-edition"
     },
     {
       "path": "skills/os-setup/SKILL.md",
-      "sha256": "438907e7d0f65e779e515e16f8d06b8c22ba751f0ef16501e22081ab885bd571",
+      "sha256": "3bf8e10bfbfdb87191c17c003bd0443bb4880c376a1f07ec8145c6ad611a5b1c",
       "origin": "public-edition"
     },
     {
       "path": "skills/os-setup/workspace-CLAUDE.md",
-      "sha256": "557507643fd49e8dc05e970d5caf0167e6ca5b7e189d947732845648d8f115bd",
+      "sha256": "d0e1483b53a966fc34a3c40742086fe9e220586f1571c51127f8d0907516d339",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/product-brand-identity/assets/identity.template.json",
+      "sha256": "6a30d07cccf35171061fd588d920d5b50861a6836ddb4dd4a7e8330989677dba",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-brand-identity/references/artifacts.md",
+      "sha256": "a21087287c1e88e731b17c87e999c7dc2413be831d8762fb0f58b2d443197b55",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/product-brand-identity/references/knowledge.md",
+      "sha256": "4cd4cbbbb305fa881005a8263a50e0dcc85c49a29ba8bb8933446fa3c5e67144",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-brand-identity/references/presentation.md",
+      "sha256": "75ecd4f6b9927da1bda669eb437af8fee5f495287b2f62feb534a4abd3417d3f",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-brand-identity/references/review.md",
+      "sha256": "87ad9db9c36a7411453b8e044804bd175ed6d4d54ea9800d77a85ac5c0d50bf9",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-brand-identity/references/workflow.md",
+      "sha256": "0b959fd504fa45a89bc21a7da63a74552cdf515e87d39c8f0160ee3b2676b232",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-brand-identity/scripts/validate.cjs",
+      "sha256": "ec47b573f7ab6d0bf020c9148ecd09618e0dd1895ac79f19ea03d2cd9e03b928",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-brand-identity/SKILL.md",
+      "sha256": "47742361906df43934ef9c57061dd5220b8083bccaf17346ed7c1054361efcae",
       "origin": "public-edition"
     },
     {
@@ -914,14 +1109,124 @@
       "origin": "toolkit"
     },
     {
+      "path": "skills/product-job-map/references/evidence-coverage.md",
+      "sha256": "fd6fbe2825673cd9ff6bda70c6f1bc8c5fad1926ace4239386e12686c2d1d298",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/product-job-map/references/map-format.md",
+      "sha256": "32d26ad5addddb7093452f599697a20a18f336d120944d3d1b88644d1e006430",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/product-job-map/references/review.md",
+      "sha256": "a2f898ec99fad3663614ac85fb8531a11220807f779eb27a6e66b466755e2aa5",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-job-map/scripts/check-map.cjs",
+      "sha256": "368d2596fe2d78de56dc570de3ba6edda9a8cb9de68a19982d78356b806cf1bf",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-job-map/scripts/research-inputs.cjs",
+      "sha256": "25368af9f876c00726bdeb337b0d62381c4acf6cf20aa764e1d4b742d7dfae45",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-job-map/SKILL.md",
+      "sha256": "d2196d6252e11ebd5f8313b05fd90403fbb92cc54696cf84813a8422c7a39045",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/product-reference-library/examples/reuse-args.json",
+      "sha256": "04c516256e0f512b94e5ae3665923cd59ea794c1bf668679e75049a178b92b61",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-reference-library/references/contract.md",
+      "sha256": "65e3317e1ba8f9bdbd0dc6a0789f67fe379f6538063ff9472a53569cea4c229c",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/product-reference-library/references/source-guide.md",
+      "sha256": "6eb21545e0eba1cd3bfb26cbb50c40f6242de2731b7bf655dda36aa32f1f3b72",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-reference-library/SKILL.md",
+      "sha256": "d53ca0fca0b6eea4123590e119ae40de4c6badbcb71ea28196897daed70b7fa8",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/product-research/SKILL.md",
+      "sha256": "6d5fdb9782cc6ad35a716595aa32ff8a824bebba8e0b9070d1901b14a9fadc9d",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/product-segment-hypotheses/references/corpus-review.md",
+      "sha256": "e60bff59b1016e82e2134a876b13505d19a8a57ca3dd9bcb401b3a9c173bdd34",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-segment-hypotheses/references/critic.md",
+      "sha256": "a7a716a196ee6d1af59a04ee10d5a57169b6948a7452357cfa180fa918edbca7",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-segment-hypotheses/references/customer-profile.md",
+      "sha256": "a8f95ae39b92a580cae8a413237ff8985dcb2e0acd19d39f648a5bcf0659ac9b",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/product-segment-hypotheses/references/few-shot-examples.md",
+      "sha256": "c48a71c1ad3d53c7f5bb9ed20a35e2458026ffa231a4aa8656f72705744a9af3",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-segment-hypotheses/references/formation-rules.md",
+      "sha256": "0646443fc08ae2d7ab8ba53f7a0a628fd5dc5f660cb7d49c984eb46e6e24f5c1",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-segment-hypotheses/references/generator-critic.md",
+      "sha256": "06a87ba02c1e467340b46ee64ed2c7f79536e8b75bcd2bfe248764e5a3eac5a9",
+      "origin": "public-edition"
+    },
+    {
+      "path": "skills/product-segment-hypotheses/references/generator.md",
+      "sha256": "114b9fc9d353c846d957bd9ed617a85f27889ae490e59c2ffb5b5ce68fa4abd4",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-segment-hypotheses/references/value-reasoning.md",
+      "sha256": "ac3c342fbf73482fa93dae9b01932e29727d5889708c1fa920480fb2b0c98b5a",
+      "origin": "toolkit"
+    },
+    {
+      "path": "skills/product-segment-hypotheses/SKILL.md",
+      "sha256": "5ab746da7f5c97e0f635de8472ce948b27bb3eb124bb28b0922f42f845d11598",
+      "origin": "public-edition"
+    },
+    {
       "path": "skills/product-status/SKILL.md",
       "sha256": "af1946cb92696631740b6a7b9e955637d0b5e4a63ba5e43df71c29bc604044d7",
       "origin": "toolkit"
     },
     {
+      "path": "test/custom-skills.test.js",
+      "sha256": "148015c01f4ff1fba1982d51107f8ea75f5bc3b780655e0bc3376b98c14156cf",
+      "origin": "toolkit"
+    },
+    {
       "path": "test/public.test.js",
-      "sha256": "e20b54b76fb8a0b020853ba4be588835f8f97e8cd442b332f78820ba451b3603",
+      "sha256": "886fda07a03843e4ade29eb1aaf821e9be61b99d48609feb8387245050f42a4e",
       "origin": "public-edition"
+    },
+    {
+      "path": "test/share-auth.test.js",
+      "sha256": "c99292da08d24e32632938e00feae6992055426b3dd05b030ff029b528215465",
+      "origin": "toolkit"
     }
   ]
 }

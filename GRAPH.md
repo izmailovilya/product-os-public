@@ -31,6 +31,8 @@
 
 Существующие индивидуальные данные исследования остаются совместимыми с консолью.
 Команды `research read`, `research source`, `research summary`, `research audit`
-читают сохранённое и ничего не исследуют самостоятельно.
+читают сохранённое и ничего не исследуют самостоятельно. Стратегическая карта
+работ — отдельный JSON-документ в reports/, зарегистрированный как artifact
+с `artifactKind: "strategic-job-map"` (см. [GRAPH-WRITES.md](GRAPH-WRITES.md)).
 
 Правила записи и пример пакета: [GRAPH-WRITES.md](GRAPH-WRITES.md).

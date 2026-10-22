@@ -1,9 +1,9 @@
 ---
 name: os-setup
-description: Create or repair a Product OS Public workspace, capture the product passport from known context, and open its local console. Use for «настрой воркспейс», «начнём продукт», or «os setup».
+description: Create or repair a Product OS workspace, capture the product passport from known context, and open its local console. Use for «настрой воркспейс», «начнём продукт», or «os setup».
 ---
 
-# Настройка Product OS Public
+# Настройка Product OS
 
 Создай рабочее место продукта, сохрани известный контекст и покажи его в консоли.
 Не запускай исследование рынка и не придумывай сведения о клиентах.
@@ -21,7 +21,7 @@ description: Create or repair a Product OS Public workspace, capture the product
 ## Создание и восстановление
 
 `<tools>` — установленный каталог product-os-tools: `.agents/product-os-tools` для
-Codex, `.claude/skills/product-os-tools` для Claude, либо checkout Product OS Public.
+Codex, `.claude/skills/product-os-tools` для Claude, либо checkout Product OS.
 Для запуска используй Node.js и абсолютный путь к `<tools>/bin/product-os.js`.
 
 1. Сохрани PRODUCT.md: что делает продукт; для кого; стадия и имеющиеся материалы;
@@ -36,8 +36,14 @@ Codex, `.claude/skills/product-os-tools` для Claude, либо checkout Produc
 5. Открой `node <tools>/bin/product-os.js <workspace>`. Проверь доступность консоли
    и покажи её адрес. Если браузер недоступен, честно укажи границу проверки.
 
-Public содержит только настройку и ведение контекста. Не ссылайся на отсутствующие
-навыки и не обещай специализированные исследования, дизайн или разработку.
+Product OS содержит настройку, ведение контекста и базовые исследовательские навыки:
+[product-research](../product-research/SKILL.md) (проверка одного вопроса по открытым
+источникам), [product-segment-hypotheses](../product-segment-hypotheses/SKILL.md)
+(карта возможных клиентов), [product-job-map](../product-job-map/SKILL.md)
+(стратегическая карта работ), [product-brand-identity](../product-brand-identity/SKILL.md)
+(айдентика бренда) и [product-reference-library](../product-reference-library/SKILL.md)
+(библиотека референсов). Не ссылайся на отсутствующие навыки и не обещай
+специализированные интервью, глубокое исследование рынка, контент или разработку.
 Обычные вопросы обсуждай с владельцем, опираясь на предоставленные материалы.
 
 Готово: паспорт сохранён, исходные файлы не потеряны, граф валиден, консоль доступна.

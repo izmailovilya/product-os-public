@@ -1,0 +1,9 @@
+/* The console's tokens and shared field/button/header own typography and controls. */
+.share-login{box-sizing:border-box;width:min(36rem,100%);margin:clamp(2rem,12vh,8rem) auto;padding:var(--os-space-3)}
+.share-login .os-brand{margin-bottom:var(--os-space-4)}
+.share-login-form{display:grid;gap:var(--os-space-3)}
+.share-login-form .os-button{justify-self:start}
+.share-status{font:400 var(--os-label)/1.5 var(--os-font);color:var(--os-muted);margin:var(--os-space-2) 0;overflow-wrap:anywhere}
+.share-status p{margin:0 0 var(--os-space-1)}
+.share-status .os-button{max-width:100%;white-space:normal}
+@media(max-width:767px){.share-login{margin:var(--os-space-4) auto;padding-inline:var(--os-space-1)}}

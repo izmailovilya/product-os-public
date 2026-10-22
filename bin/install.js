@@ -1,13 +1,18 @@
 const fs = require('node:fs')
 const path = require('node:path')
 const { renderWorkspaceInstructions, mergeWorkspaceInstructions, writeWorkspaceInstructions } = require('./workspace-instructions')
-const SKILLS = ['os-setup','product-context','product-status']
-const SHARED = ['CONTRACT.md','GRAPH.md','GRAPH-WRITES.md','COMMUNICATIONS.md','DESIGN-SYSTEM.md']
+const SKILLS = ['os-setup','product-context','product-status','product-research','product-segment-hypotheses','product-job-map','product-brand-identity','product-reference-library']
+const SHARED = ['CONTRACT.md','GRAPH.md','GRAPH-WRITES.md','COMMUNICATIONS.md','DESIGN-SYSTEM.md','CUSTOM-SKILLS.md','SHARING.md']
 
 function install(workspace, {agent='both'}={}) {
   if(!workspace || !['both','claude','codex'].includes(agent))throw new Error('install <workspace> --agent both|claude|codex')
   workspace=path.resolve(workspace)
   const root=path.resolve(__dirname,'..')
+  const customRegistry=path.join(workspace,'.product-os','custom-skills.json')
+  if(fs.existsSync(customRegistry)) {
+    const custom=JSON.parse(fs.readFileSync(customRegistry,'utf8')).skills||{}
+    if(SKILLS.some(name=>Object.hasOwn(custom,name)))throw new Error('Имя нового базового навыка занято пользовательским. Сначала переименуйте своё расширение.')
+  }
   if(workspace===root)throw new Error('Создайте отдельную папку продукта, вне репозитория инструментария')
   const targets=(agent==='both'?['claude','codex']:[agent]).map(name=>{
     const config=name==='codex'?'.agents':'.claude',target=path.join(workspace,config,'skills')
@@ -19,20 +24,28 @@ function install(workspace, {agent='both'}={}) {
     for(const dir of [workspace,path.join(workspace,config),target,tools,...SKILLS.map(skill=>path.join(target,skill))])if(fs.lstatSync(dir,{throwIfNoEntry:false})?.isSymbolicLink())throw new Error('Установка не записывает через символические ссылки: '+dir)
     if(fs.existsSync(tools)) {
       let existing;try{existing=JSON.parse(fs.readFileSync(path.join(tools,'package.json'),'utf8'))}catch{}
-      if(existing?.name!=='product-os-public')throw new Error('В папке уже установлен другой Product OS. Выберите отдельный воркспейс для Public.')
-      if(fs.readdirSync(path.join(tools,'skills'),{withFileTypes:true}).some(entry=>entry.isDirectory()&&!SKILLS.includes(entry.name)))throw new Error('В runtime есть дополнительные навыки; выберите чистый воркспейс для Public.')
+      if(existing?.name!=='product-os-public')throw new Error('В папке уже установлен другой Product OS. Выберите отдельный воркспейс для Product OS.')
+      if(fs.readdirSync(path.join(tools,'skills'),{withFileTypes:true}).some(entry=>entry.isDirectory()&&!SKILLS.includes(entry.name)))throw new Error('В runtime есть дополнительные навыки; выберите чистый воркспейс для Product OS.')
     }
     const instructions=path.join(workspace,name==='codex'?'AGENTS.md':'CLAUDE.md')
     mergeWorkspaceInstructions(fs.existsSync(instructions)?fs.readFileSync(instructions,'utf8'):'',renderWorkspaceInstructions(name))
   }
   const results=[]
+  const samePhysical=(a,b)=>{try{return fs.realpathSync(a)===fs.realpathSync(b)}catch{return false}}
   for(const {name,config,target,tools} of targets) {
     const adapt=text=>text.replace(/\.claude\/skills\/product-os-tools|\.agents\/(?:skills\/)?product-os-tools/g,name==='codex'?'.agents/product-os-tools':'.claude/skills/product-os-tools')
     fs.mkdirSync(target,{recursive:true})
-    if(fs.existsSync(tools))fs.rmSync(tools,{recursive:true})
-    fs.mkdirSync(tools,{recursive:true})
-    for(const directory of ['bin','skills'])fs.cpSync(path.join(root,directory),path.join(tools,directory),{recursive:true})
-    for(const file of ['package.json','PUBLIC-RELEASE.json',...SHARED])fs.copyFileSync(path.join(root,file),path.join(tools,file))
+    // Installing from this very runtime (e.g. installed CLI repeating setup):
+    // its own copy is already in place; replacing it deletes the running source.
+    if(samePhysical(root,tools)) {
+      for(const file of ['package.json','PUBLIC-RELEASE.json'])if(!fs.existsSync(path.join(tools,file)))throw new Error('Установленный runtime повреждён: повторите установку из checkout')
+    } else {
+      if(fs.existsSync(tools))fs.rmSync(tools,{recursive:true})
+      fs.mkdirSync(tools,{recursive:true})
+      for(const directory of ['bin','skills'])fs.cpSync(path.join(root,directory),path.join(tools,directory),{recursive:true})
+      if(fs.existsSync(path.join(root,'community-skills')))fs.cpSync(path.join(root,'community-skills'),path.join(tools,'community-skills'),{recursive:true})
+      for(const file of ['package.json','PUBLIC-RELEASE.json',...SHARED])fs.copyFileSync(path.join(root,file),path.join(tools,file))
+    }
     for(const skill of SKILLS) {
       fs.cpSync(path.join(root,'skills',skill),path.join(target,skill),{recursive:true})
       const file=path.join(target,skill,'SKILL.md');fs.writeFileSync(file,adapt(fs.readFileSync(file,'utf8')))
@@ -44,7 +57,7 @@ function install(workspace, {agent='both'}={}) {
     results.push({agent:name,target,installed:SKILLS})
   }
   writeWorkspaceInstructions(workspace,agent)
-  console.log('Product OS Public установлен в '+workspace+' для '+targets.map(t=>t.name).join(', '))
+  console.log('Product OS установлен в '+workspace+' для '+targets.map(t=>t.name).join(', '))
   return {installations:results}
 }
 if(require.main===module){try{const args=process.argv.slice(2),i=args.indexOf('--agent');install(args[0],{agent:i<0?'both':args[i+1]})}catch(error){console.error(error.message);process.exitCode=1}}

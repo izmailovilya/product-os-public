@@ -43,7 +43,8 @@ function verificationOf(segmentId, nodes = [], edges = []) {
   const gate = key => gates.find(g => g.key === key)
   const context = performs.every(pe => pe.data?.context || d.context)
   gate('hypothesis').earned = performs.length && ordered.length >= 2 && context ? 10 : 0
-  gate('hypothesis').detail = `${performs.length} работ · ${ordered.length} критериев${context ? '' : ' · контекст не описан'}`
+  const word=(n,one,few,many)=>n%10===1&&n%100!==11?one:n%10>=2&&n%10<=4&&!(n%100>=12&&n%100<=14)?few:many
+  gate('hypothesis').detail = `${performs.length} ${word(performs.length,'работа','работы','работ')} в графе · ${ordered.length?ordered.length+' '+word(ordered.length,'критерий','критерия','критериев'):'критерии графа ещё не выделены'}${context ? '' : ' · контекст не описан'}`
   const web = segmentEvidence.filter(ev => originOf(ev) === 'web')
   gate('market-signal').earned = web.length ? 10 : 0
   gate('market-signal').detail = `${web.length} свидетельств с первичными источниками`
@@ -51,7 +52,7 @@ function verificationOf(segmentId, nodes = [], edges = []) {
     .map(ev => ev.data.respondentId || ev.data.observationId || ev.source.split('#')[0])).size
   const studied = top.filter(c => evidence(c.id).some(ev => CUSTOMER_ORIGINS.has(originOf(ev))))
   gate('customers').earned = Math.round(30 * Math.min(1, interviews / INTERVIEW_TARGET) * (top.length ? studied.length / top.length : 0))
-  gate('customers').detail = `интервью: ${interviews} из ${INTERVIEW_TARGET} · проверено ${studied.length} из ${top.length} верхних критериев`
+  gate('customers').detail = `интервью: ${interviews} из ${INTERVIEW_TARGET} · ${top.length?'проверено '+studied.length+' из '+top.length+' основных критериев':'проверяемые критерии графа ещё не выделены'}`
   const closed = fatal.filter(n => {
     if (n.status === 'dropped') return n.data?.resolution?.kind === 'dependency-removed' && n.data.resolution.reason && n.data.resolution.source
     const type = n.status === 'contradicted' ? 'contradicted_by' : 'evidenced_by'
@@ -61,7 +62,9 @@ function verificationOf(segmentId, nodes = [], edges = []) {
     return official || ['validated', 'contradicted'].includes(n.status) && proof.some(ev => CUSTOMER_ORIGINS.has(originOf(ev)))
   })
   gate('fatal').earned = fatal.length ? Math.round(20 * closed.length / fatal.length) : 0
-  gate('fatal').detail = `исследовано ${closed.length} из ${fatal.length} · включая риски всего продукта`
+  gate('fatal').detail = fatal.length
+    ? `исследовано ${closed.length} из ${fatal.length} · включая риски всего продукта`
+    : 'фатальные допущения ещё не выделены; риски продукта и сегмента не проверены'
   const payment = segmentEvidence.filter(ev => ev.data?.segmentId === segmentId && productIds.has(ev.data?.productId)
     && (originOf(ev) === 'payment' || (originOf(ev) === 'test' && ev.data.kind === 'payment-test')))
   gate('payment').earned = payment.length ? 20 : 0

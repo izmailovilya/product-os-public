@@ -1,6 +1,6 @@
 const fs = require('fs')
 const { performance } = require('node:perf_hooks')
-const { gzip } = require('node:zlib')
+const { sendContent } = require('./transport')
 const { randomUUID, randomBytes } = require('crypto')
 const { GraphTransaction, migrateGraph } = require('../graph/writer')
 const { validateGraph } = require('../graph/schema')
@@ -14,7 +14,7 @@ const { StateStore } = require('./state')
 const { attachFallback, buildSnapshot, hash, loadArena, moveFor, shellQuote, SKILL_META } = require('./model')
 const { displayLabel } = require('./galaxy-model')
 
-const { MIME: ASSET_MIME, safeAssetPath, localReportLink } = require('./report-assets')
+const { MIME: ASSET_MIME, localReportLink } = require('./report-assets')
 const { isPublicEdition, PUBLIC_SKILLS } = require('../edition')
 
 const MAX_BODY = 1024 * 1024
@@ -238,6 +238,7 @@ function inlineMarkdown(value, documentPath) {
     .replace(/(!?)\[([^\]]+)\]\(([^)]+)\)/g, (_, image, label, target) => {
       const href = localReportLink(documentPath, target, Boolean(image))
       if (!href) return label
+      if (!image && ['/#map','/atlas#map'].includes(href)) return `<a href="${href}">${label}</a>`
       return image ? `<img src="${href}" alt="${label}" loading="lazy">` : `<a href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`
     })
 }
@@ -285,24 +286,11 @@ function reportPage(markdown, title, documentPath, missing=false) {
 function missingDocumentPage(kind){return reportPage(`# ${kind} не найден\n\nВозможно, ссылка устарела или файл перенесён.`,kind+' не найден',null,true)}
 
 function sendJson(response, status, payload, request) {
-  const body = `${JSON.stringify(payload)}\n`
-  // Large graph projections repeat source-backed structures. Compress transport only;
-  // clients still receive the complete unchanged JSON model.
-  if (request && body.length > 32768 && (request.headers['accept-encoding'] || '').split(',').some(value => { const [encoding, ...parameters] = value.trim().toLowerCase().split(';'); const quality = parameters.map(p => p.trim()).find(p => p.startsWith('q=')); return encoding === 'gzip' && (!quality || Number(quality.slice(2)) > 0) })) {
-    gzip(body, {level:1}, (error, compressed) => {
-      if(response.destroyed)return
-      if(error){response.writeHead(status, {'content-type':'application/json; charset=utf-8','cache-control':'no-store'});response.end(body);return}
-      response.writeHead(status, {'content-type':'application/json; charset=utf-8','content-length':compressed.length,'cache-control':'no-store','content-encoding':'gzip','vary':'Accept-Encoding'});response.end(compressed)
-    })
-    return
-  }
-  response.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'content-length': Buffer.byteLength(body), 'cache-control': 'no-store' })
-  response.end(body)
+  return sendContent(response,status,`${JSON.stringify(payload)}\n`,'application/json; charset=utf-8',{request:request||response.req})
 }
 
 function sendText(response, status, body, contentType) {
-  response.writeHead(status, { 'content-type': contentType, 'content-length': Buffer.byteLength(body), 'cache-control': 'no-store' })
-  response.end(body)
+  return sendContent(response,status,body,contentType)
 }
 
 function sendBuffer(response, status, body, contentType) {
@@ -332,19 +320,6 @@ function safeReportPath(workspace, relative) {
   const root = path.resolve(workspace, 'reports')
   const absolute = path.resolve(workspace, relative)
   return absolute.startsWith(`${root}${path.sep}`) && fs.existsSync(absolute) && fs.statSync(absolute).isFile() && fs.realpathSync(absolute).startsWith(`${fs.realpathSync(root)}${path.sep}`) ? absolute : null
-}
-
-function safeSourcePath(workspace, relative) {
-  if (typeof relative !== 'string' || relative.includes('..') || relative.includes('\\')) return null
-  if (!/^(?:sources\/[^\\]+\.(?:md|txt|json|html|csv)|reports\/[^\\]+\.md|PRODUCT\.md|MOVES\.md)$/.test(relative)) return null
-  const root = fs.realpathSync(workspace)
-  const absolute = path.resolve(workspace, relative)
-  try {
-    const real = fs.realpathSync(absolute)
-    const canonical = path.relative(root, real).split(path.sep).join('/')
-    const allowed = /^(?:sources\/[^\\]+\.(?:md|txt|json|html|csv)|reports\/[^\\]+\.md|PRODUCT\.md|MOVES\.md)$/.test(canonical)
-    return real.startsWith(`${root}${path.sep}`) && allowed && fs.statSync(real).isFile() ? real : null
-  } catch { return null }
 }
 
 function findMove(snapshot, moveId) {
@@ -429,21 +404,23 @@ async function createConsoleServer(options) {
     } finally { tx.close() }
   }
 
-  const snapshot = async (scope = '', timings = {}) => {
+  const snapshotProjector=require('./snapshot-projector').createSnapshotProjector()
+  const snapshot = async (scope = '', timings = {}, view = '') => {
     let phase = performance.now()
     const release = workspaceLock(workspace)
     try { recoverPending(workspace) } finally { release() }
     ensureMoveIds(workspace)
     const { graph, status, research, researchData } = graphStore.read()
     timings.read = performance.now() - phase; phase = performance.now()
-    const threads = await bb.list()
+    const scoped = ['identity','library','jobs'].includes(view)
+    const threads = scoped ? [] : await bb.list()
     timings.agents = performance.now() - phase; phase = performance.now()
-    const snap = buildSnapshot({
+    const input = {
       workspace, repoRoot, graph, graphStatus: status, state: store.get(), threads,
-      capabilities: { bb: bb.available, claude: claude.available }, scope, researchRecords: researchData?.records,
-    })
+      capabilities: { bb: bb.available, claude: claude.available }, scope, researchRecords: researchData?.records, researchData, view,
+    }
+    const snap = scoped ? buildSnapshot(input) : (await snapshotProjector.project(input)).snapshot
     timings.projection = performance.now() - phase
-    require('./segment-research').attachSegmentResearch(snap.galaxy,researchData||{records:[],factRevision:0},graph)
     return { ...snap, researchRevision: research?.revision ?? 0, csrfToken: token }
   }
 
@@ -465,7 +442,15 @@ async function createConsoleServer(options) {
       }
       if (url.pathname === '/api/research-briefs') {
         const briefs=require('../research-brief/store'), service=require('../research-brief/service')
-        if(request.method==='GET') return sendJson(response,200,{briefs:url.searchParams.get('id')?[briefs.read(workspace,url.searchParams.get('id'))].filter(Boolean):briefs.read(workspace),modules:service.modules,capabilities:{bb:bb.available,claude:claude.available}})
+        if(request.method==='GET') {
+          let saved=url.searchParams.get('id')?[briefs.read(workspace,url.searchParams.get('id'))].filter(Boolean):briefs.read(workspace)
+          if(url.searchParams.get('view')==='reading') {
+            const {graph,status}=graphStore.read()
+            if(status.state!=='saved') return sendJson(response,503,{error:'Карта исследования недоступна; актуальные уточнения не загружены.'})
+            saved=saved.map(brief=>require('../research-brief/reading-review').projectBriefReading(workspace,brief,graph))
+          }
+          return sendJson(response,200,{briefs:saved,modules:service.modules,capabilities:{bb:bb.available,claude:claude.available}})
+        }
         if(request.method==='POST'){
           const body=await readBody(request)
           if(body.action==='create') return sendJson(response,201,{brief:service.create(workspace,body)})
@@ -495,6 +480,7 @@ async function createConsoleServer(options) {
       if(request.method==='GET'&&url.pathname==='/api/segment-model')return sendJson(response,200,require('../research/store').snapshot(workspace,Object.fromEntries(url.searchParams),(_data,graph)=>require('../segment-model').segmentModelView(graph,Object.fromEntries(url.searchParams))))
       if(request.method==='POST'&&url.pathname==='/api/parameter-views')return sendJson(response,200,require('./parameter-views').save(workspace,await readBody(request)))
       if (request.method === 'GET' && url.pathname === '/api/segment-analysis') return sendJson(response,200,require('../research/store').snapshot(workspace,Object.fromEntries(url.searchParams),(data,graph)=>require('../research/segment-analysis').summarize(data,graph,Object.fromEntries(url.searchParams))))
+      if (request.method === 'GET' && url.pathname === '/api/strategic-jobs') return sendJson(response,200,require('../research/store').snapshot(workspace,Object.fromEntries(url.searchParams),(_data,graph)=>require('./strategic-jobs').strategicJobs(workspace,graph,url.searchParams.get('productId'))),request)
       if (request.method === 'GET' && url.pathname === '/api/segment-jobs') return sendJson(response,200,require('../research/store').snapshot(workspace,Object.fromEntries(url.searchParams),(data,graph)=>require('./segment-job-graph').segmentJobGraph(data,graph,url.searchParams.get('segmentId'))))
       if (request.method === 'POST' && url.pathname === '/api/segment-views') return sendJson(response,200,require('./segment-views').save(workspace,await readBody(request)))
       if (request.method === 'GET' && url.pathname === '/api/research/reading-preview') return sendJson(response, 200, require('../research/reading-preview').read(workspace, url.searchParams.get('personId')))
@@ -505,6 +491,18 @@ async function createConsoleServer(options) {
         const body = await readBody(request)
         if (!Number.isInteger(body.expectedRevision) || !Number.isInteger(body.expectedResearchRevision) || !body.operations?.every(o => ['research-put', 'research-update', 'research-coverage', 'research-checkpoint'].includes(o.op))) return sendJson(response, 400, { error: 'Research operations and both expected revisions required' })
         return sendJson(response, 200, require('../graph/writer').applyOperations(workspace, body))
+      }
+      if (request.method === 'GET' && ['/api/product-identity','/api/product-identity/file'].includes(url.pathname)) {
+        const graph=graphStore.read().graph,identity=require('./product-identity'),params=Object.fromEntries(url.searchParams)
+        if(url.pathname.endsWith('/file')){
+          const file=identity.identityFile(workspace,graph,params)
+          if(!file)return sendText(response,404,'Файл айдентики недоступен.','text/plain; charset=utf-8')
+          response.setHeader('X-Content-Type-Options','nosniff')
+          response.setHeader('Content-Security-Policy',"default-src 'none'; sandbox")
+          if(params.download==='1'||!file.mime)response.setHeader('Content-Disposition',"attachment; filename*=UTF-8''"+encodeURIComponent(file.name))
+          return sendBuffer(response,200,file.buffer,params.download==='1'?'application/octet-stream':file.mime||'application/octet-stream')
+        }
+        return sendJson(response,200,identity.loadIdentity(workspace,graph,params.productId,params.profile))
       }
       if (request.method === 'GET' && ['/api/product-elements','/api/product-elements/image'].includes(url.pathname)) {
         const graph=graphStore.read().graph, elements=require('./product-elements'),params=Object.fromEntries(url.searchParams)
@@ -529,7 +527,7 @@ async function createConsoleServer(options) {
         }
         return sendJson(response,200,references.loadLibrary(workspace,graph,params.productId,params.library))
       }
-      if (request.method === 'GET' && url.pathname === '/api/snapshot') {const timings={};const snap=await snapshot(url.searchParams.get('scope') || '',timings);response.setHeader('Server-Timing',Object.entries(timings).map(([name,ms])=>`${name};dur=${ms.toFixed(1)}`).join(', '));return sendJson(response,200,snap,request)}
+      if (request.method === 'GET' && url.pathname === '/api/snapshot') {const timings={},view=url.searchParams.get('view');const snap=await snapshot(url.searchParams.get('scope') || '',timings,['identity','library','jobs'].includes(view) ? view : '');response.setHeader('Server-Timing',Object.entries(timings).map(([name,ms])=>`${name};dur=${ms.toFixed(1)}`).join(', '));return sendJson(response,200,snap,request)}
 
       if (request.method === 'POST' && url.pathname === '/api/communications') {
         const body = await readBody(request)
@@ -602,6 +600,7 @@ async function createConsoleServer(options) {
           const runId = `run-${randomUUID()}`
           if (move.skill === 'product-status') move.prompt += `\nИдентификатор запуска: ${runId}. Сохрани только служебный итог командой status-receipt: runId=${runId}, nodeId=${move.receiptNodeId || move.node.id}, outcome=completed или failed, summary=фактический итог. Граф, паспорт, план и отчёты не изменяй.`
           else move.prompt += `\nИдентификатор запуска: ${runId}. В конце запиши результат через graph-write: операция receipt, runId=${runId}, nodeId=${move.receiptNodeId || move.node.id}, skill=${move.skill}, outcome=completed или failed, report=путь к существующему отчёту в reports/ или summary=конкретный итог. Отчёт другого запуска использовать нельзя. Все изменения графа выполняй через graph-write.`
+          if (move.skill === 'product-design') move.prompt += `\nДля outcome=completed сохрани полный результат workflow с runKey и referenceHandoff, подготовь closure manifest с runId=${runId}, nodeId=${move.receiptNodeId || move.node.id}, skill=product-design и передай в receipt storage:{workflow:{path,sha256},closure:{path,sha256}}. Graph-write сам проверит реальные файлы этапов, повторит storage/final gates и выполнит очистку перед записью completed. Не вызывай close заранее и не удаляй промежуточные результаты до этой записи. Без проверяемых pins завершение отклоняется. outcome=failed сохраняет рабочие файлы.`
           launch = { requestPrompt, context: body.context||'', id: runId, runId, idempotencyKey: body.idempotencyKey, moveId: move.id, provider, startedAt: Date.now(), move, prompt: move.prompt, launchState: 'pending' }
           state.launches.push(launch)
         })
@@ -697,17 +696,18 @@ async function createConsoleServer(options) {
       }
 
       if (request.method === 'GET' && url.pathname === '/asset') {
-        const file = safeAssetPath(workspace, url.searchParams.get('path'))
-        if (!file) return sendText(response, 404, 'Файл не найден.', 'text/plain; charset=utf-8')
+        const asset = require('./report-assets').readAsset(workspace, url.searchParams.get('path'))
+        if (!asset) return sendText(response, 404, 'Файл не найден.', 'text/plain; charset=utf-8')
+        const file = asset.file
         // Raster previews only; editable SVG/HTML/JS are served as inert text.
         response.writeHead(200, { 'content-type': ASSET_MIME[path.extname(file).toLowerCase()] || 'text/plain; charset=utf-8',
           'x-content-type-options': 'nosniff', 'content-security-policy': "default-src 'none'; sandbox" })
-        return response.end(fs.readFileSync(file))
+        return response.end(asset.bytes)
       }
 
       if (request.method === 'GET' && url.pathname === '/source') {
         const relative = url.searchParams.get('path') || ''
-        if (!/\.(md|txt|json|html|csv)$/i.test(relative)) {
+        if (!/\.(md|txt|json|html|csv|log)$/i.test(require('../source-locator').localSourceLocator(relative))) {
           const record = graphStore.read().graph.nodes.find(node => node.type === 'artifact' && node.data?.kind === 'source-material' && node.source === relative)
           if (!record || !relative.startsWith('sources/')) return sendText(response, 404, 'Источник не найден.', 'text/plain; charset=utf-8')
           let real; try { real = fs.realpathSync(path.resolve(workspace, relative)) } catch { return sendText(response, 404, 'Источник не найден.', 'text/plain; charset=utf-8') }
@@ -716,10 +716,11 @@ async function createConsoleServer(options) {
           response.setHeader('X-Content-Type-Options', 'nosniff')
           return sendBuffer(response, 200, fs.readFileSync(real), 'application/octet-stream')
         }
-        const file = safeSourcePath(workspace, url.searchParams.get('path'))
-        if (!file) return sendText(response,404,missingDocumentPage('Источник'),'text/html; charset=utf-8')
+        const source = require('./source-path').readSource(workspace, url.searchParams.get('path'))
+        if (!source) return sendText(response,404,missingDocumentPage('Источник'),'text/html; charset=utf-8')
+        const file = source.file
         // Serve collected HTML/JSON as text, never execute downloaded page content.
-        const content = fs.readFileSync(file, 'utf8')
+        const content = source.content
         return sendText(response, 200, file.endsWith('.md') ? reportPage(content, path.basename(file), path.relative(workspace, file).split(path.sep).join('/')) : content,
           file.endsWith('.md') ? 'text/html; charset=utf-8' : 'text/plain; charset=utf-8')
       }
@@ -730,6 +731,8 @@ async function createConsoleServer(options) {
         return sendBuffer(response, 200, archive, 'application/zip')
       }
       const staticFiles = {
+        '/audience-ideas.js': 'audience-ideas.js',
+        '/identity-example.js':'identity-example.js','/identity-reading.js':'identity-reading.js','/product-library.js':'product-library.js','/product-library.css':'product-library.css','/read-resource.js':'read-resource.js',
         '/job-graph-example.js':'job-graph-example.js',
         '/product-elements.js':'product-elements.js', '/product-elements.css':'product-elements.css', '/product-element-example.js':'product-element-example.js',
         '/product-references.js':'product-references.js', '/product-references.css':'product-references.css', '/reference-example.js':'reference-example.js',
@@ -759,7 +762,7 @@ async function createConsoleServer(options) {
           const bootstrap={workspace,productName,description:typeof description==='string'?description:''}
           content=content.replace('Загружаю продукт…',escapeHtml(productName)).replace('</head>',`<script type="application/json" id="productOsBootstrap">${JSON.stringify(bootstrap).replace(/</g,'\\u003c')}</script></head>`)
         }
-        return sendText(response, 200, content, type)
+        return sendContent(response,200,content,type,staticFiles[url.pathname]==='index.html'?{}:{cache:'public, no-cache',etag:true})
       }
       if (request.method === 'GET' && url.pathname.startsWith('/assets/')) {
         const root = path.resolve(staticRoot, 'assets')
@@ -767,7 +770,7 @@ async function createConsoleServer(options) {
         if (!file.startsWith(`${root}${path.sep}`) || !fs.existsSync(file) || !fs.statSync(file).isFile()) return sendJson(response, 404, { error: 'Asset не найден.' })
         const extension = path.extname(file).toLowerCase()
         const mime = { '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.woff2': 'font/woff2', '.glb': 'model/gltf-binary', '.ogg': 'audio/ogg', '.mp3': 'audio/mpeg', '.png': 'image/png', '.svg': 'image/svg+xml' }[extension] || 'application/octet-stream'
-        return sendBuffer(response, 200, fs.readFileSync(file), mime)
+        return sendContent(response,200,fs.readFileSync(file),mime,{cache:'public, no-cache',etag:true})
       }
       sendJson(response, 404, { error: 'Не найдено.' })
     } catch (error) {
@@ -776,7 +779,7 @@ async function createConsoleServer(options) {
     }
   })
 
-  server.on('close', () => chromeBridge.close())
+  server.on('close', () => {chromeBridge.close();snapshotProjector.close()})
   return { server, snapshot, store, graphStore, bb, claude }
 }
 

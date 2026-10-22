@@ -1,4 +1,6 @@
-import {renderResearchBriefReading} from './research-brief.js';
+import {mountIdentity,libraryNav} from './product-library.js'
+import {identityExample} from './identity-example.js'
+import {renderResearchBriefReading,resultView} from './research-brief.js';
 import {jobGraphExample} from './job-graph-example.js'
 import {mountElements} from './product-elements.js'
 import {productElementExample} from './product-element-example.js'
@@ -7,6 +9,7 @@ import {referenceExample} from './reference-example.js'
 import {ProductTabs} from './product-tabs.js'
 import {renderProductCapability,renderProductAdvantages,renderSegmentChecks,renderCompetitorDossier,renderProductDossier} from './dossier-content.js'
 import {renderCustomerProfile,renderCustomerReading,mountCustomerProfiles} from './segment-collection.js'
+import {renderAudienceIdeas} from './audience-ideas.js'
 import * as UI from './ui-components.js'
 import './annotation-popover.js'
 import { landingPageContext, landingAnalysisIntro } from './landing-panel-context.js'
@@ -51,7 +54,9 @@ const promiseExample=(()=>{const names=['Альфа','Бета','Гамма','Д
 const landingExamples=`<section class="sample" id="catalog-landing"><h2>Что обещает сайт</h2><p>Вымышленный снимок сайта конкурента: длинный заголовок, строка против нашего отличия, чужая и устаревшая фразы.</p>${renderLandingBlock(landingRival,{evidence:landingEvidence,actions:UI.button({label:'Обновить снимок'})})}<h3>Сайт ещё не снят</h3>${renderLandingBlock(landingNone,{gapAction:UI.button({label:'Снять сайт и разобрать обещания',variant:'primary'})})}</section>
 <section class="sample" id="catalog-promise-map">${renderPromiseMap(promiseExample)}</section>`
 const main=document.querySelector('main')
+const reviewedReadingExample={status:'completed',question:'Можно ли перенести результат одной команды на весь сегмент?',readingReviews:[{claimId:'demo-reading-claim',text:'Описан один рабочий эпизод. '+long+'. Для других команд результат неизвестен; готовность платить не проверялась.',source:'reports/reading-review-demo.md',sourceRefs:[{source:'sources/unavailable-reading-demo.md',available:false}]}],result:{research:{summary:'Сборщик обобщил один случай.',limitations:'Выборка мала.'},evidenceLedger:{claims:[{id:'demo-reading-claim',status:'supported'}]},findings:[{statement:'Все команды согласуют решение за день.',claimIds:['demo-reading-claim'],supportStatus:'supported',sources:[{title:'Первоначальный неполный источник',source:'unmapped:demo'}]}]}}
 main.innerHTML=UI.pageHeader({title:'Компоненты Product OS',back:'<a href="/atlas">← Консоль</a>'})+`
+<section class="sample" id="catalog-research-reading-review"><h2>Уточнение сохранённого результата</h2><p>Вымышленный пример: поздний разбор ограничивает обобщение одного эпизода. Первоначальные формулировка, проверка и пробел источника сохранены.</p>${resultView(reviewedReadingExample)}</section>
 <section class="sample"><h2>Коллекция</h2>${UI.collectionLayout({header:UI.pageHeader({title:'Каналы коммуникации',level:2,actions:UI.button({label:'Добавить канал'})}),nav:UI.topicNav({label:'Фильтруемая коллекция',active:'list',items:[{id:'list',label:'Список'},{id:'map',label:'Карта обещаний'}]}),filters:filter,content:UI.emptyState({kind:'first-use',title:'Добавьте первый канал',description:long,actions:UI.button({label:'Создать канал',attributes:{'data-catalog-editor':true}})})})}</section>
 <section class="sample" id="catalog-segment-support"><h2>Основания гипотез сегментов</h2>${[
  {id:'catalog-desk',participantCount:0,interviewSupport:{state:'hypothesis'}},
@@ -60,7 +65,7 @@ main.innerHTML=UI.pageHeader({title:'Компоненты Product OS',back:'<a h
 ].map(segment=>segmentSupportSummary(segment)).join('')}</section>
 <section class="sample" id="catalog-segment-hierarchy"><h2>Сегменты и подсегменты</h2>${renderSegmentHierarchy([
  {id:'catalog-parent',label:'Команды с несколькими независимыми участниками согласования',description:'Участники совместно принимают решения.',subSegmentIds:['catalog-child'],researchSummary:{materialCount:2,kinds:{survey:2},includesSubsegments:true}},
- {id:'catalog-empty',label:'Организации без исследованных подразделений',description:'Материалы пока не связаны.'}
+ {id:'catalog-empty',label:'Организации без исследованных подразделений',description:'Интервью, анкеты и истории клиентов пока не связаны.'}
 ],[{id:'catalog-child',parentId:'catalog-parent',parameterView:{baseSegmentId:'catalog-parent',selection:{coordination:'distributed'}},parameterConditions:[{label:'Как устроено согласование',value:'Несколько удалённых подразделений'}],label:'С согласованием документов между удалёнными подразделениями в нескольких часовых поясах',description:'Одинаковый документ проверяют несколько участников.',participantCount:2,interviewSupport:{state:'hypothesis',conflicting:true,stale:true},researchSummary:{materialCount:2,kinds:{survey:2}}}])}</section>
 <section class="sample" id="catalog-loading"><h2>Загрузка</h2>${UI.loadingState({kind:'page',title:'Исследование продукта',label:'Загружаем страницы исследования…'})}${UI.loadingState({kind:'section',label:'Загружаем историю источников…'})}</section>
 <section class="sample"><h2>Состояния списка</h2>${UI.emptyState({kind:'no-results',title:'Ничего не найдено',description:'Измените запрос или сбросьте фильтры.',actions:UI.button({label:'Сбросить фильтры'})})}${UI.emptyState({kind:'unavailable',title:'Не удалось загрузить записи',description:'Проверьте подключение и повторите загрузку.',actions:UI.button({label:'Повторить'})})}${UI.notice({message:'Загрузка записей…'})}</section>
@@ -96,6 +101,7 @@ document.addEventListener('click',event=>{if(event.target.closest('[data-researc
 const customerFact=(text,basis='hypothesis')=>({text,basis,sourceRefs:[]})
 const customerExample={confidence:'ai',id:'catalog-customer',label:'Руководители распределённых проектных команд',customerProfile:{version:1,group:{id:'teams',label:'Команды'},summary:customerFact('Координируют работу специалистов из разных подразделений.'),context:customerFact('Работают в разных часовых поясах.'),recognition:customerFact('Отвечает за согласование решений между участниками проекта.'),whySeparate:customerFact('Разные графики и ответственность меняют порядок согласования.'),primaryJob:customerFact('Получить общее решение по проекту'),successCriteria:[customerFact('Сохранить договорённости всех участников'),customerFact('Порог времени согласования пока не известен.','unknown')],otherJobs:[customerFact('Передать новому участнику историю решений')],productFit:customerFact('Покрытие задачи продуктом нужно проверить.','unknown'),alternatives:customerFact('Используют переписку и документы.'),roles:{user:customerFact('Руководитель проекта'),decisionMaker:customerFact('Полномочия не установлены.','unknown'),payer:customerFact('Плательщик неизвестен.','unknown')},journey:Object.fromEntries(['trigger','discovery','firstUse','purchase','retention'].map(key=>[key,customerFact('Для этого этапа пока нет сведений.','unknown')])),unknowns:['Как согласуют покупку и внедрение?']}}
 main.insertAdjacentHTML('beforeend',`<section class="sample" id="catalog-customer-profile"><h2>Группы и профили клиентов</h2>${renderSegmentHierarchy([customerExample])}<details><summary>Полный профиль</summary>${renderCustomerProfile(customerExample)}</details></section>`)
+main.insertAdjacentHTML('beforeend',`<section class="sample" id="catalog-audience-ideas"><h2>Отложенные идеи аудитории</h2>${renderAudienceIdeas([{id:'fiction-lab',title:'Руководители учебных лабораторий с несколькими площадками',benefit:'Сопоставлять запросы преподавателей с доступными занятиями и оборудованием.',deferredReason:'Нужно проверить, какие изменения расписания разрешены на каждой площадке.',href:'/report?path=reports%2Ffictional-lab.md'},{id:'fiction-missing',title:'Организаторы совместных учебных мастерских',benefit:'Польза ещё требует проверки.',deferredReason:'Рабочие материалы пока не получены.',href:null}])}</section>`)
 main.insertAdjacentHTML('beforeend',`<section class="sample" id="catalog-customer-reading"><h2>Чтение профиля с содержанием</h2><p>Вымышленный профиль; сохранены неизвестные поля, длинные формулировки и источники. Оглавление без повторной подписи подсвечивает текущий раздел при прокрутке; нажатие перемещает чтение и фокус без смены страницы.</p>${renderCustomerReading(customerExample)}</section>`)
 const segmentTopicExample={...customerExample,researchSummary:{materialCount:3,kinds:{interview:2,survey:1}},interviewSupport:{state:'supported',personCount:2,stale:true,conflicting:true},verification:{percent:25,blockers:[{reason:'Источники расходятся о порядке согласования'}]},researchProgress:{steps:[{label:long,status:'partial',detail:'Известен один эпизод. Порядок для остальных клиентов не установлен.'}]},risks:[{id:'unknown-buying',label:'Кто оплачивает совместное решение — пока неизвестно',status:'hypothesis'}]}
 const segmentTopicContents={
@@ -135,7 +141,7 @@ landingEntry.querySelector('#change-product').addEventListener('click', () => { 
 landingEntry.querySelector('#catalog-landing-return').addEventListener('click', () => { landingEntry.querySelector('#catalog-landing-connection').hidden = true; landingEntry.querySelector('#change-product').focus() })
 
 // Production topics separate our materials from competitor examples; no nested navigation.
-main.insertAdjacentHTML('beforeend',`<section class="sample" id="catalog-product-references"><h2>Референсы · вымышленные данные</h2><p>Вымышленные карточки проверяют закрытые при входе фильтры, их раскрытие, источники и изображения. Наши материалы открываются отдельной верхней вкладкой; остальные вкладки ведут в рабочую консоль.</p><div class="os-actions">${[['list','Список'],['filters','Длинные фильтры'],['awaiting','Ожидание'],['empty','Пусто'],['error','Ошибка'],['unsupported','Неизвестная версия']].map(([id,label])=>UI.button({label,attributes:{'data-reference-example-state':id}})).join('')}</div><div id="catalogReferenceBody"></div></section>`)
+main.insertAdjacentHTML('beforeend',`<section class="sample" id="catalog-product-references"><h2>Референсы · вымышленные данные</h2><p>Вымышленные карточки проверяют закрытые при входе фильтры, их раскрытие, источники и изображения. Документы к своим элементам доступны по ссылке; отдельной вкладки материалов в библиотеке нет.</p><div class="os-actions">${[['list','Список'],['filters','Длинные фильтры'],['awaiting','Ожидание'],['empty','Пусто'],['error','Ошибка'],['unsupported','Неизвестная версия']].map(([id,label])=>UI.button({label,attributes:{'data-reference-example-state':id}})).join('')}</div><div id="catalogReferenceBody"></div></section>`)
 const referenceRoot=main.querySelector('#catalogReferenceBody');let referenceMount,referenceKind='list',referenceState={}
 function renderReferenceExample(state={},kind=referenceKind){
  referenceKind=kind;referenceState=state;referenceMount?.destroy();let data=referenceExample()
@@ -146,15 +152,15 @@ function renderReferenceExample(state={},kind=referenceKind){
  }
  if(['awaiting','error','unsupported'].includes(kind)){data.state=kind;data.message=kind==='awaiting'?'Материалы собираются. Манифест ещё не сохранён.':kind==='unsupported'?'Версия манифеста не поддерживается.':'Не удалось прочитать пакет.'}
  const view=state.view==='materials'?'materials':'references'
- referenceRoot.innerHTML=ProductTabs.header({label:'Вымышленный продукт'},view)+ProductTabs.render(view,{library:state.library})+'<div data-catalog-reference-content></div>'
+ referenceRoot.innerHTML=UI.pageHeader({title:view==='materials'?'Документы к элементам':'Референсы конкурентов'})+libraryNav(view==='materials'?'elements':'references',state)+UI.textLink({label:view==='materials'?'К референсам':'Документы к элементам',href:view==='materials'?'#library/references':'#library/elements?documents=1'})+'<div data-catalog-reference-content></div>'
  referenceMount=mountReferences(referenceRoot.querySelector('[data-catalog-reference-content]'),{data,productId:'demo-product',state,view,navigate:referenceNavigate})
 }
-function referenceNavigate(route){const [url,query]=route.split('?'),q=new URLSearchParams(query||'');renderReferenceExample({view:url.split('/')[1],card:decodeURIComponent(url.split('/')[2]||''),filtersOpen:url.split('/')[1]===(referenceState.view||'references')?(referenceRoot.querySelector('.os-filter-disclosure')?.open??referenceState.filtersOpen):false,library:q.get('library')||'',track:q.get('track')||'',competitor:q.get('competitor')||'',page:Number(q.get('page'))||1})}
+function referenceNavigate(route){const [url,query]=route.split('?'),q=new URLSearchParams(query||'');renderReferenceExample({view:q.get('documents')==='1'?'materials':url.split('/')[1],card:decodeURIComponent(url.split('/')[2]||''),filtersOpen:url.split('/')[1]===(referenceState.view||'references')?(referenceRoot.querySelector('.os-filter-disclosure')?.open??referenceState.filtersOpen):false,library:q.get('library')||'',track:q.get('track')||'',competitor:q.get('competitor')||'',page:Number(q.get('page'))||1})}
 renderReferenceExample()
 main.addEventListener('click',event=>{
  const control=event.target.closest('[data-reference-example-state]');if(control)renderReferenceExample({},control.dataset.referenceExampleState)
  if(!referenceRoot.contains(event.target))return
- const tab=event.target.closest('[data-product-tab]'),a=event.target.closest('a[href^="#product/references"],a[href^="#product/materials"]')
+ const tab=event.target.closest('[data-product-tab]'),a=event.target.closest('a[href^="#library/"]')
  if(tab){event.preventDefault();if(['references','materials'].includes(tab.dataset.productTab))referenceNavigate(tab.dataset.productRoute||'product/'+tab.dataset.productTab);else location.href='/atlas#product/'+encodeURIComponent(tab.dataset.productTab)}
  if(a){event.preventDefault();referenceNavigate(a.hash.slice(1))}
 })
@@ -257,3 +263,20 @@ readingRuleRoot.addEventListener('click',event=>{
  if(['goals','positioning'].includes(tab.dataset.productTab))renderReadingRuleTopic(tab.dataset.productTab)
  else location.href='/atlas#product/'+encodeURIComponent(tab.dataset.productTab)
 })
+
+const strategicSample=document.createElement('section');strategicSample.className='sample';strategicSample.id='catalog-strategic-jobs';strategicSample.innerHTML='<h2>Стратегическая карта работ</h2><p>Вымышленный пример: краткое описание графа и работы слева, данные выбранного сегмента справа. Полные описания доступны в основаниях; условия связей — в работе. Переходы сохраняют положение карты.</p>'+UI.button({label:'Открыть пример карты'});main.append(strategicSample);
+strategicSample.querySelector('button').addEventListener('click',async event=>{event.currentTarget.disabled=true;try{const response=await fetch('/assets/strategic-job-example.json');if(!response.ok)throw Error();const map=await response.json();map.jobs=Object.fromEntries(Object.entries(map.jobs).map(([id,{criteria,...job}])=>[id,job]));map.contexts=map.contexts.map((c,i)=>({...c,available:true,href:'#segment/'+c.segmentId,situation:i?'Решение утверждает руководитель.':'Документ выбирают вместе.',profileCriteria:[{text:i?'Руководитель видит разногласия.':'Участники сравнивают варианты.',basis:'hypothesis'}],basis:'Вымышленная гипотеза.'}));strategicSample.insertAdjacentHTML('beforeend',window.JobFlow.strategicMarkup('demo-product',{state:'ready',id:'catalog-strategic',workspaceKey:'catalog',digest:'1',map}));event.target.closest('button').remove()}catch{event.target.closest('button').disabled=false;strategicSample.insertAdjacentHTML('beforeend',UI.notice({kind:'error',message:'Не удалось загрузить вымышленный пример карты.'}))}})
+
+main.insertAdjacentHTML('beforeend',`<section class="sample" id="catalog-product-library"><h2>Айдентика · вымышленные данные</h2><p>Принятая версия, открытые правила, неизвестное решение и недоступный файл сохраняют разные значения.</p><div class="os-actions">${['ready','proposed','choice','empty','error','missing-file'].map(id=>UI.button({label:({ready:'Принятая версия',proposed:'Предложение',choice:'Конфликт версий',empty:'Нет профиля',error:'Ошибка', 'missing-file':'Недоступный файл'})[id],attributes:{'data-identity-example':id}})).join('')}</div><div data-catalog-identity></div></section>`)
+let identityMount
+function renderIdentityExample(kind='ready'){
+ identityMount?.destroy();const data=identityExample()
+ if(kind==='proposed')data.profile.decision='proposed'
+ if(kind==='choice'){data.state='choice';data.versions.push({id:'branch',title:'Независимая принятая версия',version:2,decision:'accepted'});data.message='Сохранены независимые версии. Общая принятая версия не определена.'}
+ if(kind==='empty'){data.state='unregistered';data.message='Айдентика продукта пока не добавлена.'}
+ if(kind==='error'){data.state='error';data.message='Не удалось загрузить сохранённый профиль.'}
+ if(kind==='missing-file'){data.profile.files[0].available=false;data.profile.files[0].preview=false}
+ identityMount=mountIdentity(main.querySelector('[data-catalog-identity]'),{productId:'demo-product',data})
+}
+renderIdentityExample()
+main.addEventListener('click',event=>{const button=event.target.closest('[data-identity-example]');if(button)renderIdentityExample(button.dataset.identityExample)})

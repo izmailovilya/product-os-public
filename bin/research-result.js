@@ -7,10 +7,44 @@ function normalizeResearchResult(input) {
   R.researchContext = q.createResearchContext({ researchContext: R.researchContext })
   R.evidenceLedger = q.verifyEvidencePacket(R.evidencePacket || {}, R.verificationChecks || [], R.researchContext)
   if (R.researchMode === 'focused') {
+    if(R.atomicFormationContract===1&&R.interpretationReviewContract!==1)throw new Error('Atomic formation requires interpretation contract')
     const gap = R.researchGap || {}
     if (![gap.nodeId, gap.section, gap.question, gap.expectedOutcome].every(q.researchText)) throw new Error('Focused research needs nodeId, section, question and expectedOutcome')
     if(R.customerProfile){const issue=require('./customer-profile').customerProfileIssue(R.customerProfile);if(issue)throw new Error(issue)}
     if(R.parameterModel){const issue=require('./segment-model').segmentModelIssue(R.parameterModel);if(issue)throw new Error(issue)}
+    if (R.interpretationReviewContract === 1) {
+      const formation = R.atomicFormationContract === 1
+      const gate = formation ? require('./research-formation').evaluateAtomicFormation({history:R.atomicFormation,packet:R.evidencePacket || {},checks:R.verificationChecks || [],context:R.researchContext,segments:R.interpretationScope || [],review:R.interpretationReview}) : require('./research-interpretation').applyInterpretationReview({packet:R.evidencePacket || {}, checks:R.verificationChecks || [], context:R.researchContext, segments:R.interpretationScope || [], review:R.interpretationReview})
+      if (gate.issue && R.stage === 'focused') throw new Error(gate.issue)
+      if (formation && gate.issue) {
+        if (R.stage === 'focused') throw new Error(gate.issue)
+        R.evidenceLedger = {sources:R.evidencePacket?.sources || [],claims:[],issues:[gate.issue],coverage:{total:0,supported:0,mixed:0,refuted:0}}
+        R.findings=[];R.interpretationStatus='incomplete';R.failedStages=(R.stages || []).filter(s=>s.required&&s.status!=='completed');R.stage='partial';R.executionReady=false;return R
+      }
+      const stages = R.stages || [], reviewIndex = stages.findIndex(s => s.label === 'interpretation-review:focused' && s.required && s.status === 'completed')
+      if (reviewIndex < 0 || stages.some((s,i) => /^verify:focused:/.test(s.label) && i >= reviewIndex) || stages.some((s,i) => /^customer-profile:/.test(s.label) && i <= reviewIndex)) {
+        if (R.stage === 'focused') throw new Error('Missing or out-of-order interpretation review stage')
+        R.stages = [...stages, {label:'interpretation-review:missing',required:true,status:'failed'}]
+      }
+      if (formation) {
+        const f = require('./research-formation'), material = f.atomicFormationHasMaterial({gather:R.atomicFormation.originalGather})
+        const stageIssue=f.atomicFormationStagesIssue(stages,material,(R.evidencePacket?.claims || []).some(c=>c.observations?.length))
+        if(stageIssue&&R.stage==='focused')throw new Error(stageIssue)
+        if(stageIssue)R.stages=[...stages,{label:'atomic-formation:missing',required:true,status:'failed'}]
+        const expected=require('./research-interpretation').interpretationLedgerFingerprint(gate.ledger)
+        const preChecks=(R.verificationChecks || []).map(({pageCheck,...c})=>c)
+        const prior=f.evaluateAtomicFormation({history:R.atomicFormation,packet:R.evidencePacket,checks:preChecks,context:R.researchContext,segments:R.interpretationScope || [],review:R.interpretationReview})
+        const supplied=input.evidenceLedger
+        if(supplied&&require('./research-interpretation').interpretationLedgerFingerprint(supplied)!==expected&&require('./research-interpretation').interpretationLedgerFingerprint(supplied)!==require('./research-interpretation').interpretationLedgerFingerprint(prior.ledger))throw new Error('Forged final atomic evidence ledger')
+        if(gate.formationStatus==='formed'){
+          R.findings=gate.findings;R.namedSolutions=f.atomicFormationNamedSolutions(R.atomicFormation,gate.ledger);delete R.classification
+        }
+      }
+      if (R.customerProfile && R.profileEvidenceFingerprint !== require('./research-interpretation').interpretationLedgerFingerprint(gate.ledger)) throw new Error('Stale profile effective interpretation evidence')
+      R.verificationLedger = gate.verificationLedger
+      R.evidenceLedger = gate.ledger
+      R.interpretationStatus = gate.status
+    }
     R.findings = q.groundFocusedFindings(R.findings, R.evidenceLedger)
     R.failedStages = (R.stages || []).filter(s => s.required && s.status !== 'completed')
     const modelComplete = (!R.segmentModelContract || !!R.parameterModel && (R.stages||[]).some(s=>s.label==='segment-model:'+gap.nodeId&&s.required&&s.status==='completed')) && (!R.customerProfileContract || !!R.customerProfile && (R.stages||[]).some(s=>s.label==='customer-profile:'+gap.nodeId&&s.required&&s.status==='completed'))

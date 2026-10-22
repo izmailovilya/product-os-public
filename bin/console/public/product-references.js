@@ -1,28 +1,16 @@
 import {escapeHTML as e,button,textLink,field,filterBar,collectionLayout,detailLayout,pageHeader,emptyState,notice,loadingState,sourceNote,sourceList,evidencePanel,readingSection,paperSurface,filterLink,proseFacts,factLine,disclosure,summaryCard,pagination} from './ui-components.js'
+import {createReadCache} from './read-resource.js'
 
 // Read-only library data lives only in this page session, never in browser storage.
-export function createReferenceLibraryCache({fetcher=(...args)=>fetch(...args),now=()=>Date.now(),maxAge=300_000,maxEntries=3}={}) {
- const entries=new Map(),keyOf=({productId,library=''})=>JSON.stringify([productId,library])
- const fresh=entry=>entry?.value&&now()-entry.at<maxAge
- function touch(key,entry){entries.delete(key);entries.set(key,entry);while(entries.size>maxEntries)entries.delete(entries.keys().next().value)}
+export function createReferenceLibraryCache(options={}) {
+ const cache=createReadCache({...options,maxEntries:options.maxEntries??3})
+ const url=scope=>'/api/product-references?'+new URLSearchParams({productId:scope.productId,...(scope.library?{library:scope.library}:{})})
  return {
-  peek(scope){const key=keyOf(scope),entry=entries.get(key);if(!fresh(entry))return;touch(key,entry);return entry.value},
-  load(scope,{refresh=false}={}) {
-   const key=keyOf(scope),previous=entries.get(key)
-   if(!refresh&&fresh(previous)){touch(key,previous);return Promise.resolve(previous.value)}
-   if(!refresh&&previous?.pending)return previous.pending
-   const entry={};touch(key,entry)
-   entry.pending=Promise.resolve().then(()=>fetcher('/api/product-references?'+new URLSearchParams({productId:scope.productId,...(scope.library?{library:scope.library}:{})}))).then(async response=>{
-    if(!response.ok)throw Error('Library unavailable')
-    const value=await response.json()
-    if(entries.get(key)===entry){if(value.state==='ready'){entry.value=value;entry.at=now();entry.pending=null}else entries.delete(key)}
-    return value
-   }).catch(error=>{if(entries.get(key)===entry)entries.delete(key);throw error})
-   return entry.pending
-  }
+  peek(scope){return cache.peek(url(scope),{version:scope.versionKey||''})},
+  load(scope,options={}){return cache.load(url(scope),{...options,version:scope.versionKey||''})}
  }
 }
-const referenceLibraryCache=createReferenceLibraryCache()
+export const referenceLibraryCache=createReferenceLibraryCache()
 
 
 const list = value => Array.isArray(value)?value:[]
@@ -308,10 +296,10 @@ function originalCheckedData(card) {
 }
 export function referenceRoute({library='',track='',competitor='',page=1,card=''}={}) {
   const q=new URLSearchParams();if(library)q.set('library',library);if(track)q.set('track',track);if(competitor)q.set('competitor',competitor);if(page>1)q.set('page',String(page))
-  return 'product/references'+(card?'/'+encodeURIComponent(card):'')+(q.size?'?'+q:'')
+  return 'library/references'+(card?'/'+encodeURIComponent(card):'')+(q.size?'?'+q:'')
 }
 export function referenceMaterialsRoute({library=''}={}) {
-  return 'product/materials'+(library?'?'+new URLSearchParams({library}):'')
+  return 'library/elements?'+new URLSearchParams({documents:'1',...(library?{library}:{})})
 }
 const librarySelect=data=>list(data.libraries).length>1?field({name:'library',label:'Библиотека',type:'select',attributes:{id:'reference-library','data-reference-filter':'library'},optionsHtml:list(data.libraries).map(l=>`<option value="${e(l.id)}"${l.id===data.library?.artifactId?' selected':''}>${e(l.title)}</option>`).join('')}):''
 function aiData(data) {
@@ -332,7 +320,7 @@ function readingExample(row) {
 function designMaterials(data) {
   const groups=list(data.library.designMaterials)
   if(!groups.length)return ''
-  return readingSection({id:'reference-design-materials',title:'Материалы нашего продукта',intro:'Тексты, персонажи и варианты оформления для нашего продукта.',content:`<div class="reference-grid">${groups.map(group=>summaryCard({title:group.title,level:3,className:'reference-material',meta:`<p>${e(group.decision==='accepted'?'Выбрано владельцем':'Предложение для просмотра')}</p>`,content:`<p>${e(group.description)}</p>`,actions:list(group.links).map(link=>textLink({label:link.label,href:(link.path.endsWith('.md')?'/report':'/asset')+'?path='+encodeURIComponent(link.path),attributes:{target:'_blank',rel:'noopener noreferrer'}})).join('')})).join('')}</div>`})
+  return readingSection({id:'reference-design-materials',title:'Документы к элементам',intro:'Сохранённые тексты, описания персонажей и варианты оформления.',content:`<div class="reference-grid">${groups.map(group=>summaryCard({title:group.title,level:3,className:'reference-material',meta:`<p>${e(group.decision==='accepted'?'Выбрано владельцем':'Предложение для просмотра')}</p>`,content:`<p>${e(group.description)}</p>`,actions:list(group.links).map(link=>textLink({label:link.label,href:(link.path.endsWith('.md')?'/report':'/asset')+'?path='+encodeURIComponent(link.path),attributes:{target:'_blank',rel:'noopener noreferrer'}})).join('')})).join('')}</div>`})
 }
 export function renderReferenceMaterials(data,state={}) {
   const retry=button({label:'Повторить загрузку',attributes:{'data-reference-retry':true}})
@@ -448,11 +436,11 @@ export function renderReferences(data,state={}) {
   const packageArea=readingSection({title:'Ограничения подборки',intro:'Эти пробелы учитывайте при выборе примера для своего продукта.',content:`${status}${disclosure({title:'Что ещё не удалось собрать',className:'reference-technical',content:`${facts(data.library.gaps,null)}<p>Ограничения отдельных примеров перечислены внутри карточек.</p>`})}`})
   return collectionLayout({className:'reference-library',filters,notice:issues+(unknownFilter?notice({kind:'warning',message:'В адресе указан отсутствующий фильтр. Сбросьте фильтры, чтобы увидеть библиотеку.'}):''),content:results+packageArea})
 }
-export function mountReferences(root,{productId,state={},data,view='references',navigate=route=>window.AtlasNavigation?.navigate(route)}={}) {
+export function mountReferences(root,{productId,versionKey='',state={},data,view='references',navigate=route=>window.AtlasNavigation?.navigate(route)}={}) {
   const abort=new AbortController();let disposed=false,panel,request=0
   const images=()=>{for(const img of root.querySelectorAll('[data-reference-raster]')){const loading=img.parentElement.querySelector('[data-reference-image-loading]'),error=img.parentElement.querySelector('[data-reference-image-error]'),loaded=()=>{loading.hidden=true},failed=()=>{img.hidden=true;loading.hidden=true;error.hidden=false};img.addEventListener('load',loaded,{signal:abort.signal});img.addEventListener('error',failed,{signal:abort.signal});if(img.complete)img.naturalWidth?loaded():failed()}}
   const render=value=>{if(disposed)return;data={...value,productId};root.innerHTML=view==='materials'?renderReferenceMaterials(data,state):renderReferences(data,state);root.removeAttribute('aria-busy');images()}
-  async function load(refresh=false){const token=++request,scope={productId,library:state.library||''},cached=!refresh&&referenceLibraryCache.peek(scope);if(cached){render(cached);return}root.setAttribute('aria-busy','true');root.innerHTML=loadingState({label:view==='materials'?'Загрузка материалов…':'Загрузка референсов…'});try{const value=await referenceLibraryCache.load(scope,{refresh});if(token===request)render(value)}catch(error){if(token===request)render({state:'error',message:'Не удалось загрузить библиотеку. Повторите попытку.'})}}
+  async function load(refresh=false){const token=++request,scope={productId,library:state.library||'',versionKey},cached=!refresh&&referenceLibraryCache.peek(scope);if(cached){render(cached);return}root.setAttribute('aria-busy','true');root.innerHTML=loadingState({label:view==='materials'?'Загрузка материалов…':'Загрузка референсов…'});try{const value=await referenceLibraryCache.load(scope,{refresh});if(token===request)render(value)}catch(error){if(token===request)render({state:'error',message:'Не удалось загрузить библиотеку. Повторите попытку.'})}}
   root.addEventListener('change',event=>{const key=event.target.dataset.referenceFilter;if(key)navigate((view==='materials'?referenceMaterialsRoute:referenceRoute)({...state,[key]:event.target.value,page:1,card:''}))},{signal:abort.signal})
   root.addEventListener('click',event=>{if(event.target.closest('[data-reference-retry]')){load(true);return}const b=event.target.closest('[data-reference-image]');if(!b)return;const row=list(data?.cards).find(r=>r.card.id===b.dataset.referenceCard),m=list(row?.card.media).find(m=>m.id===b.dataset.referenceImage);if(!m)return;panel=evidencePanel({title:named(m.caption||m.alt||'Изображение референса'),trigger:b,content:`<div class="reference-enlarged"><img src="${e(imageURL(data,row.card,m))}" alt="${e(named(m.alt||m.caption||'Изображение референса'))}"></div>${sourceList({entries:sourceEntries(row,[m.sourceId])})}`});const img=panel.element.querySelector('img');img.addEventListener('error',()=>{img.replaceWith(Object.assign(document.createElement('p'),{textContent:'Изображение недоступно.'}))},{once:true})},{signal:abort.signal})
   const ready=data?(render(data),Promise.resolve()):load()

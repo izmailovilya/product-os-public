@@ -16,10 +16,14 @@ console loads no CDN scripts, fonts, models, textures or audio at runtime.
 - `fonts/inter/` — Inter 5.2.8 as `woff2` subsets (latin, latin-ext, cyrillic,
   cyrillic-ext; weights 400–700, about 330 KB total). SIL Open Font License 1.1, see
   `fonts/inter/LICENSE.txt`. Retained legacy asset; no longer requested by the console font sheet.
-- `job-flow.js`, `job-flow.css` — the prebuilt job-flow diagram (React, React DOM and
+- `job-flow.js`, `job-flow.css` — the prebuilt segment graphs and strategic job board (React, React DOM and
   React Flow from `@xyflow/react`, MIT). Generated from `ui/job-flow.jsx` by
   `scripts/build-job-flow.js`; do not edit by hand. Third-party license notices are in
-  `job-flow.js.LEGAL.txt`.
+  `job-flow.js.LEGAL.txt`, including the complete xyflow MIT notice. The strategic
+  canvas uses the supported `proOptions.hideAttribution` option for its compact UI.
+
+- `strategic-job-example.json` — fictional strategic board for the executable
+  design-system example and regressions. It contains no real product research.
 
 If another binary asset or third-party bundle is added, record its source, license and
 optimized size in this file before shipping it.

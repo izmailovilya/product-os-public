@@ -50,7 +50,15 @@ function prepareResearchSchema(schema) {
     // Collect evidence before any prose that cites it. Repeat segment identity in
     // each part; no other field can overwrite a preceding part's observations.
     const keys = Object.keys(transport.properties).filter(key => !identity.includes(key))
-    if (keys.includes('evidencePacket')) keys.unshift(...keys.splice(keys.indexOf('evidencePacket'), 1))
+    if (keys.includes('evidencePacket')) {
+      keys.unshift(...keys.splice(keys.indexOf('evidencePacket'), 1))
+      // The acquiring worker owns the search log. A later worker cannot recover
+      // exact queries from claims, URLs or another worker's private context.
+      if (keys.includes('research')) {
+        keys.splice(1, 0, ...keys.splice(keys.indexOf('research'), 1))
+        if (makePart([...identity, 'evidencePacket', 'research']).bytes > RESEARCH_SCHEMA_BUDGET_BYTES) throw new Error('Evidence and its research log exceed the schema budget; use an explicit acquisition schema instead of separating provenance')
+      }
+    }
     parts = []
     let current = [...identity]
     for (const key of keys) {

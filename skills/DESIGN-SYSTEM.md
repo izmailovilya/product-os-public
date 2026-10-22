@@ -113,7 +113,7 @@ and archived records, and repeats the palette after twelve records.
   Legacy catalogues without roles retain their ordinary list; mixed catalogues expose
   their actual untyped group, and unknown explicit roles remain visible. Diagrams
   illustrate records. Role, category, status and page survive detail and parent return.
-- Product topics: overview, goals, positioning, brief, development, elements, materials,
+- Product topics: overview, goals, positioning, jobs, brief, development, elements, materials,
   references. Our saved texts, characters and visual designs belong to Materials,
   separate from competitor examples. References begins with one `filterBar`:
   labelled native direction/competitor selects, an optional library selector and
@@ -221,7 +221,32 @@ open its source and return to the same collection. Record confusing wording and
 unnecessary blocks as defects. Contrast and passing browser assertions alone
 do not establish that the page is understandable.
 
+Before repeating a page block, compose that reading path once in the real reader.
+Choose the roles of content, caption, selection, enlargement, source and task
+launch before styling controls. In a visual document, keep image and caption
+together; enlargement is an auxiliary action. A working collection exposes the
+object and useful facts before its supporting inventory. A reading page need
+not invent a primary task button. Significant restrictions stay with their use.
+
+In the same review report, decide the current composition separately from file
+validity and control operation. Reject an enlarged technical favicon as a brand
+demonstration, repeated framed zoom actions that interrupt image/caption reading,
+and an empty page whose successive headings only restate the same absence.
+State the visible fact and task consequence; neither a button/paragraph quota nor
+token compliance decides this. A favicon at its intended 16px size or a single
+label correction stays a local check. Historical failures are regression anchors,
+not evidence of a current defect; inspect the delivered page after the change.
+
 ## New page acceptance
+
+The shared-console password entry is a separate Worker shell at `/_share/login`,
+approved by the owner on 21 October 2026. It composes `pageHeader`, `detailLayout`,
+`readingSection`, `field` and `button`, using the same fonts and tokens. Its route
+is registered in `test-support/console-routes.js` under `sharedRoutes`; the executable
+example is the exported fictional bundle in `visual-tests/share-console.spec.js`.
+That spec covers login/error/focus, 200% text, reading and logout at all three
+viewports, and belongs to `test:design-system`. The shared shell names its snapshot
+date, read-only state and access mode. It never presents a snapshot as live editing.
 
 A route or topic added to the reading console is accepted only when every item below runs;
 the release gate re-checks them together.
@@ -597,3 +622,99 @@ References reuse ready read-only library data in memory for five minutes, at mos
 Product, Segments, Competitors и Channels читают сохранённые данные. В них нет launch/edit/work controls; предложения проверок — текст, источники и неизвестности сохраняются. Задачи и редактор брифов доступны в Tools (`skills`), API/CLI не удаляются. Постоянная тема продукта `brief` открывает GET-only список/документ; временные темы не создаются. Capability statement сам является shared disclosure summary; источник открывается внутри, без вложенного интерактивного элемента в summary. Channels используют summaryCard title href, постоянные темы overview/content/rubrics/references, readingSections. Segment filters Development/Channels/Competitors отсутствуют; legacy query не скрывает данные. References показывают ограничения подборки и первоисточники; JSON manifests/AI controls отсутствуют. Ready refresh убран, retry остаётся для недоступных чтений. Production example #catalog-read-only-navigation; read-only-navigation.spec.js покрывает маршруты, keyboard, sources, stale/empty/error и отсутствие записей.
 
 Сохранённый контекст в документе брифа — открытый `proseFacts`: полный текст виден сразу с сохранёнными абзацами. Источники и вспомогательные подробности сохраняют свои контролы.
+
+
+### Отложенные идеи аудитории
+
+Под основной картой сегментов открыт раздел «Пока вне фокуса · N идей». Он читает явно сохранённый запас из artifact `data.artifactKind: audience-ideas`, а не выводит его из низкой достоверности или dropped-сегментов. Фокус и доказательства различаются. Каждая запись использует `summaryCard` внутри общего `readingSection`: название открывает полный разбор через существующий `/report`, польза и причина отложить видны сразу. Нет accordion, отключённого текста или запуска исследований. Если запас отсутствует, раздел не создаётся; отсутствующий файл не прячет идею и не становится рабочей ссылкой. Пример `/design-system#catalog-audience-ideas`, production-проверка `visual-tests/audience-ideas.spec.js`: десять записей, клавиатура, полный разбор/возврат, пустой запас, недоступный документ и 390px/200%.
+
+## Strategic job board
+
+Job map is a top-level section in the left navigation (`#jobs`), separate from
+the product topics and segment job graphs. Old `#product/jobs` links redirect here.
+Its title opens a wide reading dialog; a job opens result, contribution, limits,
+conditions and sources in that same dialog. The main column keeps the work in
+view while the adjacent column shows possible segments or one selected profile.
+Direct job associations, links through this graph and links from other graphs
+are distinguishable. Links through an entire graph remain tentative. Context
+and criteria are shown per exact saved segment, never shared across similar jobs.
+Deferred ideas remain marked outside the current focus.
+Graph details use a compact job/status list; edge explanations and conditions
+remain in the selected job. Exact repeated prose appears once, and specific
+limits share one block. Graph notes share the product-boundary section, keeping
+strong alternatives and evidence limits visible. Complete saved descriptions
+remain in Sources. Only exact legacy placeholder fields leave the primary reading view;
+concrete inputs, alternatives and qualifications remain visible. Segment context
+is explicitly the profile's context, without implying a job-specific situation.
+Uniform hypothesis labels appear once per criteria group; negative, conflicting,
+prompted, required and ranked criteria retain their individual qualifications.
+
+Frames have titles only, without job-count subtitles. At a distance job labels
+disappear and titles counter-scale within frame width. Long titles wrap in full
+without ellipsis or a line limit, both before and after the overview threshold;
+zooming out must not hide the words that distinguish one graph from another.
+The complete title also remains in the accessible button name and graph details.
+Counter-scaling stops at 3×; further zooming out scales the title with its frame.
+Whole frames can be selected and moved together; arranging them changes only
+browser layout. Detail uses the shared native dialog lifecycle above the shell,
+including a fullscreen map. Opening, navigating and dismissing it never pans,
+zooms or resizes the canvas. Its header and close control stay visible while
+the reading body scrolls. On narrow screens it fills the viewport, with the
+columns stacked. Keyboard focus stays inside; Escape first leaves sources or a
+selected segment, then dismisses the dialog and returns to the map control.
+The canvas occupies the available width and height. Its four on-canvas controls
+zoom in/out, fit all frames and expand/collapse the board; fit and fullscreen are
+distinct actions. There are no filter/legend strips, graph sidebar, mini-map,
+attribution overlay or footer toolbar. Shift selects multiple frames; selection
+does not open a panel automatically. Fullscreen, source reading, dismissal and
+return work at narrow widths and enlarged text. An executable fictional example
+is `/design-system#catalog-strategic-jobs`; the production route and states are
+covered in `visual-tests/strategic-jobs.spec.js`.
+
+## Product library
+
+The persistent «Библиотека продукта» entry owns three topics: «Айдентика»,
+«Наши элементы» and «Референсы конкурентов». Product topics keep strategy and
+development. Legacy product/elements and product/references links retain object
+IDs and query parameters under library/. product/materials opens the documents
+attached to the elements collection; materials are not a fourth topic.
+
+Identity reads the registered brand-identity profile of this product. Accepted
+versions take precedence over proposals; independent branches require selection.
+Rules and examples remain open, with their authored strength and source. A partial
+choice never accepts a whole profile. Missing, modified and unavailable files
+remain explicit. The console's own brand is not a default product identity.
+Executable example: /design-system#catalog-product-library. Route and behavior
+coverage: visual-tests/product-library.spec.js and test/product-identity.test.js.
+The library retries a failed interface-module fetch once with a fresh URL. If
+loading still fails, the shared unavailable state offers a keyboard-accessible
+page reload; browser import diagnostics do not replace the reading view.
+Registered HTML galleries and Python sources remain available as sandboxed
+attachment downloads, without being executed or treated as image previews.
+
+The identity view reads an authored, saved presentation: cover, ordered open
+sections, image/sprite examples, colour roles, a real font specimen, explicitly
+proposed applications and named downloads. Section types compose differently for
+each brand; the console never generates a presentation on opening. Brand canvases
+use the shared `brandCanvas` surface and only recolour artwork. Navigation, sources,
+versions and controls retain the console's tokens and factories. `previewImage`
+owns bounded sprite geometry; it preserves the original asset and download.
+
+New brand profiles use schema 3 and require a file/rule-bound presentation before
+ready-for-review. The producer and console share `bin/brand-presentation.js` for
+reference, contrast and scope checks. Legacy schema 1/2 profiles retain a conservative
+read-only adapter. A registered presentation companion can provide an authored
+composition for an immutable released profile; both profile and companion hashes
+must match. Unavailable/invalid compositions are explicit, not silently accepted.
+Partial brand acceptance never accepts a newly composed application. Version
+selection, the complete file inventory, rule rationale and sources live in
+«Версии и основания». Claims and meaningful restrictions remain beside the visual.
+The fictional catalog and product-library spec exercise saved composition, source
+inspection, downloads, alternate brand structure, fonts, sprites and enlarged text.
+
+`brandTypography` owns the font specimen's independent type roles and paper
+composition. Its registered font alias applies to every specimen role; variable
+font weight ranges come from the asset's metadata. Legacy prose-size adapters
+exclude this artwork. Optional saved `specimen` copy provides glyphs, title,
+heading, body and character rows; plain historical `sample` text remains intact.
+Verify computed font family, size and weight inside the real reading page.

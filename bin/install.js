@@ -52,6 +52,11 @@ function install(workspace, {agent='both',userHome=os.homedir()}={}) {
   for(const {name,config,target,tools} of targets) {
     for(const dir of [workspace,path.join(workspace,config),target,tools,...SKILLS.map(skill=>path.join(target,skill)),...SHARED.map(file=>path.join(target,file))])if(fs.lstatSync(dir,{throwIfNoEntry:false})?.isSymbolicLink())throw new Error('Установка не записывает через символические ссылки: '+dir)
     for(const file of [tools,...SKILLS.map(skill=>path.join(target,skill))])assertNoLinks(file)
+    const telemetryDoc=path.join(target,'TELEMETRY.md'),ownedTelemetry=path.join(tools,'TELEMETRY.md')
+    if(fs.existsSync(telemetryDoc)) {
+      const adapt=text=>text.replace(/\.claude\/skills\/product-os-tools|\.agents\/(?:skills\/)?product-os-tools/g,name==='codex'?'.agents/product-os-tools':'.claude/skills/product-os-tools')
+      if(!fs.lstatSync(telemetryDoc).isFile()||!fs.existsSync(ownedTelemetry)||!fs.lstatSync(ownedTelemetry).isFile()||fs.readFileSync(telemetryDoc,'utf8')!==adapt(fs.readFileSync(ownedTelemetry,'utf8')))throw new Error('Общий документ TELEMETRY.md изменён или не принадлежит этой установке. Сохраните его перед обновлением.')
+    }
     if(fs.existsSync(tools)) {
       let existing;try{existing=JSON.parse(fs.readFileSync(path.join(tools,'package.json'),'utf8'))}catch{}
       if(existing?.name!=='product-os-public')throw new Error('В папке уже установлен другой Product OS. Выберите отдельный воркспейс для Product OS.')

@@ -1,6 +1,6 @@
 {
   "edition": "public",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "skills": [
     "os-setup",
     "product-brand-identity",
@@ -11,7 +11,7 @@
     "product-segment-hypotheses",
     "product-status"
   ],
-  "sourceDigest": "8f7a712de736a6a9eda5e277aebc5c0257514a038263db1a1b88b1eb834668f7",
+  "sourceDigest": "f2263d6b31883ebb7330cf0805089b00dfa4ac00de8d7aefd4b6c4d0a5e84a3e",
   "files": [
     {
       "path": ".gitignore",
@@ -385,7 +385,7 @@
     },
     {
       "path": "bin/install.js",
-      "sha256": "aff6eb8c7fd872164147b69a95c51a97fce1fbb74274e0cbadc2bb2824017cf4",
+      "sha256": "4775064f967baf6002029587eb4f12a9e43387a2f03f485804ecca4ff97d8f38",
       "origin": "public-edition"
     },
     {
@@ -635,7 +635,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "870a8530c10f70c17763c7d03a6b28af971d34cbfc9061735d84b994eced68bf",
+      "sha256": "62f3a4c20e79099ae7d524545fb5bf8e178b9f5b860c75a4248997b0b7c6010d",
       "origin": "public-edition"
     },
     {
@@ -886,7 +886,7 @@
     {
       "path": "test/telemetry.test.js",
       "origin": "public-edition",
-      "sha256": "90ddad891072d77d053f40dd171befd5b81cb379b6da199596444c11499c43d0"
+      "sha256": "ae09b699ff1606bc9101322cc91983da9078dc344ca4d60eedaecfbd12a583ab"
     }
   ]
 }

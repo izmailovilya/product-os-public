@@ -65,3 +65,15 @@ test('a refused install produces no event and preserves both agent environments'
   await assert.rejects(cli.main(['install','--agent','both'],{userHome,telemetryOptions:c.options}),/Сохраните/)
   assert.equal(c.events.length,0);assert.equal(fs.readFileSync(path.join(conflict,'SKILL.md'),'utf8'),'owner skill');assert.equal(fs.existsSync(path.join(userHome,'.agents')),false)
 })
+test('adding the analytics document preserves an unrelated or edited shared document before either agent changes',async t=>{
+  const userHome=home(t),c=capture(userHome),opts={userHome,telemetryOptions:c.options}
+  await cli.main(['install','--agent','both'],opts)
+  const document=path.join(userHome,'.claude/skills/TELEMETRY.md')
+  fs.unlinkSync(path.join(userHome,'.claude/skills/product-os-tools/TELEMETRY.md'))
+  fs.writeFileSync(document,'Owner analytics document')
+  const codex=fs.readFileSync(path.join(userHome,'.agents/product-os-tools/package.json'),'utf8')
+  await assert.rejects(cli.main(['install','--agent','both'],opts),/TELEMETRY.md/)
+  assert.equal(fs.readFileSync(document,'utf8'),'Owner analytics document')
+  assert.equal(fs.readFileSync(path.join(userHome,'.agents/product-os-tools/package.json'),'utf8'),codex)
+  assert.equal(c.events.length,1)
+})

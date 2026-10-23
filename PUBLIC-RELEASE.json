@@ -1,6 +1,6 @@
 {
   "edition": "public",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "skills": [
     "os-setup",
     "product-brand-identity",
@@ -11,7 +11,7 @@
     "product-segment-hypotheses",
     "product-status"
   ],
-  "sourceDigest": "8cb98fa7c10b5ffff4689102a03925894c57d815cb29b353934529c2b0027cea",
+  "sourceDigest": "8f7a712de736a6a9eda5e277aebc5c0257514a038263db1a1b88b1eb834668f7",
   "files": [
     {
       "path": ".gitignore",
@@ -385,7 +385,7 @@
     },
     {
       "path": "bin/install.js",
-      "sha256": "ad681c6b284043e302136bc9ec47cd02e223b15794c66c0ab98b23ab41e1b699",
+      "sha256": "aff6eb8c7fd872164147b69a95c51a97fce1fbb74274e0cbadc2bb2824017cf4",
       "origin": "public-edition"
     },
     {
@@ -400,7 +400,7 @@
     },
     {
       "path": "bin/product-os.js",
-      "sha256": "035cb0cba1722152b7c342f8fb2c98f09e8b8c68c9f0617eb75607f06a8d64b6",
+      "sha256": "022359f632fd2ec59dcb6f93f5bf56a686a7e70ea3fd907e05fc76f85feabef3",
       "origin": "public-edition"
     },
     {
@@ -569,6 +569,11 @@
       "origin": "toolkit"
     },
     {
+      "path": "bin/telemetry.js",
+      "origin": "public-edition",
+      "sha256": "952a8b1dd6ffa59f43172e56ae9e5e3b25a25e4b7cb1a214833ac0ef7f592ce8"
+    },
+    {
       "path": "bin/verification.js",
       "sha256": "4fec08e384debd5ee22a697781bde5d3e50f8fe9312e9754dad66d70fefce9f0",
       "origin": "toolkit"
@@ -595,7 +600,7 @@
     },
     {
       "path": "CONTRACT.md",
-      "sha256": "7a27d403d4ea80d6b9e1bac9fc632b88de354cfa273a3aab115ed61df1ddca98",
+      "sha256": "2b13468abc07759da1588ce8ec7ff4b5cf7876b114ca3b363cb841f748e1089a",
       "origin": "public-edition"
     },
     {
@@ -630,12 +635,12 @@
     },
     {
       "path": "package.json",
-      "sha256": "9af134dfe429c364bce929d43f3f4441a08ee3e80f437744c4cdc95424bc77f1",
+      "sha256": "870a8530c10f70c17763c7d03a6b28af971d34cbfc9061735d84b994eced68bf",
       "origin": "public-edition"
     },
     {
       "path": "README.md",
-      "sha256": "a1f36c33d75cbbce36c1d75bd86b6ba56aa74d0a876539665fae4f0221339afa",
+      "sha256": "187c239ceb4d5f7975bc22ce903d3cbeee8982b5258e97ae93031f43afd97ad1",
       "origin": "public-edition"
     },
     {
@@ -675,7 +680,7 @@
     },
     {
       "path": "skills/CONTRACT.md",
-      "sha256": "7a27d403d4ea80d6b9e1bac9fc632b88de354cfa273a3aab115ed61df1ddca98",
+      "sha256": "2b13468abc07759da1588ce8ec7ff4b5cf7876b114ca3b363cb841f748e1089a",
       "origin": "public-edition"
     },
     {
@@ -695,7 +700,7 @@
     },
     {
       "path": "skills/os-setup/SKILL.md",
-      "sha256": "b3a65119ad360e1beeeaa6a6396a435e39695c1e4e2b8853fd4d206b02b82820",
+      "sha256": "0b14e944ccd162076bedffff89253f713d14601376773358c8d00634cedc8257",
       "origin": "public-edition"
     },
     {
@@ -740,12 +745,12 @@
     },
     {
       "path": "skills/product-brand-identity/SKILL.md",
-      "sha256": "94d8941c9c64c7ae089a2405fdf4f2101b648b560bf85130d8ec4047775c3aad",
+      "sha256": "8e8c783269afe0cf9634205c73a906197cf20f6d63f527e2e7ea569009f4a784",
       "origin": "public-edition"
     },
     {
       "path": "skills/product-context/SKILL.md",
-      "sha256": "76eb7b99215345bf047ed0918e79cfca2c3a0da93bd9389f21c72f4b58a51880",
+      "sha256": "46573628c4945b9c5e05e0ad38e8e6aaff72de4b96980d5acbb09ee4cac08e16",
       "origin": "toolkit"
     },
     {
@@ -775,7 +780,7 @@
     },
     {
       "path": "skills/product-job-map/SKILL.md",
-      "sha256": "d2196d6252e11ebd5f8313b05fd90403fbb92cc54696cf84813a8422c7a39045",
+      "sha256": "6bc2290b6f9a431baba22cd2a1dc0f934fb67f27b95e9d6ab8669c4552e9d00a",
       "origin": "public-edition"
     },
     {
@@ -795,12 +800,12 @@
     },
     {
       "path": "skills/product-reference-library/SKILL.md",
-      "sha256": "d53ca0fca0b6eea4123590e119ae40de4c6badbcb71ea28196897daed70b7fa8",
+      "sha256": "fac8beacc0c54a6555aa25d54d24af4dc0ecde4e0da80ec3898ee3ddbf73ccb7",
       "origin": "public-edition"
     },
     {
       "path": "skills/product-research/SKILL.md",
-      "sha256": "6d5fdb9782cc6ad35a716595aa32ff8a824bebba8e0b9070d1901b14a9fadc9d",
+      "sha256": "79da45506af8da87f033f3b493300bcdd36c84e6b71ae53a9e92d4143942e5e0",
       "origin": "public-edition"
     },
     {
@@ -845,13 +850,23 @@
     },
     {
       "path": "skills/product-segment-hypotheses/SKILL.md",
-      "sha256": "5ab746da7f5c97e0f635de8472ce948b27bb3eb124bb28b0922f42f845d11598",
+      "sha256": "dd9a0fb9878cebf25025fa1a3824e018eef91a67bcfd5426e63477ca30170bd3",
       "origin": "public-edition"
     },
     {
       "path": "skills/product-status/SKILL.md",
-      "sha256": "5ba9ba0c334dc0c5c44afdd31dfb3d9ed5ce7b21e9efc17eab62b413eea2357a",
+      "sha256": "b0e3b08c9a212375ca03474176babacd81115a258f6498e4a8fcb2db0fd4dc33",
       "origin": "toolkit"
+    },
+    {
+      "path": "skills/TELEMETRY.md",
+      "origin": "public-edition",
+      "sha256": "6406aa35fd8ce70f2f4b5b79585f660f0a7b369dd91250e2158ba8bb14aa6abf"
+    },
+    {
+      "path": "TELEMETRY.md",
+      "origin": "public-edition",
+      "sha256": "6406aa35fd8ce70f2f4b5b79585f660f0a7b369dd91250e2158ba8bb14aa6abf"
     },
     {
       "path": "test/custom-skills.test.js",
@@ -867,6 +882,11 @@
       "path": "test/share-auth.test.js",
       "sha256": "c99292da08d24e32632938e00feae6992055426b3dd05b030ff029b528215465",
       "origin": "toolkit"
+    },
+    {
+      "path": "test/telemetry.test.js",
+      "origin": "public-edition",
+      "sha256": "90ddad891072d77d053f40dd171befd5b81cb379b6da199596444c11499c43d0"
     }
   ]
 }

@@ -3,7 +3,7 @@ const path = require('node:path')
 const os = require('node:os')
 const { renderWorkspaceInstructions, mergeWorkspaceInstructions, writeWorkspaceInstructions } = require('./workspace-instructions')
 const SKILLS = ['os-setup','product-context','product-status','product-research','product-segment-hypotheses','product-job-map','product-brand-identity','product-reference-library']
-const SHARED = ['CONTRACT.md','GRAPH.md','GRAPH-WRITES.md','DESIGN-SYSTEM.md','CUSTOM-SKILLS.md','SHARING.md']
+const SHARED = ['CONTRACT.md','GRAPH.md','GRAPH-WRITES.md','DESIGN-SYSTEM.md','CUSTOM-SKILLS.md','SHARING.md','TELEMETRY.md']
 
 function parseInstallArgs(args) {
   let workspace,agent='both'
@@ -47,6 +47,7 @@ function install(workspace, {agent='both',userHome=os.homedir()}={}) {
   if(workspace===root)throw new Error('Создайте отдельную папку продукта, вне репозитория инструментария')
   if(!global)require('./workspace').assertWorkspace(workspace)
   const targets=installationTargets(workspace,agent)
+  const previousVersions=targets.flatMap(({tools})=>{try{const info=JSON.parse(fs.readFileSync(path.join(tools,'package.json'),'utf8'));return info.name==='product-os-public'?[info.version]:[]}catch{return []}})
   // Validate all destinations before changing either agent's installation.
   for(const {name,config,target,tools} of targets) {
     for(const dir of [workspace,path.join(workspace,config),target,tools,...SKILLS.map(skill=>path.join(target,skill)),...SHARED.map(file=>path.join(target,file))])if(fs.lstatSync(dir,{throwIfNoEntry:false})?.isSymbolicLink())throw new Error('Установка не записывает через символические ссылки: '+dir)
@@ -103,7 +104,7 @@ function install(workspace, {agent='both',userHome=os.homedir()}={}) {
   if(!global)writeWorkspaceInstructions(workspace,agent)
   console.log('Product OS установлен '+(global?'для пользователя '+workspace:'в '+workspace)+' для '+targets.map(t=>t.name).join(', '))
   if(global)console.log('Откройте папку своего продукта в агенте и попросите: «Настрой Product OS через os-setup и покажи консоль».')
-  return {scope:global?'global':'project',installations:results}
+  return {scope:global?'global':'project',installations:results,previousVersions}
 }
 if(require.main===module){try{const {workspace,agent}=parseInstallArgs(process.argv.slice(2));install(workspace,{agent})}catch(error){console.error(error.message);process.exitCode=1}}
 module.exports={install,installedGlobally,installationTargets,parseInstallArgs}

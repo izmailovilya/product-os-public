@@ -23,6 +23,8 @@ function usage() { return `Product OS
   product-os references read|types|graph <workspace> [productId=…] [track=…] [competitor=…] [type=…] [id=…]
   product-os graph-write <workspace> <operations.json> [--dry]
   product-os research read|source|summary|audit <workspace> [key=value]
+  product-os telemetry status|on|off
+  product-os telemetry skill-used <skill>
 
 Восемь навыков: os-setup, product-context, product-status, product-research,
 product-segment-hypotheses, product-job-map, product-brand-identity и
@@ -33,9 +35,10 @@ setup сохраняет совместимость с прежней устан
 Product OS бесплатен, без подписки.
 Node.js 22+. AI работает в вашем установленном агенте.
 ` }
-async function main(args = process.argv.slice(2),{userHome}={}) {
+async function main(args = process.argv.slice(2),{userHome,telemetryOptions={}}={}) {
   const [command, ...rest] = args
   if (['help', '--help', '-h'].includes(command)) { console.log(usage()); return }
+  if (command === 'telemetry') { const result=await require('./telemetry').main(rest,{...telemetryOptions,userHome});console.log(JSON.stringify(result,null,2));return result }
   if (command === 'skills') return require('./custom-skills').main(rest)
   if (command === 'share') return require('./share/cli').main(rest)
   if (command === 'setup') {
@@ -43,7 +46,7 @@ async function main(args = process.argv.slice(2),{userHome}={}) {
     const request=parseInstallArgs(rest),workspace=request.workspace||'.',agent=request.agent
     require('./workspace').assertWorkspace(workspace)
     const local=installationTargets(path.resolve(workspace),agent).some(({tools})=>fs.existsSync(tools))
-    if(local||!installedGlobally(agent,{userHome}))install(workspace,{agent,userHome})
+    if(local||!installedGlobally(agent,{userHome})) { const installed=install(workspace,{agent,userHome});await require('./telemetry').recordInstallation(installed,{...telemetryOptions,userHome}) }
     const result = require('./workspace').init(workspace, { agent })
     console.log(`Рабочее место готово: ${result.workspace}`)
     console.log('Продолжите разговор с агентом в этой папке: «Настрой Product OS по контексту нашего разговора через os-setup и покажи консоль».')
@@ -51,7 +54,9 @@ async function main(args = process.argv.slice(2),{userHome}={}) {
   }
   if (command === 'install') {
     const {install,parseInstallArgs}=require('./install'),{workspace,agent}=parseInstallArgs(rest)
-    return install(workspace, {agent,userHome})
+    const result=install(workspace, {agent,userHome})
+    await require('./telemetry').recordInstallation(result,{...telemetryOptions,userHome})
+    return result
   }
   if (command === 'init') { const result = require('./workspace').init(rest[0] || '.', { agent: option(rest, '--agent', 'both') }); console.log(JSON.stringify(result, null, 2)); return result }
   if (command === 'import') { if (!rest[0] || !rest[1]) throw new Error('product-os import <workspace> <file>'); const result = require('./workspace').importSource(rest[0], rest[1]); console.log(JSON.stringify(result, null, 2)); return result }

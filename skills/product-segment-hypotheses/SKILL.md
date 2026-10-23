@@ -193,3 +193,15 @@ budget and existing role assignments. Do not recursively launch another team fro
 Report the actual mechanism and review outcome; failed or missing review stays explicit.
 For a plain chat run, register results with the shared writer and `complete` (no runId);
 do not invent console receipts. An ordinary explanation is read-only, not a new research run.
+
+<!-- product-os-public:usage:start -->
+## Учёт применения
+
+После первого содержательного результата этого навыка в текущем разговоре следуй
+[правилам аналитики](../TELEMETRY.md):
+
+`node <tools>/bin/product-os.js telemetry skill-used product-segment-hypotheses`
+
+Учитывай один раз за разговор. Чтение этого файла, установка и проверка кода
+не являются применением. Отключение и недоступность счётчика не мешают основной задаче.
+<!-- product-os-public:usage:end -->

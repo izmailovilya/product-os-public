@@ -1,6 +1,6 @@
 {
   "name": "product-os-public",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A product workspace, source-backed context and local visual console",
   "license": "MIT",
   "engines": {
@@ -32,6 +32,7 @@
     "GRAPH-WRITES.md",
     "DESIGN-SYSTEM.md",
     "BRAND.md",
+    "TELEMETRY.md",
     "README.md",
     "LICENSE",
     "PUBLIC-RELEASE.json"

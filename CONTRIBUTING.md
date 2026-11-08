@@ -1,20 +1,20 @@
-# Поделиться своим навыком
+# Contribute a skill
 
-Попросите своего агента: «Хочу поделиться этим навыком с пользователями Product OS».
-Агент проверит пример, подготовит обобщённую версию и покажет, что станет публичным.
-Подробности и команды: [CUSTOM-SKILLS.md](CUSTOM-SKILLS.md).
+If you want to share a skill, ask your agent to prepare a contribution. It checks
+an example, generalizes the skill and shows the complete public package first.
+See [Custom skills](CUSTOM-SKILLS.md) for commands.
 
-Предлагайте навык в `community-skills/<name>/` отдельным pull request. Сохраните
-авторство в AUTHOR.md, добавьте обезличенный пример и результат проверки в PR.
-Предлагаемые материалы должны допускать распространение по MIT; для заимствований
-сохраните совместимые лицензии и исходное авторство. Реальные материалы продуктов,
-интервью, ключи и личные данные в PR не входят.
+Submit a separate pull request under `community-skills/<name>/`. Include AUTHOR.md,
+an anonymized example and the observed verification result. Materials must permit
+MIT distribution; preserve compatible licenses and original attribution for borrowed
+work. Exclude real product research, interviews, credentials and personal data.
 
-Сопровождающий проверяет три вещи: решается ли заявленная задача, используется ли
-общая память без потери происхождения данных, понятны ли ограничения и права на
-материалы. Принятие PR не обещается автоматически. После принятия автор сохраняется
-в каталоге навыков сообщества и описании выпуска.
+The maintainer reviews whether the skill solves its stated problem, uses shared
+memory without losing provenance, and clearly states limitations and usage rights.
+Acceptance is not guaranteed. Accepted contributions retain credit in the community
+catalog and release notes.
 
-Product OS собирается из исходного инструментария. До выпуска сопровождающий переносит
-принятую папку с авторством в его `community-skills/`. Не добавляйте навык вручную
-в список базовых восьми и не правьте PUBLIC-RELEASE.json: сборщик сформирует его.
+The public edition is generated from the source toolkit. Before exporting a release,
+the maintainer imports accepted contributions into its `community-skills/` directory.
+Do not add them to the eight bundled skills or edit PUBLIC-RELEASE.json by hand;
+the exporter generates that manifest.

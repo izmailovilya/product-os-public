@@ -8,13 +8,13 @@ const SEVERITY_ORDER = { critical: 0, high: 1, medium: 2, low: 3 }
 
 // Landing formulas (contract §2): key ↔ canon name ↔ legacy English name ↔ Russian label.
 const FORMULAS = {
-  core_for_big: { label: 'Работа ради большой цели', aliases: ['Core Jobs for Big Jobs', 'Goal link'] },
-  core_value: { label: 'Работа + ценность', aliases: ['Core Jobs + value', 'Value'] },
-  trigger: { label: 'Триггер → работа', aliases: ['Trigger → Core Jobs', 'Trigger scenario'] },
-  orientation: { label: 'Работа ориентирования', aliases: ['Orientation Jobs', 'Choice help'] },
-  big_jobs_lived: { label: 'Большая цель прожита', aliases: ['Big Jobs lived', 'Emotional goal'] },
-  micro: { label: 'Микро-работа', aliases: ['Micro Job', 'Effortlessness'] },
-  problem_contrast: { label: 'Проблема старого решения', aliases: ['Problem with current Solution → Core Jobs', 'Problem contrast'] },
+  core_for_big: { label: "Working for a big goal", aliases: ['Core Jobs for Big Jobs', 'Goal link'] },
+  core_value: { label: "Work + value", aliases: ['Core Jobs + value', 'Value'] },
+  trigger: { label: "Trigger → work", aliases: ['Trigger → Core Jobs', 'Trigger scenario'] },
+  orientation: { label: "Orientation work", aliases: ['Orientation Jobs', 'Choice help'] },
+  big_jobs_lived: { label: "Big goal accomplished", aliases: ['Big Jobs lived', 'Emotional goal'] },
+  micro: { label: "Micro-work", aliases: ['Micro Job', 'Effortlessness'] },
+  problem_contrast: { label: "Problem with old solution", aliases: ['Problem with current Solution → Core Jobs', 'Problem contrast'] },
 }
 const formulaFold = value => String(value ?? '').toLowerCase().replace(/[→+]/g, ' ').replace(/[_\s-]+/g, ' ').replace(/[^a-zа-яё0-9 ]/gi, '').trim()
 const FORMULA_ALIASES = new Map(Object.entries(FORMULAS).flatMap(([key, { aliases }]) => [[formulaFold(key), key], ...aliases.map(alias => [formulaFold(alias), key])]))
@@ -150,15 +150,15 @@ function categoryOf(node) {
   const label = textOrNull(typeof raw === 'string' ? raw : raw?.name || raw?.label)
   const isCategory = node.data?.isCategory === true || node.data?.entityType === 'category'
   return { id: textOrNull(raw?.id) || (label ? `category-${crypto.createHash('sha1').update(label.toLocaleLowerCase('ru')).digest('hex').slice(0, 12)}` : isCategory ? node.id : 'uncategorized'),
-    label: label || (isCategory ? node.label : 'Категория не уточнена'), parentId: textOrNull(raw?.parentId) }
+    label: label || (isCategory ? node.label : "Category not specified"), parentId: textOrNull(raw?.parentId) }
 }
 
 const RESEARCH_SECTIONS = {
-  jobs: { label: 'Задачи клиентов', action: 'Проверить, какие задачи решает продукт' },
-  pricing: { label: 'Стоимость и условия', action: 'Проверить тарифы и стоимость внедрения' },
-  messaging: { label: 'Обещания клиентам', action: 'Снять сайт и разобрать обещания' },
-  channels: { label: 'Каналы продвижения', action: 'Изучить каналы привлечения клиентов' },
-  complaints: { label: 'Жалобы и ограничения', action: 'Изучить отзывы и жалобы клиентов' },
+  jobs: { label: "Client tasks", action: "Check what problems the product solves" },
+  pricing: { label: "Cost and conditions", action: "Check tariffs and implementation costs" },
+  messaging: { label: "Promises to customers", action: "Take down the site and dismantle promises" },
+  channels: { label: "Promotion channels", action: "Explore customer acquisition channels" },
+  complaints: { label: "Complaints and restrictions", action: "Study customer reviews and complaints" },
 }
 function researchSectionsOf(node, resolver) {
   const subjectIds = [node.id, node.data?.researchCompetitorId, ...(node.data?.researchCompetitorIds || [])].filter(Boolean)
@@ -211,7 +211,7 @@ function competitorDetails(node, nodes, edges, segments, resolver, fileExists = 
     const claim = resolver.claim(claimId)
     const supported = claim?.status === 'supported' && claim.kind === 'competitor-price' && researchIds.includes(claim.subjectId) && (!item.segmentId || !claim.segmentId || graphSegmentId(claim.segmentId) === item.segmentId)
     const quantity = supported && typeof claim.value === 'number' && Number.isFinite(claim.value) && claim.value >= 0 ? claim : null
-    return { id: item.id || `price-${n}`, label: textOrNull(item.plan || item.label) || 'Стоимость', priceKind: textOrNull(item.priceKind) || 'unspecified',
+    return { id: item.id || `price-${n}`, label: textOrNull(item.plan || item.label) || "Cost", priceKind: textOrNull(item.priceKind) || 'unspecified',
       amount: quantity?.value ?? null,
       amountRange: quantity?.range && [quantity.range.low, quantity.range.base, quantity.range.high].every(value => typeof value === 'number' && Number.isFinite(value) && value >= 0) && quantity.range.low <= quantity.range.base && quantity.range.base <= quantity.range.high ? { ...quantity.range } : null,
       currency: quantity?.currency || textOrNull(item.currency), period: quantity?.period || textOrNull(item.period), unit: quantity?.unit || textOrNull(item.unit),
@@ -220,7 +220,7 @@ function competitorDetails(node, nodes, edges, segments, resolver, fileExists = 
       segmentIds: item.segmentId ? [item.segmentId] : Array.isArray(item.segmentIds) ? item.segmentIds : [],
       ...resolver.forDatum(item, { segmentId: item.segmentId, subjectIds: researchIds }), claimId: claimId || null }
   })
-  if (!priceDetails.length && textOrNull(node.data?.pricing)) priceDetails.push({ id: 'legacy-pricing', label: 'Описание стоимости', priceKind: 'unspecified', amount: null, currency: null, period: null, unit: null,
+  if (!priceDetails.length && textOrNull(node.data?.pricing)) priceDetails.push({ id: 'legacy-pricing', label: "Description of cost", priceKind: 'unspecified', amount: null, currency: null, period: null, unit: null,
     includes: null, excludes: null, summary: textOrNull(node.data.pricing), segmentIds: [], ...resolver.forDatum({ source: node.source }), legacy: true })
   const hosts = competitorHosts(node)
   const jobRef = (jobId, jobLabel) => {
@@ -246,7 +246,7 @@ function competitorDetails(node, nodes, edges, segments, resolver, fileExists = 
     messaging.push({ ...enrich(line), ...resolver.forDatum(line, { subjectIds: researchIds }) })
   }
   const landing = landingOf(node, { segments, resolver, researchIds, enrich, fileExists, index })
-  const channels = sections.channels.findings.map((item, n) => ({ id: item.id || `channel-${n}`, label: textOrNull(item.channel) || 'Канал не уточнён',
+  const channels = sections.channels.findings.map((item, n) => ({ id: item.id || `channel-${n}`, label: textOrNull(item.channel) || "Channel not specified",
     description: textOrNull(item.statement), url: sourceOf(item.url), ...evidenceFields(item.evidence) }))
   const failures = edges.filter(edge => edge.from === node.id && edge.type === 'fails_at' && index[edge.to]?.type === 'problem').map(edge => {
     const problem = index[edge.to]
@@ -269,23 +269,23 @@ function competitorDetails(node, nodes, edges, segments, resolver, fileExists = 
     const rows = content[id]
     if (id === 'messaging') {
       // A dated site snapshot closes the gap; it stays available as a manual refresh of that snapshot.
-      if (landing && ['captured', 'text-only', 'legacy'].includes(landing.status)) return [{ id, label: section.label, status: 'researched', action: 'Обновить снимок сайта',
-        reason: `Сайт снят ${formatDate(landing.observedAt)}${landing.status === 'legacy' ? ' по записям исследования; цитаты не сверены с текстом страницы' : ''}. Обновите снимок, если сайт изменился.` }]
-      return [{ id, label: section.label, status: section.status, action: section.action, reason: section.status === 'unavailable' ? section.limitations || 'Сайт был недоступен при последней попытке.' : 'Сайт конкурента ещё не снят: нет датированного снимка с его обещаниями.' }]
+      if (landing && ['captured', 'text-only', 'legacy'].includes(landing.status)) return [{ id, label: section.label, status: 'researched', action: "Update site snapshot",
+        reason: `Site taken down ${formatDate(landing.observedAt)}${landing.status === 'legacy' ? " according to research records; quotes are not checked against the page text" : ''}. Update snapshot if site has changed.` }]
+      return [{ id, label: section.label, status: section.status, action: section.action, reason: section.status === 'unavailable' ? section.limitations || "The site was unavailable on the last attempt." : "The competitor's website has not yet been taken down: there is no dated photo with its promises." }]
     }
     const lacksProof = rows.some(row => !['supported', 'mixed', 'contradicted'].includes(row.evidenceStatus) || id === 'jobs' && row.coverage === 'unknown')
     if (rows.length && !lacksProof && section.status !== 'unavailable') return []
-    return [{ id, label: section.label, reason: section.status === 'not_found' ? 'В проверенных источниках не найдено; это не доказывает отсутствие.'
-      : section.status === 'unavailable' ? section.limitations || 'Источники недоступны.' : rows.length ? 'Есть описание, но его основания ещё не подтверждены.'
-        : section.summary || 'Эта часть досье ещё не исследована.', action: section.action, status: section.status }]
+    return [{ id, label: section.label, reason: section.status === 'not_found' ? "Not found in verified sources; it does not prove absence."
+      : section.status === 'unavailable' ? section.limitations || "Sources unavailable." : rows.length ? "There is a description, but its basis has not yet been confirmed."
+        : section.summary || "This part of the dossier has not yet been examined.", action: section.action, status: section.status }]
   })
-  if (!rationale && !classification.bySegment.some(item => item.rationale)) researchGaps.unshift({ id: 'classification', label: 'Тип конкуренции', reason: 'Не объяснено, за какую задачу и какой сегмент конкурирует решение.', action: 'Обосновать тип конкуренции', status: 'not_researched' })
+  if (!rationale && !classification.bySegment.some(item => item.rationale)) researchGaps.unshift({ id: 'classification', label: "Competition type", reason: "It is not explained for which task and which segment the solution competes.", action: "Justify the type of competition", status: 'not_researched' })
   return { classification, jobCoverage, priceDetails, messaging, landing, channels, failures, researchSections: sections, researchGaps }
 }
 
 function formatDate(value) {
   const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})/)
-  return match ? `${match[3]}.${match[2]}.${match[1]}` : textOrNull(value) || 'дата не указана'
+  return match ? `${match[3]}.${match[2]}.${match[1]}` : textOrNull(value) || "date not specified"
 }
 
 // What the competitor's own site promises: the latest dated landing observation (contract §3),
@@ -297,7 +297,7 @@ function landingOf(node, { segments, resolver, researchIds, enrich, fileExists, 
   const lineEvidence = (line, url, snapshot, observedAt, verified) => {
     const rows = []
     if (sourceOf(url)) rows.push({ id: url, label: hostnameOf(url) || url, status: verified ? 'observed' : 'unverified', source: url, url, quote: line.quote, relation: 'evidenced_by', kind: verified ? 'evidence' : 'source', usable: verified, checkedAt: observedAt })
-    if (sourceOf(snapshot)) rows.push({ id: snapshot, label: 'Снимок сайта', status: verified ? 'observed' : 'unverified', source: snapshot, url: null, quote: verified ? line.quote : null, relation: 'source', kind: 'source', usable: false, checkedAt: observedAt })
+    if (sourceOf(snapshot)) rows.push({ id: snapshot, label: "Site snapshot", status: verified ? 'observed' : 'unverified', source: snapshot, url: null, quote: verified ? line.quote : null, relation: 'source', kind: 'source', usable: false, checkedAt: observedAt })
     rows.push(...resolver.forDatum({ claimIds: line.claimIds }, { subjectIds: researchIds }).evidence)
     return evidenceFields(rows)
   }
@@ -424,12 +424,12 @@ function promiseMapOf(segments, competitors, nodes, edges) {
 
 function quantitiesOf(segment, resolver) {
   const data = segment.data || {}
-  const basis = value => ({ sourced: 'Оценка из источника', derived: 'Расчёт по исходным данным', none: 'Основание пока не установлено' })[value] || textOrNull(value)
+  const basis = value => ({ sourced: "Estimate from source", derived: "Calculation based on initial data", none: "The base has not yet been installed" })[value] || textOrNull(value)
   return [
-    { id: 'people', label: 'Размер сегмента', value: researchQuantity(segment, data.peopleCount), unit: 'потенциальных клиентов', basis: basis(data.peopleBasis), source: data.peopleSource, claimId: data.peopleClaimId },
-    { id: 'spend', label: 'Расходы одного клиента на задачу', value: researchQuantity(segment, data.spendTodayUsdMonthly), unit: 'USD в месяц на клиента', basis: basis(data.spendBasis), source: data.spendSource, claimId: data.spendClaimId },
-    { id: 'annual-spend', label: 'Совокупные расходы сегмента', value: researchQuantity(segment, data.impliedAnnualSpendUsd), unit: 'USD в год для всего сегмента', basis: 'Расчёт по размеру сегмента и расходам клиента', calculation: 'Размер сегмента × расходы клиента в месяц × 12', sources: [data.peopleSource, data.spendSource].filter(Boolean), claimIds: [data.peopleClaimId, data.spendClaimId].filter(Boolean) },
-  ].map(row => ({ ...row, ...resolver.forDatum(row, { segmentId: segment.id }), description: row.id === 'annual-spend' ? 'Оценка расходов на решение задачи. Это не выручка нашего продукта.' : null }))
+    { id: 'people', label: "Segment size", value: researchQuantity(segment, data.peopleCount), unit: "potential clients", basis: basis(data.peopleBasis), source: data.peopleSource, claimId: data.peopleClaimId },
+    { id: 'spend', label: "Cost per client per task", value: researchQuantity(segment, data.spendTodayUsdMonthly), unit: "USD per month per client", basis: basis(data.spendBasis), source: data.spendSource, claimId: data.spendClaimId },
+    { id: 'annual-spend', label: "Total segment expenses", value: researchQuantity(segment, data.impliedAnnualSpendUsd), unit: "USD per year for the entire segment", basis: "Calculation based on segment size and client expenses", calculation: "Segment size × client expenses per month × 12", sources: [data.peopleSource, data.spendSource].filter(Boolean), claimIds: [data.peopleClaimId, data.spendClaimId].filter(Boolean) },
+  ].map(row => ({ ...row, ...resolver.forDatum(row, { segmentId: segment.id }), description: row.id === 'annual-spend' ? "Estimation of the costs of solving the problem. This is not our product's revenue." : null }))
 }
 
 function developmentForProduct(product, nodes, edges, resolver) {
@@ -472,7 +472,7 @@ function developmentForProduct(product, nodes, edges, resolver) {
       visiting.delete(id); visited.add(id)
       return found
     }
-    if (row.dependsOn.some(cycle)) row.dependencyIssues = [...new Set([...row.dependencyIssues, 'Циклическая зависимость: уточните порядок проверки гипотез.'])]
+    if (row.dependsOn.some(cycle)) row.dependencyIssues = [...new Set([...row.dependencyIssues, "Circular dependency: clarify the order of hypothesis testing."])]
   }
   return { nodes: rows, edges: rows.flatMap(row => row.dependsOn.map(id => ({ from: id, to: row.id, type: 'enables' }))) }
 }
@@ -632,12 +632,12 @@ function displayLabel(node) {
   const explicit = node?.data?.shortName || node?.data?.displayLabel || node?.data?.shortLabel
   const label = String(explicit || node?.label || '').replace(/\bunknown\b/gi, '').trim()
   const name = label.split(/\s+[—–]\s+|:\s*[«"“]/)[0].trim() || label
-  return name.split(/\s+/).filter(Boolean).slice(0, 4).join(' ') || 'Без названия'
+  return name.split(/\s+/).filter(Boolean).slice(0, 4).join(' ') || "Untitled"
 }
 
 // Names identify people/groups; truncating them by word count can erase the
 // qualifying condition. A supplied short name is editorial, otherwise keep it all.
-const segmentDisplayLabel = node => String(node?.data?.shortName || node?.data?.displayLabel || node?.data?.shortLabel || node?.label || 'Без названия').trim()
+const segmentDisplayLabel = node => String(node?.data?.shortName || node?.data?.displayLabel || node?.data?.shortLabel || node?.label || "Untitled").trim()
 
 function buildGalaxyProjection({ nodes = [], edges = [], productId = null, moves = {}, fileExists = null }) {
   nodes = compatibleCompetitors(nodes)
@@ -711,7 +711,7 @@ function buildGalaxyProjection({ nodes = [], edges = [], productId = null, moves
       archivedResearchSegmentIds: (segment.data?.archivedResearchSegmentIds||[]).filter(id=>nodes.some(n=>n.id===id&&n.type==='segment'&&n.status==='dropped')),
       parameterConditions: Object.entries(segment.data?.parameterView?.selection||{}).map(([key,value])=>{
         const base=nodes.find(n=>n.id===segment.data.parameterView.baseSegmentId),p=base?.data?.parameterModel?.parameters.find(p=>p.id===key)
-        return {label:p?.label||'Условие больше не доступно',value:p?.values.find(v=>v.id===value)?.label||'Нужно выбрать заново'}
+        return {label:p?.label||"Condition no longer available",value:p?.values.find(v=>v.id===value)?.label||"Need to select again"}
       }),
       shortLabel: segmentDisplayLabel(segment),
       parentId: subEdges.find(edge => edge.from === segment.id)?.to || null,
@@ -728,10 +728,10 @@ function buildGalaxyProjection({ nodes = [], edges = [], productId = null, moves
       totalScore: segment.data?.totalScore ?? null,
       totalScoreRange: segment.data?.totalScoreRange || null, ranking: segment.data?.ranking || null,
       switchScore: segment.data?.switchScore ?? null,
-      // «изучено на X%» — ворота из bin/verification.js
+      // «studied on X%» — gate from bin/verification.js
       verification,
-      researchProgress: { label: 'Проверка сегмента', completed: verification.passed, total: verification.total,
-        summary: `Завершено ${verification.passed} из ${verification.total} направлений проверки. Исследование рынка не заменяет интервью, проверку оплаты и экономики.`,
+      researchProgress: { label: "Segment check", completed: verification.passed, total: verification.total,
+        summary: `Completed ${verification.passed} from ${verification.total} check directions. Market research is not a substitute for interviews, pay checks and economics.`,
         steps: verification.gates.map(gate => ({ id: gate.key, label: gate.label, description: gate.detail, nextAction: gate.unlock,
           status: gate.done ? 'complete' : gate.partial ? 'partial' : 'not_started' })) },
       thinEvidence: Boolean(verification.blockedAt || segment.data?.thinEvidence),

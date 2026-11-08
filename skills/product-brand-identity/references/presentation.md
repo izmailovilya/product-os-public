@@ -1,145 +1,146 @@
-# Сохранённая визуальная презентация
+# Saved visual presentation
 
-Презентация — часть результата айдентики: человек видит целый бренд, понимает
-применение элементов и забирает нужные файлы. Агент авторит её при производстве;
-консоль показывает сохранённую композицию без нового AI-запроса. Нет обязательного
-набора разделов или одинакового порядка для всех брендов. Не создавать пустой
-«Персонаж», если у бренда его нет. Карточки случайных полей JSON не заменяют показ.
+Presentation is part of the result of the identity: a person sees the whole brand, understands
+Apply elements and pick up the required files. The agent authorizes it during production;
+The console shows the saved composition without a new AI request. No mandatory
+a set of sections or the same order for all brands. Do not create empty
+“Character” if the brand does not have one. JSON random field cards do not replace display.
 
-## Правила авторинга
+## Authoring rules
 
-- До заполнения повторяющихся блоков выбери по задаче аудитории, что человек
-  должен понять из первого образца и какой файл взять для своего носителя.
-  Составь этот фрагмент в reader: изображение и его подпись читаются вместе,
-  увеличение помогает рассмотреть, скачивание даёт нужный вариант. Если задача —
-  чтение, ей не требуется придумывать отдельный главный CTA. Только после проверки
-  этого пути распространяй композиционный приём. Нужный вывод запиши в обычном
-  отчёте; дополнительная схема данных или отдельный approval не нужны.
-- Первым покажи цельный образ: существующий знак/название, нужное описание и
-  характерную графику. Брендовые цвета действуют внутри визуалов, не меняют оболочку.
-- Выбирай последовательность по материалу: знак, персонаж, цвет, шрифт, голос,
-  композиция и носители — возможные темы. Заголовок объясняет содержание.
-- Свяжи изображение, подпись и правило. У каждого нужного действия есть исходный
-  файл. Все required-правила отражены через `ruleIds`; смысловые ограничения остаются
-  рядом с примером. Источники, прочие правила, версии и полный список файлов доступны
-  в отдельном окне «Версии и основания».
-- Используй реальные зарегистрированные активы. Для листа спрайтов сохраняй точные
-  координаты из индекса, не угадывай позу и не объявляй ячейку отдельным PNG.
-  До размещения различи мастер/образец применения и техническую проверку/экспорт.
-  Размер, фон и crop должны подходить выбранной роли. Читаемый favicon в 16px —
-  полноценный результат для вкладки, но не крупный образец бренда. Технические
-  варианты остаются доступны в комплекте; их наличие не обязывает повторять их
-  в основной галерее. Неизвестное назначение не устанавливается порядком файлов.
-- Компоновки из существующих ингредиентов являются предложениями. Они не наследуют
-  принятие знака или персонажа. Сохранённая область принятия не расширяется.
-- Проверь саму презентацию на desktop, 390px и при увеличении текста: изображения
-  загрузились, подписи понятны, разделы доступны, источник открывается и закрывается,
-  нужный файл можно получить. Отдельно оцени текущую страницу: помогает ли отбор
-  понять систему и выбрать применение, не вытесняют ли подпись и образец одинаковые
-  служебные действия. Если нет, исправь композицию в уже выбранном направлении;
-  валидный профиль и принятый знак не закрывают этот дефект представления.
+- Before filling in repeating blocks, select according to the audience task that person
+should understand from the first sample which file to take for your media.
+Compose this fragment in the reader: the image and its signature are read together,
+enlarging helps to see it, downloading gives the desired option. If the task is
+Reading, she doesn't need to come up with a separate main CTA. Only after verification
+spread the compositional technique this way. Write the desired output in the usual form
+report; no additional data schema or separate approval is needed.
+- Be the first to show a complete image: the existing sign/name, the desired description and
+characteristic graphics. Brand colors act inside the visuals and do not change the shell.
+- Choose a sequence based on the material: sign, character, color, font, voice,
+composition and media - possible topics. The title explains the content.
+- Link the image, caption and rule. Each required action has a source
+file. All required rules are reflected through `ruleIds`; semantic restrictions remain
+next to the example. Sources, other rules, versions and a complete list of files are available
+in a separate window "Versions and bases".
+- Use real registered assets. For the sprite sheet, keep the exact ones
+coordinates from index, don't guess pose and don't declare cell as separate PNG.
+Before placement, distinguish master/sample application and technical check/export.
+Size, background and crop must match the selected role. Readable favicon at 16px —
+Full result for the tab, but not a large brand sample. Technical
+options remain available in the kit; their presence does not oblige you to repeat them
+in the main gallery. Unknown destination is not established by file order.
+- Arrangements from existing ingredients are suggestions. They do not inherit
+adoption of a sign or character. The saved acceptance area is not expanded.
+- Check the presentation itself on desktop, 390px and with text enlarged: images
+loaded, signatures are clear, sections are accessible, the source opens and closes,
+The required file can be obtained. Separately, evaluate the current page: does selection help
+understand the system and choose the application, whether the signature and sample are not the same
+official actions. If not, correct the composition in the already selected direction;
+a valid profile and accepted sign do not close this representation defect.
 
-## Формат
+## Format
 
-Новые профили используют `schemaVersion: 3` и `presentation` в identity.json.
-В draft допустим `null`; `ready-for-review` требует сохранённую презентацию.
-Поля версии 2 сохраняются. Старые версии 1/2 остаются читаемыми.
+New profiles use `schemaVersion: 3` and `presentation` in identity.json.
+In draft, `null` is allowed; `ready-for-review` requires a saved presentation.
+Version 2 fields are retained. Old versions 1/2 remain readable.
 
 ```json
 {
   "schemaVersion": 1,
-  "title": "Название бренда",
-  "description": "Сохранённое описание",
+  "title": "Brand name",
+  "description": "Saved description",
   "theme": {"background": "#FFFDF4", "foreground": "#121212"},
   "cover": {
-    "title": "Название бренда",
+    "title": "Brand name",
     "logoFileId": "logo",
-    "description": "Сохранённый дескриптор",
-    "image": {"fileId": "character", "alt": "Описание изображения"}
+    "description": "Stored handle",
+    "image": {"fileId": "character", "alt": "Image description"}
   },
   "sections": [
-    {"id": "mark", "type": "showcase", "title": "Знак", "ruleIds": ["logo-rule"],
-     "items": [{"title": "Основная версия", "description": "Где применять",
-                "image": {"fileId": "logo", "alt": "Основной знак"}}]},
-    {"id": "files", "type": "downloads", "title": "Взять в работу",
-     "items": [{"fileId": "logo", "title": "Логотип", "description": "Векторный исходник"}]}
+    {"id": "mark", "type": "showcase", "title": "Sign", "ruleIds": ["logo-rule"],
+     "items": [{"title": "Main version", "description": "Where to apply",
+                "image": {"fileId": "logo", "alt": "Main character"}}]},
+    {"id": "files", "type": "downloads", "title": "Get to work",
+     "items": [{"fileId": "logo", "title": "Logo", "description": "Vector source"}]}
   ]
 }
 ```
 
-`fileId`, `logoFileId`, `fontFileId` ссылаются исключительно на `files` текущего
-профиля; `ruleIds` — на его `rules`. Пути, HTML, скрипты, CSS и внешние изображения
-в презентации не задаются. Hex-цвета — `#rrggbb`; контраст текста каждой пары ≥4.5:1.
-Опциональный `cover.theme` меняет только обложку. Опциональный `caption` — осмысленная
-подпись, не версия/история. `cover.title` либо `logoFileId` обязательны.
+`fileId`, `logoFileId`, `fontFileId` refer exclusively to `files` of the current
+profile; `ruleIds` - to his `rules`. Paths, HTML, scripts, CSS and external images
+not specified in the presentation. Hex colors — `#rrggbb`; text contrast of each pair ≥4.5:1.
+Optional `cover.theme` only changes the cover. Optional `caption` - meaningful
+signature, not version/history. `cover.title` or `logoFileId` are required.
 
-Блоки открыты, порядок задаёт автор. У каждого — уникальный `id` из латинских
-букв/цифр/дефисов, `title`, необязательное `description` и `ruleIds`.
+Blocks are open, the order is set by the author. Each one has a unique `id` from the Latin
+letters/numbers/hyphens, `title`, optional `description` and `ruleIds`.
 
-| type | Содержимое |
+| type | Contents |
 | --- | --- |
 | `showcase` / `gallery` | `items: [{title, description?, image, ruleIds?}]` |
 | `palette` | `colors: [{value: "#rrggbb", label}]` |
-| `typography` | `family`, `sample`, опциональный `fontFileId` для настоящего шрифта и `fontWeightRange: [min, max]` по метаданным файла; `specimen` для композиции из типографических ролей |
-| `text` | `body` с абзацами; только осмысленный сохранённый текст |
-| `applications` | `items: [{title, heading, supportingText?, logoFileId?, image?, theme?, proposed: true, description?, ruleIds?}]` — демонстрационные композиции |
+| `typography` | `family`, `sample`, optional `fontFileId` for real font and `fontWeightRange: [min, max]` for file metadata; `specimen` for a composition of typographic roles |
+| `text` | `body` with paragraphs; only meaningful saved text |
+| `applications` | `items: [{title, heading, supportingText?, logoFileId?, image?, theme?, proposed: true, description?, ruleIds?}]` - demo compositions |
 | `downloads` | `items: [{fileId, title, description?}]` |
 
-`image: {fileId, alt, region?}`; `region: {columns, rows, column, row}` — положительные
-размеры сетки до 12×12 и нумерация ячеек с нуля. За пределами сетки просмотр запрещён.
-Неполный шрифт или недоступный файл остаётся явным состоянием, не успешным превью.
+`image: {fileId, alt, region?}`; `region: {columns, rows, column, row}` - positive
+grid sizes up to 12x12 and cell numbering from scratch. Viewing is prohibited outside the grid.
+Incomplete font or inaccessible file remains an explicit condition, preview failed.
 
-У изображения в `showcase` / `gallery` можно задать `item.theme` с такой же
-контрастной парой, как у обложки: например, тёмный фон для светлой версии знака.
-Название и пояснение остаются на обычной поверхности интерфейса. Тот же фон
-сохраняется при открытии изображения. Не увеличивай favicon до иллюстрации:
-выбирай векторный мастер или экспорт подходящего размера.
+The image in `showcase` / `gallery` can be set to `item.theme` with the same
+a contrasting pair, like the cover: for example, a dark background for a light version of the sign.
+The title and explanation remain on the normal interface surface. Same background
+Saved when opening an image. Don't enlarge the favicon to illustration:
+select a vector master or export of a suitable size.
 
-Архив файлов не является галереей айдентики. В основной показ включай только
-выбранные варианты системы и примеры, которые объясняют её применение. Старые
-концепции, снимки проверок и наборы размеров оставляй в «Версиях и основаниях».
-Экран продукта уместен здесь как подписанный пример стиля; каталог экранов,
-сценариев и компонентов относится к «Нашим элементам».
+The file archive is not an identity gallery. Include only
+ in the main show
+selected variants of the system and examples that explain its application. Old
+leave concepts, check pictures and size sets in “Versions and Bases”.
+The product screen is appropriate here as a signed example of the style; screen catalogue,
+scripts and components refers to "Our Elements".
 
-`typography.specimen` — спокойная композиция на фоне бренда: `glyphs`, необязательный
-`secondaryGlyphs`, `title`, необязательный `heading`, `body`, `characters` (1–8 строк
-знаков). Текст каждого уровня задаёт автор, reader не превращает произвольную первую
-строку старого `sample` в заголовок. Без `specimen` сохранённый `sample` остаётся целым.
-Шрифт и диапазон начертаний берутся из зарегистрированного файла; стили текста
-консоли не должны заменять его собственные размеры и гарнитуру. Проверь это по
-вычисленным стилям в настоящей странице, а не только в отдельном макете.
+`typography.specimen` - calm composition against the background of the brand: `glyphs`, optional
+`secondaryGlyphs`, `title`, optional `heading`, `body`, `characters` (1-8 lines
+characters). The text of each level is set by the author, the reader does not transform an arbitrary first one
+old `sample` line in header. Without `specimen`, the saved `sample` remains intact.
+The font and style range are taken from the registered file; text styles
+Consoles should not replace its own dimensions and typeface. Check it out by
+Computed styles on the actual page, not just a separate layout.
 
-Нарезка листа по сетке допустима только после просмотра каждой границы: рисунок
-должен целиком помещаться в ячейку, без обрезанных частей и соседних фрагментов.
-Если персонажи пересекают границы, показывай исходный лист целиком. Не маскируй
-дефект более узким crop и не называй ячейки отдельными экспортированными файлами.
+Cutting a sheet along a grid is allowed only after viewing each boundary: figure
+must fit entirely into the cell, without trimmed parts or adjacent fragments.
+If characters cross boundaries, show the entire source sheet. Don't mask
+defect narrower crop and do not call cells as separate exported files.
 
-Текст рядом с образцом объясняет конкретное применение или ограничение. Убирай
-метатекст о наличии/сохранении материалов и очевидное описание самого интерфейса.
-`ruleIds` связывает композицию с основаниями; reader не повторяет исходное правило
-дословно под каждым примером авторской презентации. Значимые правила должны быть
-переданы в авторском тексте; исходные формулировки остаются в «Версии и основания».
-Область, исключения и статус предложения сохраняются возле применения.
+Text next to the sample explains the specific application or limitation. Remove
+metatext about the availability/saving of materials and an obvious description of the interface itself.
+`ruleIds` associates composition with bases; reader does not repeat the original rule
+verbatim under each example of the author's presentation. Significant rules must be
+transmitted in the author's text; the original wording remains in Versions and Reasons.
+Scope, exceptions and offer status are saved near the application.
 
-История принятия версии (номера прошлых выпусков, что ещё не выпущено и какие
-будущие действия не принимались) хранится в «Версии и основания», а не общим
-абзацем над скачиваниями. В списке файлов достаточно названия, формата и состава:
-например, «3 листа по 6 эмоций · ZIP». Условия, которые меняют допустимое применение
-самого файла (лицензия, запрет использования, несовместимость), остаются рядом с ним.
-Статус нового применения называй понятным читателю словом «Эскиз»; не повторяй
-историю согласований под каждым примером.
+Version adoption history (numbers of previous releases, what has not yet been released and which
+no future actions taken) is stored in "Versions and Reasons" rather than shared
+in paragraph above downloads. The list of files contains just the name, format and composition:
+for example, “3 sheets of 6 emotions · ZIP.” Conditions that change acceptable use
+the file itself (license, prohibited use, incompatibility), remain next to it.
+Call the status of the new application with the word “Sketch”, understandable to the reader; don't repeat
+history of approvals under each example.
 
-## Выпущенные профили
+## Profiles released
 
-При отсутствии авторской композиции reader собирает консервативное совместимое
-представление из существующих правил и файлов, без AI и записи в продукт. Его
-происхождение видно в основаниях. Для полноценной подачи уже принятой неизменяемой
-версии можно сохранить отдельный JSON и зарегистрировать в её узле
-`data.presentationFile` и `data.presentationSha256` через общий graph writer.
-Документ: `{schemaVersion:1, productId, artifactId, profileSha256, presentation}`.
-Хеши привязывают его к точным байтам прежнего профиля. Это редакционное представление,
-оно не меняет принятие активов. Несовпадение, повреждение и недоступность явно
-показываются; reader возвращается к исходным материалам, не выдаёт их за авторский макет.
+In the absence of an author's composition, the reader collects a conservative compatible
+representation from existing rules and files, without AI and writing to the product. Its
+The origin is visible in the bases. For a full submission already accepted unchangeable
+versions can be saved as a separate JSON and registered in its node
+`data.presentationFile` and `data.presentationSha256` via a common graph writer.
+Document: `{schemaVersion:1, productId, artifactId, profileSha256, presentation}`.
+Hashes bind it to the exact bytes of the previous profile. This is an editorial submission,
+It does not change the acceptance of assets. Mismatch, damage and inaccessibility clearly
+showing; reader returns to the source materials, does not pass them off as the author's layout.
 
-Структурная проверка одна: `bin/brand-presentation.js`. Её используют production-reader
-и `scripts/validate.cjs`; не создавать расходящиеся валидаторы для производителя и UI.
+Structural check one: `bin/brand-presentation.js`. It is used by production-reader
+and `scripts/validate.cjs`; do not create divergent validators for producer and UI.

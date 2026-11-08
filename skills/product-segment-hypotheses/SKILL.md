@@ -1,11 +1,6 @@
 ---
 name: product-segment-hypotheses
-description: >-
-  Form or revise a customer map: recognizable groups, segments and subsegments,
-  with independent generator–critic debate. Use for "предложи сегменты", "пересобери
-  сегментацию", "кто может пользоваться продуктом", or revising customer boundaries.
-  Also explains an existing map through a scoped read; an explanation alone does not
-  launch generation, subagents or a research rebuild.
+description: Form or revise a customer map of recognizable groups, segments and subsegments through independent generator–critic review. Use for "suggest segments", "rebuild segmentation" or "who could use the product". Explaining an existing map is a scoped read and does not start generation or research.
 user-invocable: true
 ---
 
@@ -193,15 +188,3 @@ budget and existing role assignments. Do not recursively launch another team fro
 Report the actual mechanism and review outcome; failed or missing review stays explicit.
 For a plain chat run, register results with the shared writer and `complete` (no runId);
 do not invent console receipts. An ordinary explanation is read-only, not a new research run.
-
-<!-- product-os-public:usage:start -->
-## Учёт применения
-
-После первого содержательного результата этого навыка в текущем разговоре следуй
-[правилам аналитики](../TELEMETRY.md):
-
-`node <tools>/bin/product-os.js telemetry skill-used product-segment-hypotheses`
-
-Учитывай один раз за разговор. Чтение этого файла, установка и проверка кода
-не являются применением. Отключение и недоступность счётчика не мешают основной задаче.
-<!-- product-os-public:usage:end -->

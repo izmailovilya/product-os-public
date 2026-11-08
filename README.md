@@ -1,185 +1,157 @@
 # Product OS
 
-Готовые скиллы и общая память о продукте, целевых сегментах и конкурентах
-для вас и вашего AI-агента. Сохранённый контекст можно просмотреть в консоли,
-уточнить с агентом и использовать в дальнейшей работе над продуктом.
+Skills and shared product memory for you and your AI agent. Save product context,
+customer segments, competitors and sources as local files, then browse them in a
+visual console or use them in your next conversation with Claude Code or Codex.
 
-Product OS добавляет к вашему агенту готовые правила ведения контекста
-и интерфейс для его просмотра. Разговор с AI остаётся доступен; результаты,
-которые вы поручили сохранить, можно использовать в следующем разговоре.
+**Free, open source, and no subscription. No telemetry.** Product OS does not track
+installations, updates or skill use.
 
-**Product OS бесплатен: без покупки и подписки.**
+For example, bring notes from customer conversations and ask `product-context` to
+save them with their sources. You can then review the saved context in the console
+and continue discussing it with your agent. Assumptions remain assumptions;
+saving a conversation does not turn it into validated research.
 
-Например, вы обсудили с агентом, кому нужен ваш продукт, и принесли заметки
-из разговоров с клиентами. Попросите сохранить сведения через `product-context`:
-агент запишет их с источниками. Сохранённые описания продукта, сегментов и
-конкурентов можно открыть в консоли и использовать в дальнейшем обсуждении.
-Сам разговор не становится исследованием; предположения остаются предположениями.
-
-В этом выпуске восемь навыков для вашего AI-агента:
-
-| Навык | Для чего |
+| Skill | Purpose |
 | --- | --- |
-| `os-setup` | Создать рабочее место и записать исходный контекст |
-| `product-context` | Сохранить новые материалы и сведения с источниками |
-| `product-status` | Понять, где остановились и какой следующий шаг обоснован |
-| `product-research` | Проверить один выбранный вопрос по открытым источникам |
-| `product-segment-hypotheses` | Построить карту возможных клиентов с независимой проверкой |
-| `product-job-map` | Стратегическая карта работ: где продукт помогает и где его пределы |
-| `product-brand-identity` | Айдентика бренда: бриф, направления, логотип, система |
-| `product-reference-library` | Библиотека референсов: как другие решают задачу, с источниками |
+| `os-setup` | Set up a product workspace using the context you already have |
+| `product-context` | Save materials and facts with sources |
+| `product-status` | Review progress and identify a grounded next step |
+| `product-research` | Investigate one question using public sources |
+| `product-segment-hypotheses` | Map potential customers with an independent critique |
+| `product-job-map` | Map customer jobs and the product's contribution and limits |
+| `product-brand-identity` | Develop a brand brief, directions, logo and identity system |
+| `product-reference-library` | Collect sourced examples of how other products solve a problem |
 
-Навыки обработки интервью, глубокого исследования рынка, контента и разработки
-в этот выпуск не входят. Обычные способности вашего AI-агента остаются доступны.
+Specialized interview processing, deep market research, content production and
+implementation skills are outside this edition. Your agent's other capabilities
+remain available.
 
-## Начало работы
+## Get started
 
-Нужны Git и Node.js 22 или новее. Для навыков нужен Claude Code или Codex.
-Просмотр консоли и сохранение файлов работают без подключения AI.
+You need Git and Node.js 22 or later. Skills run in Claude Code or Codex.
+Browsing the console and saving files do not require an AI connection.
 
-### Один раз — установка скиллов
+### Install once
 
-Попросите агента выполнить:
+Ask your agent to run:
 
 ```sh
 npx --yes --package=github:izmailovilya/product-os-public product-os install --agent both
 ```
 
-Установщик сообщает о служебной аналитике: учитываются завершённые установки,
-обновления и сообщённые агентом применения скиллов. Передаются только тип события,
-версия и название скилла. Отключение: `DO_NOT_TRACK=1` или команда
-`product-os telemetry off` через установленный runtime. Содержимое продуктов не
-передаётся. Команды и ограничения счётчика — [TELEMETRY.md](TELEMETRY.md).
+Skills install in `~/.agents/skills` for Codex and `~/.claude/skills` for Claude Code.
+The runtime lives in `~/.agents/product-os-tools` or
+`~/.claude/skills/product-os-tools`, respectively. You do not need to clone the
+repository. Installation does not create product data in your home directory.
 
-Команда устанавливает скиллы и инструменты в общие каталоги пользователя:
-`~/.agents/skills` для Codex и `~/.claude/skills` для Claude Code. Служебный runtime
-Codex находится отдельно в `~/.agents/product-os-tools`, Claude — в
-`~/.claude/skills/product-os-tools`. Самому клонировать репозиторий не нужно.
-Паспорта, исследования и память продуктов в домашней папке не создаются.
+Use `--agent codex` or `--agent claude` to install for one agent. Run the same
+command to update. Custom skills and product data are preserved. If newly installed
+skills do not appear in your current conversation, start a new conversation in
+your product folder.
 
-`--agent codex` устанавливает только для Codex, `--agent claude` — для Claude.
-Для обновления повторите ту же команду. Она не удаляет чужие навыки и не меняет
-данные продуктов. Если агент не увидел новые скиллы в текущем разговоре, откройте
-новый разговор в папке продукта.
+### Set up each product
 
-### Для каждого продукта — os-setup
+Open a separate product folder in your agent and ask:
 
-Создайте или выберите отдельную папку продукта и откройте её в своём агенте.
-Напишите:
+> Set up Product OS using the context of our conversation through os-setup and show me the console.
 
-> Настрой Product OS по контексту нашего разговора через os-setup и покажи консоль.
+The agent saves the known context, asks for missing information when needed, and
+opens the local console. Its address appears in the terminal. Each product keeps
+its own context and materials; several products can share one installation.
+Repeating setup preserves existing materials and user instructions. The console
+listens on localhost.
 
-Агент использует известный контекст, уточнит только недостающее, сохранит паспорт
-и откроет локальную консоль. Адрес будет выведен в терминале. Скиллы и инструменты
-остаются в общей установке; в папке продукта хранятся его контекст, материалы и
-результаты. Так можно вести несколько продуктов с одним набором скиллов.
+The console has five sections: **Product**, **Segments**, **Job map**,
+**Competitors** and **Library**. Research reports are linked from products and
+segments. The library contains brand identities and reference collections.
+Ask your agent to add or update the saved context; the console displays it.
+BB is not required.
 
-Повторная настройка сохраняет паспорт, материалы и пользовательские инструкции.
-Установка сама по себе не запускает AI и не описывает продукт за владельца.
-Консоль слушает только localhost.
+A project-local installation is also supported:
+`product-os install <workspace> --agent both`. The older `setup <workspace>`
+command remains compatible with existing installations. `init <workspace>` creates
+only product data and instructions, without copying skills. To call tools directly,
+use `node <tools>/bin/product-os.js`, where `<tools>` is the absolute runtime path.
+You do not need to add a permanent command to PATH for the skills to work.
 
-Локальная установка для одного проекта также доступна:
-`product-os install <workspace> --agent both`. Прежняя команда `setup <workspace>`
-сохраняет совместимость: при существующей общей установке создаёт данные продукта,
-а для прежнего локального сценария устанавливает инструменты в проект.
-Команда `init <workspace>` создаёт только данные и инструкции, без копирования скиллов.
-При вызове инструментов напрямую используйте `node <tools>/bin/product-os.js`,
-где `<tools>` — абсолютный путь к выбранному runtime. Добавление отдельной
-постоянной команды в PATH не требуется для работы скиллов.
+## Add materials and review context
 
-В главном меню пять разделов: **Продукт**, **Сегменты**, **Карта работ**,
-**Конкуренты** и **Библиотека**. Описание, цель и ограничения читаются на одной
-странице продукта. Сегменты и конкурентов можно постепенно заполнять через
-своего агента, например: «Через product-context добавь сегмент независимых
-консультантов: вот что мы о нём знаем…». Карта работ строится навыком
-`product-job-map` и читается в своём разделе; отчёты исследований открываются
-со страниц продуктов и сегментов. В библиотеке — айдентика бренда
-(`product-brand-identity`) и референсы (`product-reference-library`).
-Заполнение ведётся в агенте; консоль показывает сохранённый контекст.
-BB для этого не требуется.
+Ask your agent:
 
-Навыки вызываются в Codex или Claude Code. Отдельных экранов запуска агентов,
-плана работы и предложений в публичной консоли нет.
+> Save this material through product-context.
 
-## Свои навыки и соавторство
-
-Попросите агента: «Добавь этот навык» или «Создай навык для моей задачи».
-Пользовательские навыки сохраняются отдельно от базового набора, доступны вашему
-агенту и не пропадают при обновлениях. После успешной проверки агент предложит
-подготовить pull request и поделиться навыком, сохранив ваше авторство.
-Отказ не мешает использовать навык у себя. До отправки вы увидите весь публичный
-пакет; данные продукта не публикуются автоматически.
-Команды и порядок: [CUSTOM-SKILLS.md](CUSTOM-SKILLS.md),
-вклад в проект: [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Добавление материалов
-
-В агенте: «Добавь этот материал через product-context». Без AI:
+Or import a file directly:
 
 ```sh
-node bin/product-os.js import ../my-product /path/to/notes.md
-node bin/product-os.js sources ../my-product
+node <tools>/bin/product-os.js import ../my-product /path/to/notes.md
+node <tools>/bin/product-os.js sources ../my-product
 ```
 
-Оригинал копируется без изменения. Повторная загрузка идентичного содержимого
-не создаёт второй экземпляр. Импорт сохраняет файл и ссылку в памяти; он не
-выдаёт сохранение за выполненный анализ. Агент может отдельно добавить заметки
-по содержимому с точными ссылками на оригинал.
+Import preserves the original bytes and avoids duplicate copies of identical
+content. It saves the file and registers its source; analysis is a separate step.
 
-Для ориентации попросите: «Через product-status покажи, где мы и что дальше».
-Этот навык только читает сохранённое: не меняет план и не запускает исследование.
+Ask `product-status` where you left off and what to do next. It reads saved context
+without changing the plan or starting research. Ask `product-research` to check one
+specific question and save a report with sources.
 
-Для проверки одного вопроса попросите: «Через product-research проверь, …».
-Навык сохранит отчёт с источниками и зарегистрирует его в памяти продукта.
-Зарегистрированную библиотеку референсов можно читать и без агента:
+Read a registered reference library without an agent:
 
 ```sh
-node bin/product-os.js references read ../my-product productId=<id> track=onboarding
+node <tools>/bin/product-os.js references read ../my-product productId=<id> track=onboarding
 ```
 
-## Консоль для команды
+## Custom skills
 
-Попросите агента: «Поделись консолью с командой». Он предложит открытый доступ
-или свой пароль и подготовит снимок для просмотра. Коллегам достаточно браузера;
-ваш компьютер после публикации может быть выключен. Изменения появляются после
-обновления снимка. Общий пароль работает без покупки функции защиты хостинга.
-Перед отправкой вы увидите состав; оригиналы sources/ по умолчанию исключены.
-Подробнее: [SHARING.md](SHARING.md). Размещение использует Cloudflare Workers
-с его квотами; безлимитный бесплатный хостинг не обещается.
+Ask your agent to add an existing skill or create one for your task. Custom skills
+are kept separately and survive Product OS updates. Publishing a skill is optional
+and starts only when you ask. You can review the entire contribution package before
+it is sent; authorship is preserved and product data is never published automatically.
+See [Custom skills](CUSTOM-SKILLS.md) and [Contributing](CONTRIBUTING.md).
 
-## Ваши данные
+## Share the console with your team
+
+Ask your agent to share the console. Choose public access or a shared password,
+then review the snapshot before publishing. Colleagues only need a browser;
+your computer can be turned off after deployment. Publish a new snapshot to show
+updates. Original files in `sources/` are excluded by default.
+
+Hosting uses Cloudflare Workers and is subject to its quotas. Password protection
+works without a paid hosting protection feature. See [Sharing](SHARING.md).
+
+## Your data
 
 ```text
 my-product/
-  PRODUCT.md           описание, цель и ограничения
-  AGENTS.md            инструкции Codex
-  CLAUDE.md            инструкции Claude
-  sources/             оригиналы материалов
-  reports/             заметки с источниками
-  research-graph.json  структурированная память
-  MOVES.md             выбранные действия
-  IDEAS.md             пока не выбранные идеи
+  PRODUCT.md           product description, goals and constraints
+  AGENTS.md            Codex instructions
+  CLAUDE.md            Claude Code instructions
+  sources/             original materials
+  reports/             sourced notes and reports
+  research-graph.json  structured product memory
+  MOVES.md             chosen actions
+  IDEAS.md             ideas not yet selected
 ```
 
-В репозитории нет материалов реальных клиентов и продуктов. Материалы продуктов
-не передаются в служебную аналитику Product OS. Обработка материалов AI происходит по вашему
-поручению в выбранном агенте; учитывайте настройки доступа и хранения этого сервиса.
+The repository contains no real customer research or product workspaces. Product OS
+sends no usage events. Your chosen AI agent processes materials when you ask it to;
+its own access and retention settings apply. Existing materials and quotations stay
+in their original language. Shipped instructions, templates and interface labels
+are in English; you can ask your agent to respond in your preferred language.
 
-## Проверки
+## Development checks
 
 ```sh
-npm test
 npm install
+npm test
 npm run test:design-system
 ```
 
-Для UI-проверки используется установленный Google Chrome. `npm install` нужен
-только для инструментов разработки; обычной консоли он не требуется.
+UI checks use an installed Google Chrome. Development dependencies are not needed
+to run the normal console.
 
-`PUBLIC-RELEASE.json` перечисляет файлы выпуска и их контрольные суммы. Полная
-история приватной разработки в этот репозиторий не переносится. Этот первый выпуск
-содержит базовые навыки; дальнейшая публикация версий с задержкой — план, а не
-обязательство о периодичности обновлений.
+`PUBLIC-RELEASE.json` lists release files and their checksums. Private development
+history is excluded. Future updates have no guaranteed schedule.
 
-Лицензия MIT. Шрифты и встроенные библиотеки сохраняют собственные лицензии
-рядом с файлами в `bin/console/public/assets/`.
+MIT licensed. Bundled fonts and libraries retain their own licenses beside the
+files in `bin/console/public/assets/`.

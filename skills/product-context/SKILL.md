@@ -1,73 +1,60 @@
 ---
 name: product-context
-description: Save new product materials and facts with exact sources, update the product passport and reconcile supplied evidence with existing context. Use for «добавь контекст», «сохрани материал», «вот новые данные», «прими результаты». Read-only status and next-step questions belong to product-status.
+description: Save new product materials and facts with exact sources, update the product profile and reconcile supplied evidence with existing context. Use for "add context", "save this material", "here is new data" or "accept these results". Read-only status and next-step questions belong to product-status.
 user-invocable: true
 ---
 
-# Добавить контекст
+# Add product context
 
-Сохрани принесённые сведения так, чтобы их можно было найти, проверить и
-использовать в следующем решении. Сохранение исходника и анализ — разные результаты.
+Save incoming information so it can be found, checked and used in later decisions.
+Saving a source and analyzing it are separate outcomes.
 
-Прочитай [CONTRACT.md](../CONTRACT.md), [GRAPH.md](../GRAPH.md) и
-[GRAPH-WRITES.md](../GRAPH-WRITES.md). `<tools>` — runtime в
-`.claude/skills/product-os-tools` своего агентского окружения либо checkout инструментария.
-При отсутствии локального runtime проверь те же каталоги относительно домашней
-папки пользователя. Определи абсолютный путь к `<tools>`; `<workspace>` всегда
-означает выбранную папку продукта. Общая установка не требует локальной копии.
+Read [CONTRACT.md](../CONTRACT.md), [GRAPH.md](../GRAPH.md) and
+[GRAPH-WRITES.md](../GRAPH-WRITES.md). Find the installed runtime in the agent's
+product folder or home directory, or use a toolkit checkout. Resolve `<tools>`
+to its absolute path; `<workspace>` is always the selected product folder.
+A shared installation does not require a local copy in each product.
 
-## Сохранение
+## Save and reconcile
 
-1. Прочитай PRODUCT.md и только нужные записи графа. Определи, что пришло:
-   заметка, интервью, аналитика, продажи, экономика, сведения о конкуренте или готовый отчёт.
-2. Сохрани оригинал без изменений в sources/. Для отдельного файла:
+1. Read PRODUCT.md and only the relevant graph records. Identify the incoming
+   material: a note, interview, analytics, sales, economics, competitor information
+   or an existing report.
+2. Preserve the original in `sources/`. For a file, run
    `node <tools>/bin/product-os.js import <workspace> <file>`.
-   Для текста сначала создай файл с исходным текстом, затем импортируй его.
-   Команда возвращает ID и путь, проверяет байты и не дублирует идентичный материал.
-3. По порученному объёму добавь краткую заметку либо извлеки относящиеся к вопросу
-   факты. Сохрани точные указатели на оригинал: фрагмент, строку или страницу.
-   Различай слова автора, наблюдение, вывод исследователя и гипотезу.
-4. Обновляй существующие записи по стабильным ID. Не создавай связи по похожим
-   словам и не превращай сохранение файла в подтверждение спроса.
-5. Изменения графа проводи типизированными операциями через
+   For supplied text, create a source file first and then import it. The command
+   returns its ID and path, checks bytes and deduplicates identical material.
+3. Within the requested scope, add a short note or extract relevant facts. Keep
+   exact pointers to the original: a passage, line or page. Distinguish the author's
+   words, direct observations, the researcher's conclusions and hypotheses.
+4. Update existing records using stable IDs. Do not infer links from similar words
+   or treat a saved file as evidence of demand.
+5. Write graph changes as typed operations through
    `node <tools>/bin/product-os.js graph-write <workspace> <operations.json>`.
-   Используй актуальную expectedRevision, а для индивидуального исследования —
-   также expectedResearchRevision. Сначала оригинал и отчёт, затем общая память.
-   При конфликте ревизий перечитай нужный срез; не перезаписывай более новые данные.
+   Use the current `expectedRevision`; individual research also requires
+   `expectedResearchRevision`. Save originals and reports before updating shared
+   memory. On a revision conflict, reread the relevant slice and reconcile it.
 
-В полной версии подробности согласования аналитики, платежей и готовых результатов
-даны в `references/ingestion.md`, если этот файл установлен. Подробный разбор
-интервью выполняет product-interviews, когда он доступен и такой результат поручен.
-Простое «сохрани» не запускает полный разбор, синтез всего архива или новое исследование.
-В Public сохраняй исходники и предоставленные сведения в пределах базовых возможностей.
+A request to save material does not authorize full interview analysis, synthesis
+of the entire archive or a new study. Save the supplied sources and information
+within the capabilities of this edition.
 
-## Обновление и завершение
+## Update and finish
 
-Паспорт меняй только при появлении новых сведений о самом продукте. Сохраняй
-историю противоречий; смена статуса требует подходящего связанного свидетельства.
-Принесённая идея остаётся идеей; действие появляется в MOVES.md лишь по выбору
-владельца или в пределах уже порученного выполнения.
+Update PRODUCT.md only when new information concerns the product itself. Preserve
+contradictions and their history; status changes need suitable linked evidence.
+An idea remains an idea. Add an action to MOVES.md only when chosen by the owner
+or required by an already assigned task.
 
-Отчитайся о фактической разнице: что сохранено, что добавлено или уточнено,
-что противоречит прежним данным и что остаётся неизвестным. Дай ссылки на файлы.
-Для отдельного обзора состояния используй product-status.
+Report the actual change: what was saved, added or clarified; what conflicts with
+previous information; and what remains unknown. Link to the files. Use
+`product-status` for a separate status review.
 
-Если запуск пришёл из консоли, сохрани его runId, nodeId и skill. Итог записывается
-операцией receipt через общий writer: существующий report или конкретный summary,
-outcome по факту. Не присваивай отчёт другого запуска и не объявляй анализ выполненным,
-если только сохранён исходник.
+If a task was launched from the console, preserve its `runId`, `nodeId` and `skill`.
+Save a `receipt` through the shared writer with an existing report or a concrete
+summary and the actual outcome. Never reuse another run's report or claim analysis
+is complete merely because a source was saved.
 
-Готово: оригиналы сохранены, новые сведения проверяемы по источникам, изменения
-валидны, незавершённая часть названа честно. Публикация не входит в сохранение контекста.
-
-<!-- product-os-public:usage:start -->
-## Учёт применения
-
-После первого содержательного результата этого навыка в текущем разговоре следуй
-[правилам аналитики](../TELEMETRY.md):
-
-`node <tools>/bin/product-os.js telemetry skill-used product-context`
-
-Учитывай один раз за разговор. Чтение этого файла, установка и проверка кода
-не являются применением. Отключение и недоступность счётчика не мешают основной задаче.
-<!-- product-os-public:usage:end -->
+Done means originals are preserved, extracted information has been checked against
+sources, changes are valid and unfinished work is stated. Saving context does not
+include publication.

@@ -1,14 +1,14 @@
-# Запись продуктовой памяти
+# Write product memory
 
-Команды выполняются инструментами выбранной установки: `node <tools>/bin/product-os.js`,
-где `<tools>` — абсолютный путь к локальному либо общему runtime пользователя.
-Папка `<workspace>` содержит данные конкретного продукта и передаётся отдельно.
+Commands are executed by the tools of the selected installation: `node <tools>/bin/product-os.js`,
+where `<tools>` is the absolute path to the user’s local or shared runtime.
+Folder `<workspace>` contains product-specific data and is transferred separately.
 
-Сначала сохраните оригинал, затем структурированные сведения. Для обычного
-материала используйте `product-os import <workspace> <file>`: команда копирует
-байты без изменений, проверяет повторный импорт и регистрирует artifact.
+Save the original first, then the structured information. For regular
+material use `product-os import <workspace> <file>`: command copies
+no bytes changed, checks for re-import and registers artifact.
 
-Если нужны дополнения к уже известным сведениям, подготовьте JSON-пакет:
+If you need additions to already known information, prepare a JSON package:
 
 ```json
 {
@@ -21,11 +21,11 @@
       "node": {
         "id": "product",
         "type": "product",
-        "label": "Название продукта",
+        "label": "Product name",
         "status": "hypothesis",
         "data": {
           "description": {
-            "what": "Описание из паспорта владельца",
+            "what": "Description from the owner's passport",
             "forWhom": null,
             "outcome": null
           }
@@ -36,8 +36,8 @@
 }
 ```
 
-Возьмите реальную expectedRevision и существующий ID из текущего графа;
-число и ID в примере не подставляются вслепую. Источник должен существовать.
+Take the real expectedRevision and the existing ID from the current graph;
+the number and ID in the example are not blindly substituted. The source must exist.
 
 ```sh
 node <tools>/bin/product-os.js graph-write <workspace> <operations.json> --dry
@@ -45,66 +45,67 @@ node <tools>/bin/product-os.js graph-write <workspace> <operations.json>
 node <tools>/bin/graph-write.js <workspace> --check
 ```
 
-Поддерживаются типизированные операции node, edge, evidence, transition, move,
-receipt и другие совместимые операции writer. Их схемы определены в
-`bin/graph/writer.js` и `bin/graph/schema.js`. Для первого сохранения документа
-дополнительные узлы, связи и действия не нужны.
+Typed operations node, edge, evidence, transition, move,
+ are supported
+receipt and other compatible writer operations. Their circuits are defined in
+`bin/graph/writer.js` and `bin/graph/schema.js`. To save a document for the first time
+additional nodes, connections and actions are not needed.
 
-- evidence требует конкретного target, text, source и происхождения наблюдения.
-  Для исходного файла указывайте точное место: строку, фрагмент или страницу.
-- transition ссылается на уже записанные evidenceIds; противоречия сохраняются.
-- move создаётся только для выбранного или порученного действия. Не записывайте
-  совет как принятую задачу и не редактируйте MOVES.md в обход общего writer.
-- receipt нужен для запущенной из консоли задачи: сохраните её runId, nodeId и
-  skill; укажите фактический outcome и существующий report либо краткий summary.
-  Не выдавайте сохранение файла за выполненный анализ.
+- evidence requires a specific target, text, source and origin of the observation.
+For the source file, specify the exact location: line, fragment or page.
+- transition refers to already recorded evidenceIds; contradictions persist.
+- move is created only for the selected or assigned action. Don't write down
+advice as an accepted task and do not edit MOVES.md bypassing the shared writer.
+- receipt is needed for a task launched from the console: save it runId, nodeId and
+skill; indicate the actual outcome and the existing report or short summary.
+Do not pass off saving the file as analysis completed.
 
-Writer выполняет валидацию, блокировку и согласованную запись графа и действий.
-При конфликте ревизий перечитайте нужные записи и согласуйте изменение с ними.
-Не отключайте проверку и не затирайте более новые сведения.
+Writer performs validation, locking and consistent writing of graph and actions.
+If there is a revision conflict, re-read the necessary records and agree on the change with them.
+Do not disable the check and do not overwrite newer information.
 
-Простое чтение через product-status не создаёт отчёт, receipt, задачи или записи.
-Результат чтения остаётся в ответе владельцу.
+Simply reading through product-status does not create a report, receipt, task or record.
+The reading result remains in the response to the owner.
 
-## Отчёты навыков
+## Skill reports
 
-Отчёт навыка — Markdown в `reports/` с frontmatter: `title`, `date` (YYYY-MM-DD),
-`skill` (slug навыка), `nodeId` цели, `outcome: completed|partial|failed`, `summary`.
-Список исследований в консоли строится из этих полей; `visibility: internal` убирает
-рабочие материалы из списка, не удаляя файл. Свяжите отчёт с узлом операцией
+Skill report - Markdown in `reports/` with frontmatter: `title`, `date` (YYYY-MM-DD),
+`skill` (skill slug), `nodeId` target, `outcome: completed|partial|failed`, `summary`.
+The list of studies in the console is built from these fields; `visibility: internal` removes
+Work materials from the list without deleting the file. Link the report to the node operation
 `complete`: `{op:"complete", nodeId, skill, report:"reports/…​.md", outcome}`.
 
-## Стратегическая карта работ
+## Strategic job map
 
-У продукта — один действующий `artifact` с `data.artifactKind: "strategic-job-map"`,
-`version: 1`, `productId` и `mapPath` на существующий `reports/job-map/<run>/map.json`
-(плюс `mapSha256` точных байтов). Прежнюю активную карту отставляйте явно. Формат
-карты — в навыке `product-job-map` (`references/map-format.md`); там же скрипт
-проверки. Необязательное `scope.edition: "full"|"public"` выбирает охват
-предложения; отсутствующее поле читается как `full`. Читается в консоли в разделе
-«Карта работ».
+The product has one valid `artifact` with `data.artifactKind: "strategic-job-map"`,
+`version: 1`, `productId` and `mapPath` to existing `reports/job-map/<run>/map.json`
+(plus `mapSha256` exact bytes). Clearly leave the previous active card aside. Format
+cards - in skill `product-job-map` (`references/map-format.md`); there is also a script
+checks. Optional `scope.edition: "full"|"public"` selects coverage
+offers; the missing field reads `full`. Read in the console under
+“Map of works”.
 
-## Отложенные идеи аудитории
+## Deferred audience ideas
 
-Обещающие, но пока не выбранные применения сохраняйте как `artifact` с
-`data.artifactKind: "audience-ideas"`, `version: 1` и `data.ideas:
+Save promising but not yet selected applications as `artifact` with
+`data.artifactKind: "audience-ideas"`, `version: 1` and `data.ideas:
 [{id, title, focus: "deferred", benefit, deferredReason, report}]`; `report` —
-существующий `reports/*.md` этой идеи. Полные профили не выдумывайте; консоль
-показывает идеи под картой сегментов.
+existing `reports/*.md` of this idea. Don't make up complete profiles; console
+Shows ideas below the segment map.
 
-## Айдентика бренда
+## Brand identity
 
-`artifact` с `data.kind: "visual-profile"`, `artifactKind: "brand-identity"`,
-`productId`, `profileFile` на identity.json, `version`, `decision: proposed|accepted`
-(`accepted` — только с `decisionSource` — явным решением владельца). Формат
-identity.json и валидатор — в навыке `product-brand-identity`. Консоль читает
-профиль в разделе «Библиотека» → «Айдентика»; предложенные и принятые версии
-показываются раздельно.
+`artifact` with `data.kind: "visual-profile"`, `artifactKind: "brand-identity"`,
+`productId`, `profileFile` on identity.json, `version`, `decision: proposed|accepted`
+(`accepted` - only with `decisionSource` - explicit owner decision). Format
+identity.json and validator - in skill `product-brand-identity`. Console reads
+profile in the “Library” → “Identity” section; proposed and accepted versions
+shown separately.
 
-## Библиотека референсов
+## Reference library
 
-`artifact` с `data.kind: "content-pack"`, `artifactKind: "product-reference-library"`,
-`productId`, `manifestFile` на manifest schemaVersion 1 (`tracks[].cardsPath/
-sourcesPath/…`). Формат файлов — контракт навыка `product-reference-library`.
-Библиотека без независимой проверки сохраняется с `readiness: "draft"`.
-Читается в разделе «Библиотека» → «Референсы» и через `product-os references read`.
+`artifact` with `data.kind: "content-pack"`, `artifactKind: "product-reference-library"`,
+`productId`, `manifestFile` on manifest schemaVersion 1 (`tracks[].cardsPath/
+sourcesPath/…`). File formats are defined by the skill contract for `product-reference-library`.
+Library without independent verification is saved with `readiness: "draft"`.
+Read in the “Library” → “References” section and via `product-os references read`.

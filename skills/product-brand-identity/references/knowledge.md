@@ -1,65 +1,65 @@
-# Методические основания и необязательная библиотека
+# Methodological grounds and optional library
 
-База частная и не входит в skill/package. Корень задаётся KNOWLEDGE_BASE_ROOT или локальным
-untracked WORKSPACES.md; абсолютный путь никогда не хранится в распространяемых файлах.
-Не выводить секреты соседних конфигов ради поиска. Если указателя нет, используй workflow.md
-и предоставленные материалы; один раз обозначь отсутствие дополнительных примеров.
+The database is private and not included in the skill/package. The root is specified by KNOWLEDGE_BASE_ROOT or local
+untracked WORKSPACES.md; absolute path is never stored in distributed files.
+Do not display secrets of neighboring configs for the sake of searching. If there is no index, use workflow.md
+and materials provided; indicate the absence of additional examples once.
 
-| Вопрос | Путь относительно корня базы |
+| Question | Path relative to the base root |
 | --- | --- |
-| Обещание, шесть вопросов, имя/слоган/архитектура, конкуренты | brand-identity/wiki/topics/osnova-brenda.md |
-| Процесс, аудиты, бриф, широкий поиск, согласование, права | brand-identity/wiki/topics/process-identity.md |
-| Типы знаков, подходы к дизайну, цвет и шрифт как сигналы, изображения | brand-identity/wiki/topics/vizualnaya-identichnost.md |
-| Постоянное/переменное, цифровые носители, гайд, шаблоны, защита, жизненный цикл | brand-identity/wiki/topics/sistema-i-nositeli.md |
-| Шрифты и ритм | brand-identity/wiki/topics/tipografika.md |
-| Состав результата и референсы | brand-identity/wiki/topics/reference-artifacts.md |
-| Точные примеры | brand-identity/wiki/references/index.md |
-| Границы книжного чтения и постраничные карты | brand-identity/wiki/books/index.md |
+| Promise, six questions, name/tagline/architecture, competitors | brand-identity/wiki/topics/osnova-brenda.md |
+| Process, audits, brief, broad search, approval, rights | brand-identity/wiki/topics/process-identity.md |
+| Types of signs, design approaches, color and font as signals, images | brand-identity/wiki/topics/visualnaya-identichnost.md |
+| Permanent/variable, digital media, guide, templates, protection, lifecycle | brand-identity/wiki/topics/sistema-i-nositeli.md |
+| Fonts and rhythm | brand-identity/wiki/topics/tipografika.md |
+| Composition of the result and references | brand-identity/wiki/topics/reference-artifacts.md |
+| Exact examples | brand-identity/wiki/references/index.md |
+| Boundaries of book reading and page maps | brand-identity/wiki/books/index.md |
 
-Сначала синтез и его ограничения. Для конкретного сомнения — нужная страница источника.
-Сохранённая ссылка не означает нового прочтения всей книги. У локального Wheeler только
-фрагмент Basics до печатной страницы 99; отсутствующий Process (включая раздел о favicon
-на печ. 168) не служит основанием. В `identity.json` источник `method` указывает страницу
-или принцип, а не индекс базы; при отсутствии базы допустима ссылка вида «Johnson, с. 93»
-из списка ниже.
+First, synthesis and its limitations. For specific doubts - the necessary source page.
+A saved link does not mean a new reading of the entire book. Local Wheeler only has
+Basics fragment up to printed page 99; missing Process (including the section about favicon
+on the stove. 168) does not serve as a basis. In `identity.json` the source `method` points to page
+or principle, not base index; If there is no database, a link like “Johnson, p. 93"
+from the list below.
 
-Опоры встроенного метода (печатные страницы; в базе карта переводит их в номера файлов):
-- Alina Wheeler, Designing Brand Identity, 4th ed. (2013): печ. 4, 12, 32, 36, 38, 44 —
-  система, стратегия, смысл, целостность, гибкость и отличие; 20–24 — архитектура бренда,
-  имя (качества, типы, доступность), слоган; 48–49 — типы знаков и подпись; 52–64 —
-  словесный, буквенный (и иконка приложения), изобразительный, абстрактный, эмблема
-  (худший случай миниатюры), динамический знак, персонаж; 70–74 — социальные медиа,
-  мобильные (проектирование от самого ограниченного устройства), приложения.
-- Michael Johnson, Branding: In Five and a Half Steps (2016): печ. 36, 38–45 —
-  исследование, «стадное» сходство категории, правда продукта, пять аудитов; 46–58 —
-  простые упражнения, три группы вопросов, внутреннее и внешнее восприятие, карта рынка;
-  92–93 — шесть вопросов и порядок для нового/действующего бренда; 141 — дизайн уточняет
-  стратегию; 170–173 — контрольный список перед дизайном, бриф и его шаблон; 174–181 —
-  широкий поиск, варианты показа, набор инструментов вместо логотипа; 183–203 — подходы:
-  типографика, монограмма, символ, рамка, скрытая форма, язык, метафора, развитие
-  существующего; 190 — favicon 16×16 и иконка 48 px; 210–214 — 2–3 маршрута, решение по
-  стратегии, «безопасный → радикальный», ключевые ограничения рано, начать заново;
-  217–218 — проверка товарных знаков; 251 — изображения как носитель узнаваемости; 266 —
-  шаблоны в инструментах команды; 272 — команда принимает систему до окончания внедрения.
-- Kevin Budelmann и Yang Kim, Brand Identity Essentials, Revised and Expanded (2019):
-  принципы 4–6 — цвет: сначала без цвета, сигнал через последовательность, ассоциации
-  под сомнением; 8–9 — роль шрифта; 10 — форма знака; 22 — имя; 24 — голос; 25–27 —
-  постоянное и переменное, «всегда / иногда / никогда»; 49 — генерация и редактирование
-  идей; 50–54 — фильтры, стратегия, прототипы и итерации; 56–57 — иерархия брендов, не
-  плодить бренды; 58–60 — спецификации, правила, объяснение бренда; 62 — шаблоны; 64 —
-  защита знака; 67–69 — жизненный цикл и план изменений; 70–72 — конкуренты и позиция;
-  81 — универсальный дизайн; 100 — простота.
-- Александра Королькова, Живая типографика (2007): печ. 84, 134, 136 — качество,
-  назначение пары; 176–177 — трекинг и внутрибуквенное белое, прописные отдельно;
-  184–185 — длина строки и интерлиньяж вместе. Книжные числа не переносить в интерфейс
-  как норму.
+Built-in method supports (printed pages; in the database the map translates them into file numbers):
+- Alina Wheeler, Designing Brand Identity, 4th ed. (2013): print. 4, 12, 32, 36, 38, 44 —
+system, strategy, meaning, integrity, flexibility and difference; 20–24 — brand architecture,
+name (qualities, types, availability), slogan; 48–49 — types of signs and signature; 52–64 —
+verbal, letter (and app icon), pictorial, abstract, logo
+(worst case thumbnail), dynamic sign, character; 70–74 — social media,
+mobile (design from the most limited device), applications.
+- Michael Johnson, Branding: In Five and a Half Steps (2016): print. 36, 38–45 —
+research, category herd, product truth, five audits; 46–58 —
+simple exercises, three groups of questions, internal and external perception, market map;
+92–93 - six questions and order for a new/existing brand; 141 — design clarifies
+strategy; 170–173 – pre-design checklist, brief and template; 174–181 —
+wide search, display options, toolbox instead of logo; 183–203 — approaches:
+typography, monogram, symbol, frame, hidden form, language, metaphor, development
+existing; 190 – favicon 16×16 and icon 48 px; 210–214 — 2–3 routes, solution by
+strategies, "safe → radical", key restrictions early, start over;
+217–218 - verification of trademarks; 251 - images as a medium of recognition; 266 —
+templates in command tools; 272 - the team accepts the system until the implementation is completed.
+- Kevin Budelmann and Yang Kim, Brand Identity Essentials, Revised and Expanded (2019):
+principles 4–6 - color: no color first, signal through sequence, associations
+doubtful; 8–9 - the role of the font; 10 — shape of the sign; 22 - name; 24 - voice; 25–27 —
+constant and variable, “always / sometimes / never”; 49 - generation and editing
+ideas; 50–54 - filters, strategy, prototypes and iterations; 56–57 - brand hierarchy, not
+produce brands; 58–60 - specifications, rules, explanation of the brand; 62 - templates; 64 —
+sign protection; 67–69 - life cycle and change plan; 70–72 - competitors and position;
+81 - universal design; 100 - simplicity.
+- Alexandra Korolkova, Living Typography (2007): print. 84, 134, 136 - quality,
+pair assignment; 176–177 - tracking and intraletter white, capitals separately;
+184–185 - line length and leading together. Book numbers should not be transferred to the interface
+as normal.
 
-Без книжного основания (прикладные выводы навыка, помечены так в workflow.md): круглая
-обрезка аватара, тёмная тема, og-image, письмо, наборы размеров иконок, пороги контраста,
-число идей широкого поиска, повторный выпуск вслепую отдельным субагентом.
+Without book base (applied skill pins, marked as such in workflow.md): round
+avatar crop, dark theme, og-image, letter, icon size sets, contrast thresholds,
+number of broad search ideas, blind reissue by separate subagent.
 
-Пять пользовательских примеров — необязательные локальные референсы, без самих файлов
-в составе навыка: Place (знак + иллюстрации), hpd. (логобук), SaleCatcher (версии/экспорты),
-Buyer (баннер), Digest (две концепции). Используй как способы организации результата.
-Если библиотека недоступна, не утверждай, что видел эти примеры. Никакие их активы,
-шрифты, тексты или клиентские сведения не включены в универсальный шаблон.
+Five user examples - optional local references, without the files themselves
+as part of the skill: Place (sign + illustrations), hpd. (brand guidelines), SaleCatcher (versions/exports),
+Buyer (banner), Digest (two concepts). Use as ways to organize the result.
+If the library is not available, do not claim to have seen these examples. None of their assets,
+Fonts, text, or client information are not included in the generic template.

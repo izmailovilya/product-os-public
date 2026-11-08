@@ -1,8 +1,8 @@
-# Навыки сообщества
+# Community skills
 
-Здесь размещаются принятые пользовательские навыки Product OS Public.
-Каждый навык — отдельная папка `<name>/` с SKILL.md, авторством и необходимыми
-ресурсами. Базовый набор устанавливается отдельно; расширения подключаются
-пользователем по выбору через `product-os skills add`.
+Accepted user skills Product OS Public are located here.
+Each skill is a separate folder `<name>/` with SKILL.md, authorship and necessary
+resources. The basic set is installed separately; extensions are connected
+user selectable via `product-os skills add`.
 
-Порядок подготовки и ревью: [CUSTOM-SKILLS.md](../CUSTOM-SKILLS.md).
+Procedure for preparation and review: [CUSTOM-SKILLS.md](../CUSTOM-SKILLS.md).

@@ -1,18 +1,18 @@
 // Research actions describe a missing answer, not a request to rerun the whole map.
 const COMPETITOR_GAPS = [
-  { id: 'identity', label: 'Уточнить конкретное решение', reason: 'В карточке описан класс решений. Нужны конкретные продукты и отдельные источники по каждому.', action: 'Найти решения в этой категории', output: 'Отдельные карточки проверенных продуктов внутри категории; общие данные категории останутся отдельно' },
-  { id: 'jobs', label: 'Проверить задачи конкурента', reason: 'Пересечение клиентских задач ещё не показывает, какую часть задачи конкурент действительно закрывает.', action: 'Проверить, какие задачи он решает', output: 'По каждой общей задаче: что поддерживается, ограничения, сегмент и подтверждающие источники' },
-  { id: 'pricing', label: 'Проверить стоимость', reason: 'Нет проверенного описания тарифов и дополнительных затрат конкретного решения.', action: 'Проверить тарифы и затраты', output: 'Тариф, валюта, период, единица расчёта, условия и ссылка на источник; внедрение отдельно от подписки' },
-  { id: 'messaging', label: 'Разобрать коммуникацию', reason: 'Нет датированного снимка сайта конкурента с его обещаниями клиентам.', action: 'Снять сайт и разобрать обещания', output: 'Датированный снимок сайта (текст и скриншот в sources/competitors/), первый экран, обещания по работам сегментов с дословными цитатами и ссылкой на снимок' },
-  { id: 'complaints', label: 'Исследовать жалобы', reason: 'Отзывы и ограничения решения ещё не исследованы.', action: 'Исследовать отзывы и жалобы', output: 'Конкретные ограничения и жалобы с источниками, датами и контекстом клиента; отдельно — область, где ничего не найдено' },
-  { id: 'channels', label: 'Исследовать продвижение', reason: 'Не установлено, где конкурент привлекает клиентов.', action: 'Изучить каналы продвижения', output: 'Наблюдаемые каналы, примеры сообщений и ссылки; предположения об эффективности отмечены отдельно' },
+  { id: 'identity', label: "Specify a specific solution", reason: "The card describes a class of solutions. We need specific products and separate sources for each.", action: "Find solutions in this category", output: "Individual cards of verified products within a category; general category data will remain separate" },
+  { id: 'jobs', label: "Check competitor's tasks", reason: "The intersection of client tasks does not yet show which part of the task the competitor is actually covering.", action: "Check what problems it solves", output: "For each common task: what is supported, limitations, segment and supporting sources" },
+  { id: 'pricing', label: "Check price", reason: "There is no verified description of tariffs and additional costs for a specific solution.", action: "Check tariffs and costs", output: "Tariff, currency, period, unit of calculation, conditions and link to the source; implementation separately from subscription" },
+  { id: 'messaging', label: "Parse communication", reason: "There is no dated snapshot of a competitor's website with its promises to customers.", action: "Take down the site and dismantle promises", output: "Dated snapshot of the site (text and screenshot in sources/competitors/), first screen, promises for segment work with verbatim quotes and a link to the snapshot" },
+  { id: 'complaints', label: "Investigate complaints", reason: "Feedback and limitations of the solution have not yet been explored.", action: "Investigate reviews and complaints", output: "Specific restrictions and complaints with sources, dates and client context; separately - an area where nothing was found" },
+  { id: 'channels', label: "Research promotion", reason: "It is not established where the competitor attracts customers.", action: "Explore promotion channels", output: "Watched channels, example messages and links; performance assumptions are noted separately" },
 ]
 
 function dossierGaps(node, dossier = {}) {
   if (node.type === 'product') return [{
-    id: 'positioning', action: dossier.positioning?.touchpoints?.length ? 'Обновить позиционирование продукта' : 'Разобрать позиционирование продукта',
-    reason: 'Нужно сопоставить реальные обещания на сайте и в соцсетях с задачами и сегментами клиентов.',
-    output: 'Текущие сообщения по каждой площадке со ссылками и задачами клиентов; предложения по изменению отдельно от наблюдаемых фактов',
+    id: 'positioning', action: dossier.positioning?.touchpoints?.length ? "Update product positioning" : "Parse product positioning",
+    reason: "It is necessary to compare real promises on the website and in social networks with the tasks and customer segments.",
+    output: "Current messages for each site with links and client tasks; proposals for change separate from observed facts",
   }]
   if (node.type === 'competitor' && (dossier.isCategory || node.data?.entityType === 'category')) {
     const identity = node.data?.researchSections?.identity
@@ -39,46 +39,46 @@ function dossierGaps(node, dossier = {}) {
   if (node.type !== 'segment') return []
   const completed = node.data?.research?.['product-deep-research']?.outcome === 'completed'
   if (!completed && !node.data?.researchAudit && !dossier.jobs?.length) return [{
-    id: 'initial', kind: 'segmentDefinition', action: 'Уточнить задачу и границы сегмента', reason: 'Сегмент пока только назван: не описаны задачи, критерии выбора и существующие решения.', output: 'Определение этого сегмента: ситуация клиента, задача, критерии успеха и отличия от соседних сегментов; остальные сегменты сохраняются',
+    id: 'initial', kind: 'segmentDefinition', action: "Clarify the task and segment boundaries", reason: "The segment is only named yet: the tasks, selection criteria and existing solutions are not described.", output: "Definition of this segment: customer situation, task, success criteria and differences from neighboring segments; the remaining segments are preserved",
   }]
   const gaps = []
   const jobs = dossier.jobs || []
   if (!jobs.length || jobs.some(job => !job.criteria?.length)) gaps.push({
-    id: 'criteria', action: 'Уточнить критерии успеха', reason: 'Не для всех задач описано, какой результат клиент считает успешным.', output: 'Задача и измеримые критерии успеха без дублирования формулировок; источники или явно отмеченные гипотезы',
+    id: 'criteria', action: "Clarify success criteria", reason: "Not all tasks describe what result the client considers successful.", output: "Objective and measurable success criteria without duplicating language; sources or explicitly noted hypotheses",
   })
   if ((dossier.problems || []).some(problem => !problem.evidenceCount) || !dossier.sources?.length) gaps.push({
-    id: 'evidence', action: 'Проверить основания выводов о сегменте', reason: 'В досье есть выводы без связанных свидетельств. Нужно проверить именно эти утверждения и связать их с источниками.', output: 'Подтверждения и возражения к конкретным болям и критериям, с цитатами и ссылками; список оставшихся неизвестных',
+    id: 'evidence', action: "Check the basis of conclusions about the segment", reason: "The dossier contains findings without associated evidence. It is these statements that need to be verified and linked to sources.", output: "Affirmations and objections to specific pain points and criteria, with citations and references; list of remaining unknowns",
   })
   return gaps
 }
 
 const ISSUE_LABELS = {
-  'missing-failure-test': 'Не описан способ измерить результат проверки.',
-  'invalid-failure-test': 'Нужно уточнить метрику, порог и способ измерения результата.',
-  'missing-assumption': 'Не указано, какое допущение проверяет задача.',
-  'unknown-assumption': 'Указанное допущение не найдено в карте.',
-  'unknown-or-ambiguous-assumption': 'Указанное допущение не найдено в карте или указано неоднозначно.',
-  'missing-outcome': 'Не описан ожидаемый результат задачи.',
-  'canonical-now-capacity-exceeded': 'На ближайшее время уже назначены три задачи. Нужно выбрать, что перенести.',
-  'research-plan-incomplete': 'Исследование завершилось частично; план требует проверки по оставшимся пробелам.',
+  'missing-failure-test': "A way to measure the test result is not described.",
+  'invalid-failure-test': "It is necessary to clarify the metric, threshold and method of measuring the result.",
+  'missing-assumption': "It is not specified which assumption the problem tests.",
+  'unknown-assumption': "The specified assumption was not found in the map.",
+  'unknown-or-ambiguous-assumption': "The specified assumption was not found in the map or was specified in an ambiguous manner.",
+  'missing-outcome': "The expected result of the task is not described.",
+  'canonical-now-capacity-exceeded': "Three tasks have already been assigned for the near future. You need to choose what to transfer.",
+  'research-plan-incomplete': "Study partially completed; the plan requires verification for the remaining gaps.",
 }
-const RESOURCE_FIELDS = { budgetUsd: 'Бюджет', hours: 'Время', people: 'Число участников' }
+const RESOURCE_FIELDS = { budgetUsd: "Budget", hours: "Time", people: "Number of participants" }
 
 function explainMoveIssues(item) {
   const issues = (item.issues || []).map(issue => typeof issue === 'string' ? issue : issue.message || issue.reason || issue.code).filter(Boolean)
   const labels = issues.map(issue => ISSUE_LABELS[issue] || (
-    issue.startsWith('constraint-exceeded-or-unknown:') ? `${RESOURCE_FIELDS[issue.split(':')[1]] || 'Ресурс'} задачи превышает ограничение или неизвестен.` :
-    issue.startsWith('now-move-has-pending-dependencies:') ? 'У задачи на ближайшее время есть незавершённые зависимости — дождитесь их или измените порядок.' :
-    /assumption|test-target/.test(issue) ? 'Требует уточнения проверяемое допущение и его связь с задачей.' :
-    /failure|threshold|metric|measurement|sample|deadline/.test(issue) ? 'Требуют уточнения метрика, порог, способ измерения и срок проверки.' :
-    /depend/.test(issue) ? 'Требуют уточнения зависимости: какая задача должна быть завершена раньше.' :
-    /resource|budget|capacity/.test(issue) ? 'Требует проверки, укладываются ли ресурсы задачи в ограничения.' :
-    /outcome|output/.test(issue) ? 'Требует уточнения ожидаемый результат задачи.' :
-    /[а-яё]/i.test(issue) ? issue : 'Нужно проверить полноту плана и его связь с целью продукта.'
+    issue.startsWith('constraint-exceeded-or-unknown:') ? `${RESOURCE_FIELDS[issue.split(':')[1]] || "Resource"} Task exceeds limit or unknown.` :
+    issue.startsWith('now-move-has-pending-dependencies:') ? "The task for the near future has unfinished dependencies - wait for them or change the order." :
+    /assumption|test-target/.test(issue) ? "The assumption being tested and its connection with the problem requires clarification." :
+    /failure|threshold|metric|measurement|sample|deadline/.test(issue) ? "The metric, threshold, measurement method and verification period require clarification." :
+    /depend/.test(issue) ? "The dependency needs to be clarified: which task should be completed first." :
+    /resource|budget|capacity/.test(issue) ? "Requires a check to see if the task's resources are within the constraints." :
+    /outcome|output/.test(issue) ? "The expected result of the task requires clarification." :
+    /[а-яё]/i.test(issue) ? issue : "It is necessary to check the completeness of the plan and its connection with the product goal."
   ))
   if (!labels.length && item.executionReady === false) labels.push(item.testsAssumptionId
-    ? 'В плане проверки не хватает измеримого результата или условий проведения.'
-    : 'Для задачи ещё не согласованы результат, ответственный или условия выполнения.')
+    ? "The test plan lacks a measurable result or conditions for implementation."
+    : "The result, responsible person, or execution conditions have not yet been agreed upon for the task.")
   return [...new Set(labels)]
 }
 

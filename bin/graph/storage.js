@@ -41,7 +41,7 @@ function acquireLock(file, { timeoutMs = 5000 } = {}) {
           if (e.code === 'ESRCH') { fs.unlinkSync(file); continue }
         }
       } catch {} // partial lock initialization: wait, never steal
-      if (Date.now() - start >= timeoutMs) throw Object.assign(new Error('Воркспейс занят другим процессом. Повтори запись.'), { code: 'WORKSPACE_BUSY' })
+      if (Date.now() - start >= timeoutMs) throw Object.assign(new Error("Workspace is busy with another process. Repeat the recording."), { code: 'WORKSPACE_BUSY' })
       Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 20)
     }
   }
@@ -56,17 +56,17 @@ function recoverPending(workspace) {
   if (!fs.existsSync(journal)) return
   const bundle = JSON.parse(fs.readFileSync(journal, 'utf8'))
   for (const entry of bundle.files) {
-    if (!/^research\/briefs\/[a-z0-9][a-z0-9-]{0,99}\.json$/.test(entry.path) && !['research-graph.json', 'MOVES.md', 'research/research-data.json'].includes(entry.path) && !/^\.product-os\/research-history\/[0-9]+\.json$/.test(entry.path) && !/^reports\/(?:communications|segment-views)\/[a-zа-яё0-9][a-zа-яё0-9_.:-]{0,239}\.md$/i.test(entry.path) && !/^\.product-os\/runs\/[a-z0-9-]+\.json$/i.test(entry.path)) throw new Error('Неверный путь в журнале транзакции')
+    if (!/^research\/briefs\/[a-z0-9][a-z0-9-]{0,99}\.json$/.test(entry.path) && !['research-graph.json', 'MOVES.md', 'research/research-data.json'].includes(entry.path) && !/^\.product-os\/research-history\/[0-9]+\.json$/.test(entry.path) && !/^reports\/(?:communications|segment-views)\/[a-zа-яё0-9][a-zа-яё0-9_.:-]{0,239}\.md$/i.test(entry.path) && !/^\.product-os\/runs\/[a-z0-9-]+\.json$/i.test(entry.path)) throw new Error("Invalid path in transaction log")
     const file = path.join(workspace, entry.path)
     // Never traverse a user-created symlink when recovering a report transaction.
     let ancestor = file
     while (ancestor !== path.resolve(workspace)) {
-      if (fs.existsSync(ancestor) && fs.lstatSync(ancestor).isSymbolicLink()) throw new Error('Символическая ссылка в пути транзакции')
+      if (fs.existsSync(ancestor) && fs.lstatSync(ancestor).isSymbolicLink()) throw new Error("Symbolic link in transaction path")
       ancestor = path.dirname(ancestor)
     }
     const current = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : null
     if (current === entry.content) continue
-    if (digest(current) !== entry.before) throw Object.assign(new Error(`Восстановление остановлено: ${entry.path} изменён после незавершённой записи`), { code: 'RECOVERY_CONFLICT' })
+    if (digest(current) !== entry.before) throw Object.assign(new Error(`Restore stopped: ${entry.path} modified after an incomplete write`), { code: 'RECOVERY_CONFLICT' })
   }
   // Preflight the entire bundle before changing any file. Recovery may still
   // resume after a crash between renames, while readers hold the same lock.

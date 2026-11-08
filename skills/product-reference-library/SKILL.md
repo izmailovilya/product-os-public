@@ -1,123 +1,99 @@
 ---
 name: product-reference-library
-description: "Собрать референсы по продуктовой задаче или выбранным решениям: конкретные механики, изображения, примеры и источники, независимая проверка и каталог для выбора. Для «как другие решают эту задачу», «собери референсы», разбора конкурентов или готового архива; не для общего исследования рынка, дизайна без источников или реализации продукта."
+description: Collect a reference library for a product problem or selected solutions, with concrete mechanics, images, examples, sources, independent checks and a catalog for owner selection. Use for "how do others solve this", "collect references", competitor examples or reusing an archive. Not for general market research, unsourced design or implementation.
 ---
 
-# Библиотека референсов продукта
+# Product reference library
 
-Дай владельцу материал, по которому можно увидеть конкретный пример, открыть его
-источник, понять действие пользователя и ответ продукта, затем вручную выбрать,
-что попробовать у себя. Количество карточек и завершённый workflow не доказывают
-полезность механики, спрос или удержание. Не называй ограниченный архив исчерпывающим.
+Give the owner examples they can inspect, trace to sources and compare: what the
+person does, how the product responds and what might be useful in their own product.
+Card counts and a completed workflow do not prove usefulness, demand or retention.
+Do not describe a bounded archive as exhaustive.
 
-Использование этого навыка по поручению собрать библиотеку разрешает подготовку
-брифа, нативный сбор, независимую проверку и обратимые локальные артефакты в указанном
-продукте. Оно не разрешает реализацию продукта. Учитывай уже согласованный выбор и
-лимиты; не проси повторное разрешение для порученной локальной работы.
+A request for a library authorizes preparing a brief, collecting examples, reviewing
+them and creating reversible local artifacts within the selected product. It does
+not authorize product implementation. Respect agreed scope and access limits.
 
-Прочитай [контракт файлов и направлений](references/contract.md) перед запуском и
-перед проверкой. Следуй CONTRACT.md и GRAPH-WRITES.md выбранного Product OS runtime.
-Обычный вопрос «какой пример лучше?» решается по существующей библиотеке без нового
-сбора. Для одного выбранного проверяемого вопроса используй
-[product-research](../product-research/SKILL.md); для реализации — отдельное
-поручение владельца.
+Read [the file and track contract](references/contract.md) before collection and
+review. Follow CONTRACT.md and GRAPH-WRITES.md in the selected runtime. Answer
+questions about existing examples from the saved library. Use
+[product-research](../product-research/SKILL.md) for one testable question;
+implementation requires a separate instruction.
 
-## Зафиксируй конкретный объём
+## Define scope
 
-Сначала прочитай PRODUCT.md, текущие MOVES.md и относящийся к задаче актуальный срез
-исследования через общий reader. Для локальной перепаковки достаточно выбранного
-архива. Не перечитывай все материалы. Проверь существующие оригиналы, библиотеку и
-принятый профиль бренда/персонажей, если они нужны задаче; отсутствие профиля означает
-«неизвестен», а не заказ на новую айдентику.
+Read PRODUCT.md, MOVES.md and the relevant current research through the shared
+reader. Repackaging an archive may need only that archive. Inspect existing originals,
+libraries and accepted brand/character profiles when relevant. An absent profile
+is unknown context, not a request to create an identity.
 
-Для открытого запроса «как другие решают эту задачу» сначала определи, какие
-разные способы решения нужно сравнить. Составь компактную карту: **вопрос владельца
-→ семейство механик → действие человека и ответ продукта → где искать пример**.
-Семейства различаются способом решения и получаемым результатом, а не отраслью
-или названием компании. Включи простые привычные способы: сложный и хорошо
-задокументированный пример не должен вытеснять базовый вариант.
+For open exploration, first map **owner question → family of solutions → person’s
+action and product response → where to find an example**. Families differ by how
+they solve the problem and the outcome, not by industry or brand. Include familiar,
+simple methods; a complex, well-documented example must not displace the basic case.
 
-Только после этого выбирай продукты. При разрешённом широком поиске ищи и прямых
-конкурентов, и решения той же задачи в других категориях; объясни переносимость
-аналога. Это кандидаты для поиска, а не утверждения о наличии у них функции.
-Список, составленный самим агентом, не становится ограничением владельца.
-До начала сбора отрази выбранные семейства и источники в параметрах запуска
-(см. [контракт](references/contract.md#decision-coverage)). Не запускай все
-возможные ветки: глубина и охват должны укладываться в бюджет.
+Choose products afterward. Search direct competitors and other categories solving
+the same problem, explaining transferability. Candidates are search leads, not
+verified features. An agent-created list is not an owner-imposed limit. Record the
+selected families and sources in launch parameters under
+[decision coverage](references/contract.md#decision-coverage). Keep breadth and
+depth within the budget rather than opening every possible branch.
 
-Явное поручение разобрать только названные продукты или переиспользовать архив
-сохраняет выбранные границы. Для него достаточно проверки внутри указанного
-среза; карта всего рынка, новые продукты и сетевой поиск не требуются.
+If instructed to inspect only named products or reuse an archive, preserve that
+scope. A market-wide map, extra products and web searches are unnecessary.
 
-Подготовь параметры из уже известного задания: цель ручного выбора, продукт,
-конкретные конкуренты, выбранные направления, желаемая глубина и квоты по каждому,
-доступные архивы, разрешённый доступ, лимиты запросов/открытий источников/вызовов
-агентов. Квота и проверка источников — разные показатели. Укажи неизвестные квоты
-как null. Не превращай девять возможных направлений в обязательный объём.
+Record the selection goal, product, named competitors, chosen tracks, desired depth,
+per-track quotas, archives, permitted access and limits on requests, source visits
+and agent calls. Unknown quotas are `null`. A quota and source verification are
+separate measures. The nine built-in track names are options, not mandatory scope:
+`characters`, `exercises`, `rpg`, `path`, `onboarding`, `personalization`, `progress`,
+`reminders`, `ui_voice`. Other tracks need a concrete description. Do not silently
+expand agreed parameters; return a material gap for a bounded scope decision.
 
-Кандидаты: characters, exercises, rpg, path, onboarding, personalization, progress,
-reminders, ui_voice. Пользователь может выбрать часть или задать другие направления
-с конкретным описанием. Назови выбранных конкурентов явно. После фиксации параметров
-их нельзя незаметно расширять. Существенный найденный пробел верни владельцу для
-ограниченного пересмотра области в пределах разрешения и оставшегося бюджета.
+For open search, provide `coveragePlan` with the original `request`,
+`userScope: open`, `selectionBasis: mechanisms` and `families` with unique `key`,
+`question` and selected `trackKeys`. For a fixed slice use `userScope: fixed` and
+`selectionBasis: selected-scope`. Follow the contract's schema.
 
-Для открытого поиска передай `coveragePlan`: исходное поручение в `request`,
-`userScope: open`, `selectionBasis: mechanisms`, и `families` с уникальными `key`,
-вопросом `question` и выбранными `trackKeys`. Для явно ограниченного среза допустим
-`userScope: fixed`, `selectionBasis: selected-scope`. Формат — в
-[контракте](references/contract.md#decision-coverage).
+Use `mode: reuse` for indexing, copying and checking an assigned or sufficient saved
+archive, without new searches or network source visits. If further collection is
+assigned, use `mode: collect` for the needed gaps while preserving originals.
+Keep `runKey` and `asOf`; never make an old capture appear newly collected.
 
-Если поручен сохранённый архив или его достаточно для выбранной задачи, работай в
-`mode: reuse`: только индексация, копии и проверка существующих оригиналов, без
-повторного поиска и сетевого открытия источников. Частичный архив не закрывает
-пробел нового порученного сбора: при разрешённом поиске дополни только нужную
-часть в `mode: collect`, сохраняя прежние оригиналы. Сохрани `runKey` и `asOf`;
-не обновляй дату старого снимка задним числом.
+Show working assumptions, their risks and significant dependencies. Clarify missing
+information that changes the action while continuing independent preparation.
 
-Покажи рабочие допущения и риски исходных слов команды. Для предложений добавь число
-непроверенных допущений и существенных зависимостей. Вопрос задавай только если
-неизвестное меняет действие и его нельзя выяснить из файлов; независимая подготовка
-продолжается.
+## Collect and verify
 
-## Нативный сбор и проверка
+This edition has no BB orchestrator. Work sequentially by selected track:
+preparation → collection and independent review per track → assembly of all tracks
+→ independent release review. Use independent agents only when available and
+authorized in the current environment.
 
-В Product OS нет BB-оркестратора: сбор выполняешь ты сам, последовательно, по одному
-направлению за раз. Порядок тот же, что в полном выпуске: подготовка → по каждому
-выбранному направлению сбор и независимая проверка → сборка всех веток → независимая
-проверка выдачи.
-
-1. **Подготовка.** Сохрани параметры запуска под
-   `reports/product-reference-library/<runKey>/` (журнал параметров, не нарративный
-   отчёт). Повторный runKey не должен затирать завершённые оригиналы.
-2. **Сбор по направлению.** Используй доступные тебе средства поиска и чтения
-   страниц (встроенный веб-поиск/загрузка агента). Разрешён только public-only
-   доступ; не используй обычный Chrome/профиль пользователя, его авторизацию,
-   новые логины, аккаунты, расходы, сообщения третьим лицам, установку
-   инструментов или удалённые машины. Недоступный безопасный способ — пробел
-   доступа, а не повод для обхода. Оригиналы (страницы, снимки, медиа) сохраняй
-   под `sources/product-reference-library/<runKey>/` с URL, датой и происхождением;
-   сырые и проверенные копии — в разных папках. Соблюдай prose-ledger контракта:
-   короткие дословные цитаты с локатором, не воспроизводи источники целиком.
-3. **Независимая проверка.** Если в твоей среде доступен субагент или второй
-   экземпляр агента, передай ему направление целиком: он проверяет фактические
-   файлы, источники, медиа и заявления, просматривает изображения и создаёт
-   проверенные копии (`verification.json` по контракту). Проверяющий не запускает
-   вложенные команды и не пишет бизнес-граф. Если независимой проверки нет,
-   сохрани черновик с явным статусом «без независимой проверки» и не помечай
-   библиотеку `registrationReady`.
-4. **Сборка.** Собери **все** ветки, включая пустые/частичные/отказные, в один
-   манифест schemaVersion 1 (формат — контракт). Дедупликация карточек, общий
-   prose-ledger и проверка цитирования требуют все направления сразу; не собирай
-   по одному вразнобой. Сформируй каталог направлений: человечески читаемый
-   catalog.md с примерами, изображениями и пробелами + карточки/источники JSON.
-5. **Проверка выдачи.** Независимый проверяющий (см. п. 3) сверяет выдачу с
-   исходным вопросом и coveragePlan: по каждому семейству карточки либо
-   проверенный пробел с основанием; не подменено ли нужное решение соседней
-   функцией; есть ли базовый вариант. Без независимой проверки зафиксируй лимит
-   в отчёте и readiness: draft.
-6. **Структурная проверка.** До регистрации собери структурный индекс по сценарию
-   buildFromManifest: он проверяет манифест и связи с перспективным artifactId,
-   не записывая бизнес-граф:
+1. **Prepare.** Save launch parameters under
+   `reports/product-reference-library/<runKey>/` as a parameter log, not a narrative
+   report. Reusing a run key must not overwrite completed originals.
+2. **Collect.** Use available public web search and page readers. Use public-only
+   access, without the user's regular browser profile, authentication, new accounts,
+   purchases, messages, tool installations or remote machines. Unavailable permitted
+   access is a gap, not a reason to bypass limits. Save originals under
+   `sources/product-reference-library/<runKey>/` with URL, date and provenance.
+   Keep raw and verified copies separate. Follow the prose ledger: short quotations
+   with locators, never wholesale reproduction of sources.
+3. **Review each track.** Give an authorized independent reviewer the complete track.
+   They inspect files, sources, media and claims, view images and create verified
+   copies and `verification.json` under the contract. They do not launch nested
+   teams or write the business graph. Without independent review, save a clearly
+   marked draft and do not set `registrationReady`.
+4. **Assemble.** Include **all** branches, including empty, partial and rejected ones,
+   in a schemaVersion 1 manifest. Deduplication, the shared prose ledger and citation
+   checks need the complete set. Produce a readable `catalog.md` with examples,
+   images and gaps, plus cards/sources JSON for each track.
+5. **Review the release.** Check the original question and `coveragePlan`: each chosen
+   family needs a suitable example or a verified blocking gap. Do not substitute an
+   adjacent feature for the requested solution or omit the basic case. Without
+   independent review, keep `readiness: draft` and state the limitation.
+6. **Check structure.** Build the index without writing the business graph:
 
    ```sh
    node -e "const {buildFromManifest}=require('<tools>/bin/reference-graph.js');\
@@ -127,24 +103,20 @@ reminders, ui_voice. Пользователь может выбрать част
    console.log(JSON.stringify(buildFromManifest(workspace,graph,{manifestFile:'<manifestFile>',artifactId:manifest.registeredArtifactId,productId:'<productId>'}),null,2))" <workspace>
    ```
 
-   Ошибки структуры/связей блокируют регистрацию. После регистрации тот же индекс
-   читается командой `references graph`.
+Structural or link errors block registration. After registration, `references graph`
+reads the same index. Failures, null results, exceeded limits and partial results
+must retain their actual status. Tests using fictional data are not live collection.
 
-Отказ, null, превышение лимита и частичные результаты не становятся «готово».
-Проверки на вымышленных данных не называй живым сбором источников.
+## Save and register
 
-## Сохрани выдачу и закрой запуск один раз
+Preserve **competitor product → track → example → step → image and source** links.
+This is an artifact index, not a new set of business segments/jobs. Index the full
+saved set, including images without a complete flow. Gallery order does not prove
+a transition. Shared element types connect examples only as `editor_classification`
+with a rationale and the original card hash; no basis means no assignment.
 
-Сохрани явные связи **продукт конкурента → направление → конкретный пример →
-шаг → изображение и источник**. Это структурный индекс артефакта, а не новые
-сегменты/джобы в бизнес-графе. Индексируется весь сохранённый набор, включая
-изображения без полного flow; порядок галереи не становится выполненным переходом.
-Общие типы элементов связывают разные экземпляры; назначение типа —
-`editor_classification` с основанием и hash исходной карточки; нет основания —
-нет назначения.
-
-Для готовой зарегистрированной библиотеки сначала используй общий reader
-(для незарегистрированного пакета — staged-проверка из п. 6):
+For registered libraries, start with the shared reader; use the staged check above
+for unregistered packages:
 
 ```sh
 node <tools>/bin/product-os.js references types . productId=<productId>
@@ -153,70 +125,53 @@ node <tools>/bin/product-os.js references read . productId=<productId> competito
 node <tools>/bin/product-os.js references read . productId=<productId> id=<referenceNodeId>
 ```
 
-`read` возвращает родителей, детей, типы, изображения, ссылки и точные pointers;
-`nextCursor` раскрывает следующую порцию. Reader строит связи из актуальных файлов,
-отбрасывает устаревшие назначения типов, не запускает веб-поиск и не пишет граф.
-Наличие референса не создаёт `hires`/`competes_for` и не доказывает спрос.
+`read` returns parents, children, types, images, links and exact locators;
+`nextCursor` retrieves the next page. The reader uses current files, discards stale
+type assignments and neither searches the web nor writes the graph. A reference
+does not establish `hires`/`competes_for` links or prove demand.
 
-Выдача содержит компактные paths/counts/statuses/gaps, все ветки и журнал сбоев.
-Полные карточки, источники, сохранённые изображения и примеры находятся в файлах.
-Один narrative summary объясняет результат; каталоги направлений, JSON, coverage,
-hash/quote ledgers и проверочные журналы — его вложения. Собственные предложенные
-дизайны лежат отдельно от референсов конкурентов и имеют decision: proposed.
+Save compact paths, counts, statuses, gaps, all branches and a failure log. Keep
+full cards, sources, images and examples in files. One narrative summary explains
+the result; catalogs, JSON, coverage reports and hash/quote ledgers are attachments.
+Proposed designs for the owner's product remain separate from competitor references
+with `decision: proposed`.
 
-При failed/null обязательном этапе `registrationReady: false`: не регистрируй
-зависимый результат как доставленный. Проверенная читаемая частичная библиотека
-без failed этапов завершает исследовательскую активность: `activityStatus:
-completed`, `coverageStatus: partial`. Зарегистрируй именно partial/draft artifact,
-сохрани пробелы доступа/квот и отрицательные наблюдения; не называй её полным
-покрытием. Исследованный отрицательный результат тоже завершённая работа. Старую
-полную библиотеку и её положение в графе не затирай частичным результатом.
+A failed or null required stage means `registrationReady: false`; do not register
+a dependent result as delivered. A checked, readable partial library without failed
+required stages can finish the research activity with `activityStatus: completed`
+and `coverageStatus: partial`. Register its actual partial/draft status and preserve
+access/quota gaps and negative observations. Do not overwrite a complete older
+library or its graph position with an incomplete result.
 
-До завершения отдельно сверь содержание с исходным вопросом и `coveragePlan`.
-Неисследованное выбранное семейство или непригодный набор блокируют успешную
-доставку. Проверенные пробелы допускают честную частичную библиотеку с видимыми
-ограничениями.
+Recheck the original question and `coveragePlan` before completion. Unexamined chosen
+families or an unsuitable set block delivery; verified gaps permit a clearly bounded
+partial result.
 
-Регистрируй новый существующий `artifact` (без новой онтологии):
-`data.kind: content-pack`, `data.artifactKind: product-reference-library`, productId,
-libraryId, manifestFile, decision: proposed, readiness: ready-for-review либо draft,
-researchStatus и точные paths. Только явное решение владельца даёт accepted с
-decisionSource; ни проверка исследователем, ни receipt его не заменяют. Не создавай
-механики/конкурентов/ходы автоматически из каждой карточки.
+Register an existing `artifact` type, without inventing ontology:
+`data.kind: content-pack`, `data.artifactKind: product-reference-library`, `productId`,
+`libraryId`, `manifestFile`, `decision: proposed`, `readiness: ready-for-review|draft`,
+`researchStatus` and exact paths. Only an explicit owner decision establishes
+`accepted` with `decisionSource`. Research review and a receipt do not replace it.
+Do not automatically create mechanics, competitors or actions from each card.
 
-Если запуск пришёл из консоли, передай точные runId/nodeId/skill в frontmatter
-итогового отчёта и выполни **одну** revision-checked graph-write транзакцию: artifact
-операции и **одна** receipt для исходного launch target. Для проверенной читаемой
-частичной библиотеки с `registrationReady: true` receipt имеет outcome: completed
-при явном coverage: partial. Незавершённые обязательные этапы и failed delivery
-получают outcome: failed и конкретный отчёт/summary. Без console run не изобретай
-receipt. Проверь writer receipt и прочитай зарегистрированный результат; ошибка
-writer не считается сохранением.
+For a console launch, put the original `runId/nodeId/skill` in the final report
+frontmatter. Apply **one** revision-checked graph-write transaction containing artifact
+operations and **one** receipt for the original target. A checked, readable partial
+library with `registrationReady: true` uses `outcome: completed` and explicit partial
+coverage. Incomplete required stages or failed delivery use `outcome: failed` and
+a concrete report/summary. Do not invent a receipt for a direct invocation. Check
+the writer result and reread registration; a writer error is not a saved result.
 
-Скажи, что реально собрано и проверено, где доступны каталог и изображения,
-что осталось неизвестным, какие направления частичны, была ли независимая
-проверка. Следующий шаг — ручной выбор конкретных примеров владельцем; он не
-является автоматическим разрешением на реализацию.
+Show what was collected and checked, where the catalog and images are, unknowns,
+partial tracks and whether independent review occurred. The next step is the
+owner's manual selection of examples, not automatic implementation.
 
-## Передача в проектирование собственного продукта
+## Hand off to product design
 
-Сохраняй observed/inferred flow boundaries: по каждому примеру/сборке/сессии —
-наблюдаемые состояние/действие/ответ и известные ограничения с источниками;
-выведенные связки — отдельно. Единичный скриншот имеет неизвестные переходы;
-не сшивай сессии и сборки. Дай владельцу ручной выбор по точному snapshot и
-источникам. AI review проверяет происхождение и читаемость; оно не принимает
-библиотеку за владельца. Навыка проектирования продукта в Product OS нет: без явного
-решения владельца референсы остаются материалами исследования. Не соединяй сбор
-конкурентов и самопринятие своего дизайна.
-
-<!-- product-os-public:usage:start -->
-## Учёт применения
-
-После первого содержательного результата этого навыка в текущем разговоре следуй
-[правилам аналитики](../TELEMETRY.md):
-
-`node <tools>/bin/product-os.js telemetry skill-used product-reference-library`
-
-Учитывай один раз за разговор. Чтение этого файла, установка и проверка кода
-не являются применением. Отключение и недоступность счётчика не мешают основной задаче.
-<!-- product-os-public:usage:end -->
+Keep observed and inferred flow boundaries separate. For each example, build or
+session, record observed states, actions, responses and sourced limitations.
+A single screenshot has unknown transitions. Do not merge sessions or builds.
+Support manual selection against an exact snapshot and sources. AI review checks
+provenance and readability; it does not accept the library for the owner. Without
+an explicit design decision, references remain research materials. Do not combine
+competitor collection with self-approval of a proposed design.

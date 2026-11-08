@@ -11,7 +11,7 @@ function createSnapshotProjector({workerFactory=()=>new Worker(require.resolve('
     const current=workerFactory();worker=current
     function failed(error){if(worker===current)worker=null;if(running?.worker===current){const task=running;running=null;task.reject(error)}}
     current.on('error',failed)
-    current.on('exit',code=>failed(Error('Не удалось собрать данные консоли: '+code)))
+    current.on('exit',code=>failed(Error("Failed to collect console data: "+code)))
     current.on('message',message=>{
       if(running?.worker!==current)return
       const task=running;running=null
@@ -24,7 +24,7 @@ function createSnapshotProjector({workerFactory=()=>new Worker(require.resolve('
     const key=digest(input)
     if(pending.has(key))return pending.get(key)
     const result=queue.then(()=>new Promise((resolve,reject)=>{
-      if(closed){reject(Error('Консоль закрыта'));return}
+      if(closed){reject(Error("Console closed"));return}
       try{const current=getWorker();running={worker:current,resolve,reject};current.postMessage(input)}
       catch(error){running=null;reject(error)}
     }))
@@ -33,6 +33,6 @@ function createSnapshotProjector({workerFactory=()=>new Worker(require.resolve('
     result.then(()=>pending.delete(key),()=>pending.delete(key))
     return result
   }
-  return {project,close(){closed=true;if(running){running.reject(Error('Консоль закрыта'));running=null}worker?.terminate();worker=null}}
+  return {project,close(){closed=true;if(running){running.reject(Error("Console closed"));running=null}worker?.terminate();worker=null}}
 }
 module.exports={createSnapshotProjector}

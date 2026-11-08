@@ -2,7 +2,7 @@
 const fs=require('node:fs'),path=require('node:path'),{createHash}=require('node:crypto');
 function runtimeRoot(){
  for(const root of [path.resolve(__dirname,'../../..'),path.resolve(__dirname,'../../../product-os-tools'),path.resolve(__dirname,'../../product-os-tools')])if(fs.existsSync(path.join(root,'bin/research/store.js')))return root;
- throw Error('Не найден установленный runtime Product OS.');
+ throw Error("The installed runtime Product OS was not found.");
 }
 const runtime=runtimeRoot(),{snapshot}=require(path.join(runtime,'bin/research/store'));
 const {activeRecords}=require(path.join(runtime,'bin/research/scope'));
@@ -13,13 +13,13 @@ const pick=(record,keys)=>Object.fromEntries(keys.filter(key=>record[key]!==unde
 function researchInputs(workspace,productId){
  return snapshot(workspace,{},(data,graph)=>{
   const products=graph.nodes.filter(n=>n.type==='product'&&n.status!=='dropped'&&!n.data?.retired);
-  if(!products.some(n=>n.id===productId))throw Error('Продукт исследования не найден.');
+  if(!products.some(n=>n.id===productId))throw Error("Research product not found.");
   const records=activeRecords(data),by=new Map(records.map(r=>[r.id,r]));
   const productIds=new Set(products.map(n=>n.id));
   const jobs=records.filter(r=>r.type==='JobInstance').filter(job=>{
    const episode=by.get(job.episodeId),studies=(episode?.sessionIds||[]).map(id=>by.get(by.get(id)?.studyId));
    if(studies.some(study=>study?.product===productId))return true;
-   if(!studies.length||studies.some(study=>!study||!productIds.has(study.product)))throw Error('Не определена принадлежность работы к продукту: '+job.id+'. Уточните Study/Session/Episode; пустая выборка не означает отсутствие работ.');
+   if(!studies.length||studies.some(study=>!study||!productIds.has(study.product)))throw Error("The assignment of the work to the product is not determined: "+job.id+". Specify Study/Session/Episode; an empty sample does not mean no work.");
    return false;
   });
   const jobIds=new Set(jobs.map(j=>j.id)),episodeIds=new Set(jobs.map(j=>j.episodeId));
@@ -55,7 +55,7 @@ function researchInputs(workspace,productId){
    coverage:{registryState:fs.existsSync(path.join(workspace,'research/research-data.json'))?'available':'absent',registeredJobs:rows.length,
     unprocessedUnits:data.coverage.filter(c=>['unprocessed','source_only'].includes(c.disposition)).length,
     checkpoints:data.checkpoints.map(c=>({id:c.id,status:c.status})),
-    note:'Полнота относительно текущих записей JobInstance этого продукта. Формулировки сохранённого разбора не равны дословным цитатам. Не доказывает полноту извлечения всех интервью или спрос; пробелы и происхождение сохраняются.'}};
+    note:"Completeness relative to the current JobInstance records of this product. The wording of the saved analysis is not the same as verbatim quotations. Does not prove the completeness of retrieval of all interviews or demand; spaces and origins are preserved."}};
   return {...result,fingerprint:fingerprint(result)};
  });
 }

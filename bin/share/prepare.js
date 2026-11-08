@@ -9,26 +9,26 @@ const { pathToFileURL } = require('node:url')
 const runtimeRoot = path.resolve(__dirname, '../..')
 
 function regularTree(directory, callback, relative = '') {
-  if (exists(directory)?.isSymbolicLink()) throw new Error('Снимок не следует по символическим ссылкам: ' + directory)
+  if (exists(directory)?.isSymbolicLink()) throw new Error("The snapshot does not follow symbolic links: " + directory)
   for (const entry of fs.readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name, 'en'))) {
     if (entry.name.startsWith('.')) continue
     const file = path.join(directory, entry.name), name = relative + entry.name
     if (entry.isDirectory()) regularTree(file, callback, name + '/')
     else if (entry.isFile()) callback(file, name)
-    else throw new Error('В снимок входят только обычные файлы: ' + name)
+    else throw new Error("The snapshot includes only regular files: " + name)
   }
 }
 function safeChild(workspace, relative) {
   const result = path.resolve(workspace, relative)
-  if (result !== workspace && !result.startsWith(workspace + path.sep)) throw new Error('Путь снимка выходит за пределы рабочего места.')
-  for (let current = result; current !== workspace; current = path.dirname(current)) if (exists(current)?.isSymbolicLink()) throw new Error('Снимок не следует по символическим ссылкам: ' + relative)
+  if (result !== workspace && !result.startsWith(workspace + path.sep)) throw new Error("The image path extends beyond the work area.")
+  for (let current = result; current !== workspace; current = path.dirname(current)) if (exists(current)?.isSymbolicLink()) throw new Error("The snapshot does not follow symbolic links: " + relative)
   return result
 }
 function settings(workspace) {
   const file = safeChild(workspace, '.product-os/share-settings.json')
   if (!exists(file)) return {}
   const value = JSON.parse(fs.readFileSync(file, 'utf8'))
-  if (value.version !== 1 || !['open', 'password'].includes(value.access) || typeof value.includeSources !== 'boolean') throw new Error('Некорректные сохранённые настройки публикации.')
+  if (value.version !== 1 || !['open', 'password'].includes(value.access) || typeof value.includeSources !== 'boolean') throw new Error("Incorrect saved publishing settings.")
   return value
 }
 function write(directory, relative, bytes) {
@@ -43,15 +43,15 @@ function cleanSnapshot(snapshot, info) {
 }
 async function prepare(workspace, { access, name, includeSources, changeAccess = false } = {}) {
   workspace = fs.realpathSync(path.resolve(workspace))
-  if (!exists(path.join(workspace, 'research-graph.json'))) throw new Error('Нужен воркспейс продукта с research-graph.json.')
+  if (!exists(path.join(workspace, 'research-graph.json'))) throw new Error("We need a product workspace with research-graph.json.")
   const prior = settings(workspace)
   access = access || prior.access
-  if (!['open', 'password'].includes(access)) throw new Error('Спросите владельца: открытый доступ или по паролю? Затем укажите --access open|password. Для приватных данных рекомендуйте пароль.')
-  if (prior.access && prior.access !== access && !changeAccess) throw new Error('Для изменения сохранённого режима доступа нужно поручение владельца и --change-access.')
+  if (!['open', 'password'].includes(access)) throw new Error("Ask the owner: open access or password? Then specify --access open|password. For private data, recommend a password.")
+  if (prior.access && prior.access !== access && !changeAccess) throw new Error("To change a saved access mode, you need an instruction from the owner and --change-access.")
   name = name || prior.name || 'product-os-' + randomUUID().slice(0, 8)
-  if (!/^[a-z][a-z0-9-]{2,62}$/.test(name)) throw new Error('--name: от 3 до 63 строчных латинских букв, цифр и дефисов, начиная с буквы.')
+  if (!/^[a-z][a-z0-9-]{2,62}$/.test(name)) throw new Error("--name: from 3 to 63 lowercase Latin letters, numbers and hyphens, starting with the letter.")
   includeSources = includeSources ?? prior.includeSources ?? false
-  if (typeof includeSources !== 'boolean') throw new Error('includeSources должен быть явным логическим выбором.')
+  if (typeof includeSources !== 'boolean') throw new Error("includeSources must be an explicit boolean choice.")
   const output = safeChild(workspace, '.product-os/shares/' + randomUUID())
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'product-os-share-'))
   const copy = path.join(temp, 'workspace'), inventory = [], routes = {}, omitted = [], auxiliary = new Map()
@@ -60,9 +60,9 @@ async function prepare(workspace, { access, name, includeSources, changeAccess =
   try {
     fs.mkdirSync(copy)
     const copyFile = (file, relative) => {
-      if (!exists(file)?.isFile() || exists(file).isSymbolicLink()) throw new Error('Нужен обычный файл: ' + relative)
+      if (!exists(file)?.isFile() || exists(file).isSymbolicLink()) throw new Error("A regular file is needed: " + relative)
       const bytes = fs.readFileSync(file)
-      if (bytes.length > 25 * 1024 * 1024) throw new Error('Файл превышает лимит 25 MiB: ' + relative)
+      if (bytes.length > 25 * 1024 * 1024) throw new Error("File exceeds 25 MiB limit: " + relative)
       write(copy, relative, bytes); inventory.push({ path: relative, bytes: bytes.length, sha256: digest(bytes) })
     }
     const releaseSource = require('../graph/storage').workspaceLock(workspace)
@@ -82,11 +82,11 @@ async function prepare(workspace, { access, name, includeSources, changeAccess =
     if (!includeSources) {
       const visit = value => {
         if (typeof value === 'string' && /^sources\/[^\\]+\.(?:json|png|jpe?g|webp|gif|svg|woff2?|[ot]tf|pdf|pptx)$/i.test(value)) {
-          if (/[\u0000-\u001f\u007f]/.test(value) || value.split('/').some(part => !part || part.startsWith('.'))) throw new Error('Некорректная ссылка на файл источника: ' + value)
+          if (/[\u0000-\u001f\u007f]/.test(value) || value.split('/').some(part => !part || part.startsWith('.'))) throw new Error("Incorrect link to the source file: " + value)
           const file = safeChild(workspace, value)
           if (exists(file)?.isFile() && !auxiliary.has(value)) {
             const bytes = fs.readFileSync(file)
-            if (bytes.length > 25 * 1024 * 1024) throw new Error('Файл превышает лимит 25 MiB: ' + value)
+            if (bytes.length > 25 * 1024 * 1024) throw new Error("File exceeds 25 MiB limit: " + value)
             write(copy, value, bytes); auxiliary.set(value, { path: value, bytes: bytes.length, sha256: digest(bytes), role: 'displayed-asset' })
             if (value.endsWith('.json')) { let data; try { data = JSON.parse(bytes) } catch {} if (data) visit(data) }
           }
@@ -103,7 +103,7 @@ async function prepare(workspace, { access, name, includeSources, changeAccess =
     let root = runtimeRoot
     if (!isPublicEdition(root)) {
       const exporter = path.join(root, 'scripts/export-public.js')
-      if (!exists(exporter)) throw new Error('Для экспорта используйте Product OS Public либо исходный checkout инструментария.')
+      if (!exists(exporter)) throw new Error("To export, use Product OS Public or the original toolkit checkout.")
       root = path.join(temp, 'public-runtime'); require(exporter).exportPublic(root)
     }
     const { createConsoleServer, listen } = require(path.join(root, 'bin/console/server'))
@@ -111,7 +111,7 @@ async function prepare(workspace, { access, name, includeSources, changeAccess =
     const address = await listen(app.server), base = `http://127.0.0.1:${address.port}`
     const { routeKey } = await import(pathToFileURL(path.join(__dirname, 'auth.mjs')))
     const add = (url, bytes, headers = {}, status = 200) => {
-      if (bytes.length > 25 * 1024 * 1024) throw new Error('Сохранённая страница превышает лимит 25 MiB: ' + url)
+      if (bytes.length > 25 * 1024 * 1024) throw new Error("The saved page exceeds the 25 MiB limit: " + url)
       const key = routeKey(url), asset = '/_snapshot/' + digest(bytes)
       write(output, 'assets' + asset, bytes)
       routes[key] = { asset, status, headers }
@@ -121,7 +121,7 @@ async function prepare(workspace, { access, name, includeSources, changeAccess =
       let bytes = fs.readFileSync(file)
       if (relative === 'app.js') {
         const original = bytes.toString('utf8'), changed = original.replace(/^setInterval\(\(\)=>\{if\(!document.hidden\)refresh\(\)\},4000\)\s*$/m, '')
-        if (original === changed) throw new Error('Изменилась схема обновления Public. Проверьте адаптер снимка.')
+        if (original === changed) throw new Error("The Public update scheme has changed. Check the snapshot adapter.")
         bytes = Buffer.from(changed)
       }
       const extension = path.extname(relative).toLowerCase()
@@ -133,7 +133,7 @@ async function prepare(workspace, { access, name, includeSources, changeAccess =
       const response = await fetch(new URL(route, base))
       if (!response.ok) {
         if (optional && response.status === 404) { omitted.push(route); return }
-        throw new Error('Не удалось сохранить страницу ' + route + ': ' + response.status)
+        throw new Error("Failed to save page " + route + ': ' + response.status)
       }
       let bytes = Buffer.from(await response.arrayBuffer())
       let value
@@ -142,8 +142,8 @@ async function prepare(workspace, { access, name, includeSources, changeAccess =
         let html = bytes.toString('utf8')
         html = html.replace(/<script type="application\/json" id="productOsBootstrap">[\s\S]*?<\/script>/, '')
         html = html.replace('</head>', '<link rel="stylesheet" href="/_share/login.css"></head>').replace('<script type="module" src="/app.js"></script>', '<script src="/_share/client.js"></script><script type="module" src="/app.js"></script>')
-        const date = new Intl.DateTimeFormat('ru-RU', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(info.createdAt))
-        html = html.replace('<nav class="public-navigation"', `<div class="share-status"><p>Снимок от ${date}</p><p>Только просмотр · ${access === 'password' ? 'Доступ по паролю' : 'Открытый доступ'}</p>${access === 'password' ? '<form method="post" action="/_share/logout"><button class="os-button os-button-secondary" type="submit">Выйти</button></form>' : ''}</div><nav class="public-navigation"`)
+        const date = new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(info.createdAt))
+        html = html.replace('<nav class="public-navigation"', `<div class="share-status"><p>Photo from ${date}</p><p>View only · ${access === 'password' ? "Password access" : "Open access"}</p>${access === 'password' ? "<form method=\"post\" action=\"/_share/logout\"><button class=\"os-button os-button-secondary\" type=\"submit\">Exit</button></form>" : ''}</div><nav class="public-navigation"`)
         bytes = Buffer.from(html)
       }
       const headers = {}
@@ -195,9 +195,9 @@ async function prepare(workspace, { access, name, includeSources, changeAccess =
       const credentials = safeChild(workspace, '.product-os/shares/' + prior.lastPackage + '/.dev.vars')
       if (exists(credentials)?.isFile()) fs.copyFileSync(credentials, path.join(output, '.dev.vars'))
     }
-    const manifest = { version: 1, workerName: name, ...info, files: inventory, unavailable: omitted, routes: Object.keys(routes).sort(), published: false, note: 'В снимок входит вся сохранённая память продукта и отчёты. Оригиналы sources/ входят только при явном выборе. Перед отправкой проверьте содержимое, а не только имена файлов.' }
+    const manifest = { version: 1, workerName: name, ...info, files: inventory, unavailable: omitted, routes: Object.keys(routes).sort(), published: false, note: "The snapshot includes all saved product memory and reports. Original sources/ are only included when explicitly selected. Please check the contents, not just the file names, before sending." }
     write(output, 'REVIEW.json', JSON.stringify(manifest, null, 2) + '\n')
-    write(output, 'README.md', '# Снимок Product OS\n\nПеред публикацией просмотрите REVIEW.json и локальный preview.\n\nРежим: ' + access + '. Только просмотр.\n\nДля пароля: product-os share password <этот каталог> --env-file <защищённый dotenv с PRODUCT_OS_SHARE_PASSWORD>.\n\nПубликация: product-os share deploy <этот каталог> --approved-digest <digest из share review>.\n\nХостинг имеет бесплатные квоты Cloudflare Workers; платные функции автоматически не включаются.\n')
+    write(output, 'README.md', "# Snapshot Product OS\n\nBefore publishing, review REVIEW.json and local preview.\n\nMode: " + access + ". View only.\n\nFor password: product-os share password <this directory> --env-file <protected dotenv s PRODUCT_OS_SHARE_PASSWORD>.\n\nPublication: product-os share deploy <this directory> --approved-digest <digest from share review>.\n\nHosting has free quotas Cloudflare Workers; Paid features are not automatically enabled.\n")
     fs.mkdirSync(path.dirname(safeChild(workspace, '.product-os/share-settings.json')), { recursive: true })
     const settingsFile = path.join(workspace, '.product-os/share-settings.json'), settingsTemp = settingsFile + '.' + randomUUID() + '.tmp'
     fs.writeFileSync(settingsTemp, JSON.stringify({ version: 1, access, name, includeSources, lastPackage: path.basename(output) }, null, 2) + '\n')

@@ -3,7 +3,7 @@ const {read,source,load,summary}=require('./store')
 const {validate}=require('./schema')
 function main(args=process.argv.slice(2)) {
  const [mode='audit',root='.',...rest]=args,workspace=path.resolve(root)
- if(require('../edition').isPublicEdition()&&!['read','source','summary','audit'].includes(mode))throw new Error('В Product OS Public доступны research read|source|summary|audit')
+ if(require('../edition').isPublicEdition()&&!['read','source','summary','audit'].includes(mode))throw new Error("Research read|source|summary|audit available in Product OS Public")
  let result
  if(mode==='read')result=read(workspace,Object.fromEntries(rest.map(s=>s.split('='))))
  else if(mode==='summary')result=summary(workspace,Object.fromEntries(rest.map(s=>{const at=s.indexOf('=');if(at<1)throw new Error('summary options must use key=value');return [s.slice(0,at),s.slice(at+1)]})))

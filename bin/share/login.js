@@ -4,7 +4,7 @@ form.addEventListener('submit', async event => {
   event.preventDefault()
   const input = form.querySelector('[name=password]'), button = form.querySelector('button[type=submit]')
   if (button.disabled) return
-  setFieldError(input, ''); button.disabled = true; button.textContent = 'Проверяю пароль…'
+  setFieldError(input, ''); button.disabled = true; button.textContent = "Checking the password..."
   try {
     // Password stretching runs in the browser, within Workers Free's CPU budget.
     const salt = Uint8Array.from(form.dataset.salt.match(/.{2}/g), value => parseInt(value, 16))
@@ -13,8 +13,8 @@ form.addEventListener('submit', async event => {
     const proof = Array.from(new Uint8Array(bits), byte => byte.toString(16).padStart(2, '0')).join('')
     const response = await fetch('/_share/login', { method: 'POST', headers: { accept: 'application/json' }, body: new URLSearchParams({ proof, next: new FormData(form).get('next') }) })
     const result = await response.json()
-    if (!response.ok) { setFieldError(input, result.error || 'Не удалось войти. Повторите попытку.'); input.focus(); return }
+    if (!response.ok) { setFieldError(input, result.error || "Login failed. Please try again."); input.focus(); return }
     location.assign(result.next)
-  } catch { setFieldError(input, 'Не удалось войти. Проверьте соединение и повторите попытку.'); input.focus() }
-  finally { button.disabled = false; button.textContent = 'Открыть консоль' }
+  } catch { setFieldError(input, "Login failed. Check your connection and try again."); input.focus() }
+  finally { button.disabled = false; button.textContent = "Open console" }
 })

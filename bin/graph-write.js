@@ -9,7 +9,7 @@ function main(args = process.argv.slice(2)) {
   if (args.includes('--check')) {
     const error = validateGraph(JSON.parse(fs.readFileSync(path.join(workspace, 'research-graph.json'), 'utf8')))
     if (error) throw new Error(error)
-    console.log('Граф валиден'); return
+    console.log("Count is valid"); return
   }
   let result
   if (args.includes('--migrate')) {
@@ -19,7 +19,7 @@ function main(args = process.argv.slice(2)) {
     if (!args[1]) throw new Error('graph-write.js <workspace> <operations.json> [--dry] | --check | --migrate')
     result = applyOperations(workspace, JSON.parse(fs.readFileSync(path.resolve(args[1]), 'utf8')), { dry: args.includes('--dry') })
   }
-  console.log(`Граф: revision ${result.graph.revision}; ${result.graph.nodes.length} узлов, ${result.graph.edges.length} связей.`)
+  console.log(`Count: revision ${result.graph.revision}; ${result.graph.nodes.length} nodes, ${result.graph.edges.length} connections.`)
   for (const warning of result.warnings) console.warn(warning)
   if (!args.includes('--dry')) require('child_process').execFileSync(process.execPath, [path.join(__dirname, 'pages.js'), workspace], { stdio: 'inherit' })
   return result

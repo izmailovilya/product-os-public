@@ -1,47 +1,48 @@
-# Приёмка карты по содержанию
+# Accepting map by content
 
-Проверяй вход и карту независимо от их автора. Не требуй конкретных сегментов,
-графов, чисел или любимого pivot. Дай конкретный контрпример к каждому возражению,
-почему это меняет решение и минимальное исправление. Для уже закрытого дефекта
-не запускай новый общий обзор.
+Check the entrance and map regardless of their author. Don't require specific segments,
+graphs, numbers or your favorite pivot. Give a specific counterexample to each objection,
+Why does this change the solution and minimal fix. For an already closed defect
+do not start a new general review.
 
-1. Видно, какое решение владелец может принять по карте? Карта отражает нужный
-   срез рынка/работ, а не организацию навыков и не план задач команды исследования?
-2. Сохранены все входные пункты? Для объединённых/отложенных есть соответствие
-   и причина; каталог не «исчез» после форматирования.
-   Если есть исследование, сравни карту с полным входом из реестра: каждая
-   собранная работа каждого случая должна иметь видимый узел. Проверка лишь
-   краткого списка автора или нынешних фокусных профилей недостаточна. Для
-   пропущенной работы назови record ID, случай, формулировку и последствия
-   пропуска. Нельзя отложить её из-за отсутствия функции продукта. Явное
-   ограничение всего исследования оставляет карту частичной, а не полной.
-   При объединении проверь сохранность результата, ситуации и основания у
-   каждого случая; одно совпавшее слово не оправдывает общий узел. Гипотезы
-   допустимы рядом, но не замещают фактуру и не становятся словами респондента.
-3. Каждое ребро выдерживает «нижнее делаю, чтобы получить верхнее» именно в этом
-   контексте? Не выданы ли варианты за обязательную последовательность, общие темы
-   за причинную связь, глубина DAG за методологический уровень?
-4. Есть необходимые внешние работы и условия, из-за которых верхний результат
-   остаётся вне продукта? Противоположный тест: если удалить все не закрываемые
-   продуктом работы, изменится ли ошибочно вывод о его верхней способности?
-5. Конкретны нынешняя альтернатива, вклад продукта и условия преимущества? Для
-   дополнения к платформе различён тот же инструмент с/без дополнения, а не
-   автоматически «наш продукт против его обязательного провайдера»?
-6. Не перенесены ли критерии, приоритеты, факты и уровень поддержки одного
-   сегмента на соседний? Общий job ID допускает разные практики и критерии.
-   Совпадение графов не доказывает одинаковую аудиторию.
-7. Видны гипотезы текущего исполнения, изменения продукта и пробелы знания?
-   Состояние ready не выдано за качество результата, спрос или работу end-to-end.
-8. Понятны ли короткие подписи без пояснения автора и все тексты внутри карточки?
-   Примени отдельную проверку текста.
-   Восстанови смысл по доступному читателю контексту. Затем закрой название:
-   способ и результат описывают эту же работу или другую? Прочитай входы,
-   альтернативы, ограничения, вклад каждой версии и условия рёбер, а не только
-   заголовки. Назови непонятную/неверную строку и проверь исправленную версию.
-   Хочет ли человек именно этого результата независимо от устройства продукта?
-   Не сузила ли подпись целую деятельность до одной реплики, кнопки или файла?
-9. Выбор дальнейшего исследования не присвоен ли агентом без разрешения? Можно
-   ли повторить handoff по его содержанию, не перечитывая всю историю разговора?
+1. Can you see what decisions the owner can make on the map? The map reflects the desired
+market/job overview, not skills organization and not research team task plan?
+2. Are all entry points saved? For merged/deferred there is a correspondence
+and reason; the directory did not “disappear” after formatting.
+If there is research, compare the map with the full entry from the registry: each
+The collected job of each case must have a visible node. Checking only
+Author shortlist or current focus profiles are not sufficient. For
+name the missed job record ID, case, wording and consequences
+passes. It cannot be postponed due to a missing product feature. Explicit
+Limiting all exploration leaves the map partial rather than complete.
+When merging, check the integrity of the result, situation and basis of
+each case; one matched word does not justify a common node. Hypotheses
+acceptable nearby, but do not replace the invoice and do not become the respondent’s words.
+3. Each edge maintains “I do the bottom to get the top” in this
+context? Are the options given out as a required sequence, general topics
+for causality, DAG depth for methodological level?
+4. There are necessary external jobs and conditions due to which the top result is
+remains outside the product? Opposite test: if you delete all non-closable
+job product, will the erroneous conclusion about its top ability change?
+5. Are the current alternative, product contribution, and benefit conditions specific? For
+platform add-ons distinguish the same tool with/without add-on, not
+automatically "our product versus its mandatory provider"?
+6. Are the criteria, priorities, facts and support level of one
+ not transferred
+segment to adjacent? A common job ID allows for different practices and criteria.
+Matching graphs does not prove the same audience.
+7. Are current execution hypotheses, product changes and knowledge gaps visible?
+The ready state is not issued for result quality, demand or end-to-end job.
+8. Are short signatures without explanation of the author and all texts inside the map clear?
+Apply a separate text check.
+Restore the meaning based on the context available to the reader. Then close the name:
+Do the method and result describe the same job or another? Read inputs,
+alternatives, limitations, contribution of each version and edge conditions, not just
+headers. Name the unclear/incorrect line and check the corrected version.
+Does a person want this exact result, regardless of the design of the product?
+Did the signature narrow the entire activity down to a single replica, button, or file?
+9. Has the further research choice been appropriated by the agent without permission? Possible
+is it possible to repeat the handoff based on its content without re-reading the entire conversation history?
 
-Форматная проверка, graph-write и GET viewer нужны отдельно. Они могут пройти
-при смысловой ошибке; не засчитывай их как ответы на вопросы выше.
+Format check, graph-write and GET viewer are needed separately. They can pass
+if there is a semantic error; do not count them as answers to the questions above.

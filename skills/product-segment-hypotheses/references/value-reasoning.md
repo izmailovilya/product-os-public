@@ -1,133 +1,133 @@
-# От возможностей продукта к ценности для человека
+# From product capabilities to human value
 
-Используй до оформления карты и при её критике. Цель — объяснить, какую значимую
-возможность продукт открывает человеку по сравнению с тем, как он решает задачу
-сейчас. Перечень результатов производства — отчёт, страница, публикация — этого
-не объясняет. Полезная гипотеза не обязана быть неожиданной или уже подтверждённой
-покупателями.
+Use before designing a card and when criticizing it. The goal is to explain how significant
+the opportunity the product opens to a person compared to how he solves the problem
+now. List of production results - report, page, publication - this
+doesn't explain. A useful hypothesis does not have to be unexpected or already confirmed
+by buyers.
 
-## На входе: случаи использования, а не только готовые файлы
+## Input: use cases, not just finished files
 
-Если есть опыт применения, восстанови несколько относящихся к вопросу случаев:
-что человек пытался решить; что делал или считал раньше; какие материалы использовал;
-что обнаружил или смог сделать; какое решение или действие это изменило; что сделал
-продукт и что человек; как он оценил результат. Готовый файл подтверждает только
-ту часть, которая в нём видна. Причинный вклад продукта может оставаться неизвестным.
+If you have experience with use, restore several relevant cases:
+what the person was trying to solve; what you did or thought before; what materials did you use;
+what I discovered or was able to do; what decision or action made a difference; what did
+product and what person; how he assessed the result. The finished file is confirmed only by
+the part that is visible in it. The causal contribution of the product may remain unknown.
 
-Сначала раскрой конкретное основание из разрешённых материалов. Указатель на пост,
-отчёт или интервью — повод прочитать нужный фрагмент, когда от него зависит объяснение.
-Не заменяй это новым общим вопросом владельцу или перечитыванием всего архива.
-Передай следующему шагу содержание случая, источник и границы, а не только ссылку.
-Если опыта ещё нет, переходи к явно предполагаемым применениям; не выдумывай кейс.
-Желаемый эффект со слов владельца хранится отдельно от наблюдавшегося результата.
+First, cut a specific base from approved materials. Post pointer,
+a report or interview is a reason to read the desired fragment when the explanation depends on it.
+Do not replace this with a new general question to the owner or re-reading the entire archive.
+Pass the contents of the case, source and boundaries to the next step, not just the reference.
+If there is no experience yet, move on to clearly intended applications; don't make up a case.
+The desired effect according to the owner is stored separately from the observed result.
 
-## Сначала объясни возможность, затем оформляй клиента
+## First explain the opportunity, then sign up the client
 
-Для рассматриваемого направления построй связное рассуждение:
+For the direction in question, construct a coherent argument:
 
-1. **Значимая задача и нынешний способ.** Что человек уже пытается получить, в какой
-   ситуации и как справляется сейчас. Если конкретная практика неизвестна, назови
-   правдоподобный способ как гипотезу с границами. Он может быть хорошим; активный
-   поиск замены не обязателен.
-2. **Что для него будет лучше.** Назови критерий результата и препятствие нынешнего
-   способа именно по этому критерию. «Есть много данных» или «нужен качественный
-   результат» без последствия для человека недостаточно. Важность и приоритет
-   критерия не выдавай за слова клиентов, если они предложены аналитически.
-3. **За счёт чего продукт это меняет.** Какие доступные сведения и способности он
-   соединяет, что с ними делает и как это помогает получить нужный результат.
-   Для знаний и аналитики покажи предполагаемое обнаружение, сопоставление или
-   изменение решения. Для исполнения — действие и полезный эффект, а не только файл.
-   Не расширяй возможности продукта в ходе этого объяснения.
-4. **Почему этого недостаточно в нынешнем способе.** Сравни с сильным вариантом
-   текущей работы, специалистом или подходящим общим инструментом. Для дополнения
-   к другой системе сравни способ работы с дополнением и без него. Не называй
-   зависимость конкурентом и не делай вид, что общий инструмент неспособен выполнить
-   ту же задачу. Если преимущество — в подготовке, повторяемости, сопровождении или
-   затратах, объясни именно это. Допустим вывод: отличия пока не установлены.
-5. **Граница и наблюдаемое различие.** При каких условиях наше преимущество исчезает?
-   Что в результате или действии человека позволит отличить полезную возможность
-   от красивого объяснения? Не требуй оплаты для логической гипотезы, но и не принимай
-   согласие с текстом за изменение работы.
+1. **Significant task and current method.** What a person is already trying to get, in what
+situations and how they cope now. If the specific practice is unknown, call
+plausible method as a hypothesis with boundaries. He may be good; active
+search for a replacement is not necessary.
+2. **What will be best for him.** Name the result criterion and the current obstacle
+method precisely according to this criterion. “There is a lot of data” or “you need high-quality
+result" without consequences for a person is not enough. Importance and priority
+do not pass off criteria as the words of clients if they are proposed analytically.
+3. **How does the product change this.** What available information and abilities does it have
+connects, what it does with them and how it helps to get the desired result.
+For knowledge and analytics, show intended detection, matching, or
+decision change. For execution - an action and a useful effect, and not just a file.
+Do not expand the product's capabilities during this explanation.
+4. **Why is this not enough in the current method.** Compare with the strong option
+current work, specialist or suitable general tool. For addition
+For another system, compare the way it works with and without the addition. Don't call
+Dependency by competitor and do not pretend that the common tool is unable to perform
+same task. If the advantage is preparation, repeatability, maintenance or
+costs, explain exactly that. Let us conclude: the differences have not yet been established.
+5. **Boundary and observable difference.** Under what conditions does our advantage disappear?
+What is the result or action of a person that will distinguish a useful opportunity
+from a beautiful explanation? Don't ask for payment for a logical hypothesis, but don't accept it either
+agreement with the text for changing the work.
 
-Не превращай эти вопросы в ещё пять односложных полей поверх старой карточки.
-Короткий причинный рассказ перед профилями должен раскрывать реальные связи.
-Источники подтверждают отдельные звенья; отсутствующее звено остаётся гипотезой.
-Не надо обещать «лучше всех» или выдумывать эффект ради допуска направления.
+Don't turn these questions into five more one-syllable fields on top of the old card.
+A short causal story before profiles should reveal real connections.
+Sources confirm individual links; the missing link remains a hypothesis.
+There is no need to promise “the best” or invent an effect for the sake of admitting a direction.
 
-### Испытай объяснение на конкретном случае
+### Try the explanation on a specific case
 
-До подробных профилей разверни наиболее существенное обещание на небольшом примере:
-какие именно сведения оказались рядом, что между ними обнаруживается и какой выбор
-это меняет. Используй доступный случай; недостающие элементы можно предположить только
-с явной маркировкой. Не выдавай мысленный пример за выполненную работу или результат.
+Expand the most significant promise to detailed profiles using a small example:
+exactly what information was nearby, what is found between them and what choice
+That changes. Use the available opportunity; missing elements can only be assumed
+Explicitly marked. Do not pass off a mental example as work done or results.
 
-Если прибавка приписана методике, настройке или автоматизации, раскрой фактическую
-процедуру продукта, а не только её название. Для доступного инструмента прочитай нужный
-фрагмент инструкции, реализации или сохранённого выполнения. Объясни, какое действие
-он задаёт и где это может изменить результат. Требование прочитать документ не
-доказывает, что агент его выполнил. Заявленный механизм и наблюдённый эффект различны.
+If the increase is attributed to a technique, setup or automation, expand the actual
+the procedure of the product, not just its name. For an accessible tool, read the required one
+fragment of an instruction, implementation, or saved execution. Explain what action
+it specifies and where it can change the result. The requirement to read the document is not
+proves that the agent completed it. The stated mechanism and the observed effect are different.
 
-Проведи через этот же пример сильную альтернативу. Если специалист с тем же AI может
-сделать всё то же, не придумывай недоступную ему способность. Тогда возможная прибавка —
-например, не собирать и не поддерживать процедуру самому; её ещё нужно сравнить по
-труду, ошибкам и ограничениям. Если различие не удаётся объяснить, оставь его нерешённым
-и не используй общие слова о качестве как основание предпочтения. После этой проверки
-обобщай, кому и при каких условиях может пригодиться найденная возможность.
+Run the same example through a strong alternative. If a specialist with the same AI can
+do everything the same, don’t invent an ability that is inaccessible to him. Then the possible increase is
+for example, do not build or maintain the procedure yourself; it still needs to be compared by
+labor, errors and limitations. If the difference cannot be explained, leave it unresolved
+and don't use general words about quality as a basis for preference. After this check
+generalize who and under what conditions the found opportunity may be useful.
 
-## Детализация, которую можно понять без автора
+## Detail that can be understood without author
 
-Описание должно позволять представить человека за работой. Разверни ситуацию:
-что произошло, как он справляется сейчас, какие конкретные сведения продукт соединит
-и какое решение или действие из этого может следовать. Одного общего примера на всю
-карту недостаточно, если остальные профили читатель должен достраивать сам.
-Предположенный пример обозначай как иллюстрацию, не как найденного клиента.
+The description should allow you to imagine the person at work. Expand the situation:
+what happened, how he is coping now, what specific information the product will connect
+and what decision or action can follow from this. One general example for the whole
+the map is not enough if the reader must complete the rest of the profiles himself.
+Designate the proposed example as an illustration, not as a found client.
 
-Объясни, что у человека уже есть на входе, чего ещё нет, что остаётся ему или
-специалисту и нужна ли настройка либо новая функциональность. Для разных стадий
-работы не копируй одну пользу: меняются доступная фактура, ближайшее решение и способ
-получить первый результат. Не выводи бюджет или готовность платить из стадии.
+Explain what a person already has at the input, what he doesn’t yet have, what remains for him or
+a specialist and whether customization or new functionality is needed. For different stages
+work do not copy one benefit: the available texture, the closest solution and method change
+Get the first result. Don't take your budget or willingness to pay out of the stage.
 
-Пиши короткими связными абзацами с конкретным примером и сильной альтернативой.
-Поля профиля сохраняют структуру, но не заменяют объяснение набором однословных ячеек.
-Объём определяется недостающими связями, а не квотой слов или одинаковым шаблоном.
-Понятность, обоснованность и расширение картины возможностей оцениваются отдельно:
-подробный правдоподобный текст ещё не означает новой возможности или проверки спроса.
+Write in short, coherent paragraphs with a specific example and a strong alternative.
+Profile fields retain structure, but do not replace the explanation with a set of single-word cells.
+Volume is determined by missing links, not by word quota or same pattern.
+Clarity, validity and expansion of the opportunity picture are assessed separately:
+Detailed plausible text does not indicate a new feature or demand check.
 
-Различай читаемый обзор и полный паспорт. Для подробного обзора разверни главное
-рассуждение о ценности; не повторяй в каждом пункте все роли, стадии покупки,
-общие ограничения и технический учёт. Полные поля сохраняются в структурированных
-профилях, когда они нужны, а история проверок и идентификаторы — в приложении.
-Общие неизвестные можно объяснить один раз; существенную оговорку оставь рядом
-с конкретным утверждением. Детальность означает восстановленные связи, а не
-обязательную публикацию всех рабочих материалов в основном тексте.
+Distinguish between a readable review and a complete passport. For a detailed overview, expand the main page
+value reasoning; do not repeat at each point all the roles, stages of purchase,
+general restrictions and technical accounting. Complete fields are stored in structured
+profiles when needed, and verification history and identifiers in the application.
+Common unknowns can be explained once; leave the essential disclaimer nearby
+with a specific statement. Detail means restored connections, not
+mandatory publication of all working materials in the main text.
 
-## Когда различать клиентов, контексты и подзадачи
+## When to distinguish between clients, contexts and subtasks
 
-После объяснения ценности сравни соседей. Несколько результатов могут быть частями
-одного процесса одного человека. Название выполненной задачи ещё не создаёт клиента.
-Смена страницы, канала или инструмента сама по себе не создаёт отдельного сегмента.
+After explaining the value, compare neighbors. Multiple results may be parts
+one process of one person. The name of the completed task does not yet create a client.
+Changing a page, channel or instrument does not itself create a separate segment.
 
-Контекст становится отдельным профилем, когда меняет существенный критерий,
-предложение, выбор, покупку или внедрение. Подсегмент дополнительно должен быть
-строгой частью родителя. Разовый эпизод работы не становится подсегментом автоматически;
-его можно оставить сценарием внутри профиля. Не объединяй разные практики только
-из-за одной должности. Объясни практическое последствие каждой границы.
+The context becomes a separate profile when the essential criterion changes,
+offer, selection, purchase or implementation. The subsegment must additionally be
+strict part of the parent. A one-time episode of work does not automatically become a subsegment;
+It can be left as a script inside the profile. Do not combine different practices only
+because of one position. Explain the practical consequences of each boundary.
 
-Самостоятельная работа, стадия запуска и занятость по найму могут пересекаться;
-не объявляй их взаимоисключающими без основания. Идеи расширения продукта сохраняй
-с предполагаемой пользой и необходимыми изменениями. Они не становятся текущими
-целевыми клиентами или детьми существующего профиля только ради размещения в карте.
+Self-employment, start-up and paid employment may overlap;
+Don't declare them mutually exclusive without reason. Save product expansion ideas
+with intended benefit and necessary changes. They do not become current
+target clients or children of an existing profile only for the sake of placement in the map.
 
-## Как проверять глубину
+## How to check depth
 
-Критик сначала проверяет рассуждение, затем оформление и ссылки. Для каждого
-рекомендуемого направления укажи точное место, где объяснено преимущество по критерию
-человека, и испытай его сильной альтернативой. Фразы «связывает контекст», «повышает
-качество», «готовит обоснованный следующий шаг» сами по себе не проходят эту проверку.
-Метка «гипотеза» сохраняет честность, но не заполняет пропущенную причинную связь.
+The critic checks the reasoning first, then the formatting and references. For each
+recommended direction, indicate the exact place where the advantage according to the criterion is explained
+human, and try it with a strong alternative. Phrases “links context”, “increases
+quality", "prepares an informed next step" do not pass this test on their own.
+The "hypothesis" label maintains fairness, but does not fill in missing causality.
 
-Если текст получается простым перечислением того, что можно изготовить, попроси
-исправить объяснение или оставь направление как нераскрытую возможность. Не рекомендуй
-его первым лишь потому, что его легко настроить или удобно проверить. Отсутствие
-интервью не повод запретить гипотезу; отсутствие объяснения — повод не выдавать её
-за хорошо обоснованную. Не оценивай глубину числом карточек, терминов или источников.
+If the text turns out to be a simple listing of what can be made, ask
+Correct the explanation or leave the direction as an undisclosed possibility. Do not recommend
+its first only because it is easy to set up or convenient to test. Absence
+an interview is not a reason to prohibit a hypothesis; lack of explanation is a reason not to release it
+for well-founded. Don't judge depth by the number of cards, terms or sources.

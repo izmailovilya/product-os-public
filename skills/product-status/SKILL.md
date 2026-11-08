@@ -1,72 +1,55 @@
 ---
 name: product-status
-description: Read existing product context and explain where we are, what is known and one grounded next step. Use for «где мы», «что дальше», «на чём остановились», status or tool-choice questions. Does not ingest new materials, change plans or start research.
+description: Read saved product context and explain where we are, what is known and one grounded next step. Use for "where are we", "what's next", "where did we stop", status or tool-choice questions. Does not ingest materials, change plans or start research.
 user-invocable: true
 ---
 
-# Где мы и что дальше
+# Review product status
 
-Ответь по уже накопленным сведениям. Сам этот навык не меняет продуктовую память
-и не выполняет предложенный следующий шаг.
+Answer from existing information. This skill does not change product memory or
+execute the next step it recommends.
 
-Правила: [CONTRACT.md](../CONTRACT.md). `<tools>` — runtime этого воркспейса:
-`.claude/skills/product-os-tools` своего агентского окружения
-или корень checkout инструментария. При отсутствии локального runtime проверь
-те же каталоги в домашней папке пользователя. Используй абсолютный путь к
-инструментам; данные читай из выбранного `<workspace>`, а не из общей установки.
-Выбери существующий путь; не используй чужой продукт.
+Follow [CONTRACT.md](../CONTRACT.md). Find the runtime in the current agent's
+product folder, its home directory or the toolkit checkout. Use its absolute path
+as `<tools>` and read data from the selected `<workspace>`, never another product
+or the shared installation directory.
 
-## Прочитать ровно нужный контекст
+## Read only the relevant context
 
-1. Возьми цель, стадию, ресурсы и ограничения из PRODUCT.md, выбранные действия —
-   из MOVES.md. Не проси повторить уже известное.
-2. Начни с актуального синтеза нужной темы, если он сохранён.
-   Проверь область, ревизию, покрытие и ограничения. Если этого достаточно, останови
-   чтение. Раскрой отдельную запись только для оставшегося вопроса.
-3. При отсутствии синтеза используй нужный срез графа и доступные документы.
-   Не запускай создание синтеза, массовую обработку интервью или веб-поиск.
-   Оригинал открывай для конкретного вопроса, проверки противоречия или по просьбе владельца.
-4. В полной версии перед использованием интервью прочитай существующий
-   `skills/product-interviews/references/consumers.md` в runtime. Если его нет,
-   оставайся в пределах предоставленных сведений и явно называй пробелы.
+1. Read the goal, stage, resources and constraints from PRODUCT.md and chosen
+   actions from MOVES.md. Do not ask for information already saved.
+2. Start with the current synthesis for the topic, if available. Check its scope,
+   revision, coverage and limitations. Stop when sufficient; open individual
+   records only to resolve a remaining question.
+3. Without a synthesis, use the relevant graph slice and available documents.
+   Do not generate a synthesis, process interviews in bulk or start a web search.
+   Open an original to answer a specific question, check a contradiction or fulfill
+   the owner's request to see it. State gaps in the available evidence.
 
-## Ответ
+## Respond
 
-Кратко объясни цель, что уже известно и на каком основании, где остановились,
-какое ограничение мешает сейчас и какой один шаг наиболее полезен.
-Сохраняй актуальный выбранный ход; не заменяй его новой идеей без основания.
-Для предлагаемого шага назови результат и способ проверки, не выдумывай бюджет,
-срок или гарантированную прибыль. Различай наблюдения, гипотезы, оплату и прибыль.
-Ссылка на сохранённую цитату не означает, что оригинал был перечитан сейчас.
+Briefly explain the goal, what is known and its basis, where work stopped, the
+current constraint and the most useful next step. Preserve the chosen action
+unless there is a reason to revisit it.
 
-Каталог дополнительных рекомендаций полной версии находится в
-`references/routing.md`, если он установлен. Сначала проверь наличие выбранного
-навыка; не предлагай отсутствующую команду. Каталог не является разрешением на запуск.
+For a proposed step, name its intended result and how to check it. Do not invent
+budgets, deadlines or guaranteed profit. Distinguish observations, hypotheses,
+payment and profit. Linking to a saved quotation does not mean its original was
+reread in this session. Check that a suggested skill is installed; a tool catalog
+does not authorize running it.
 
-## Граница чтения и выполнения
+## Reading and execution
 
-Новые материалы направляются в product-context. Обычный запрос о состоянии не
-создаёт отчёт, задачу, evidence, новый синтез или запись в PRODUCT.md/MOVES.md.
-Если владелец отдельно поручил выполнить выбранный шаг в том же запросе,
-сначала заверши обзор, затем продолжи порученное подходящим инструментом вне этого навыка.
+Send new materials to `product-context`. An ordinary status question creates no
+report, task, evidence, synthesis or PRODUCT.md/MOVES.md entry. If the same request
+also assigns a specific next step, finish the status review and then carry out
+that instruction with an appropriate tool outside this skill.
 
-Для запуска из консоли сохрани только служебный итог: JSON с runId, nodeId,
-outcome (`completed`/`failed`) и фактическим summary, затем
+For a console-launched task, save only execution metadata: JSON with `runId`,
+`nodeId`, actual `summary` and `outcome: completed|failed`, then run
 `node <tools>/bin/product-os.js status-receipt <workspace> <receipt.json>`.
-Команда проверяет зарегистрированный запуск и пишет только `.product-os/runs/`;
-граф, паспорт и план остаются без изменений. В обычном чате это не нужно.
+The command checks the registered run and writes only `.product-os/runs/`.
+The graph, product profile and plan remain unchanged. Ordinary chat needs no receipt.
 
-Готово: владелец понимает состояние, ограничения и основание следующего шага;
-продуктовая память не изменена, новое исследование не запускалось.
-
-<!-- product-os-public:usage:start -->
-## Учёт применения
-
-После первого содержательного результата этого навыка в текущем разговоре следуй
-[правилам аналитики](../TELEMETRY.md):
-
-`node <tools>/bin/product-os.js telemetry skill-used product-status`
-
-Учитывай один раз за разговор. Чтение этого файла, установка и проверка кода
-не являются применением. Отключение и недоступность счётчика не мешают основной задаче.
-<!-- product-os-public:usage:end -->
+Done means the owner understands the status, limitations and reason for the next
+step. Product memory is unchanged and no new study has started.

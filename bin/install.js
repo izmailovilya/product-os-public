@@ -3,7 +3,7 @@ const path = require('node:path')
 const os = require('node:os')
 const { renderWorkspaceInstructions, mergeWorkspaceInstructions, writeWorkspaceInstructions } = require('./workspace-instructions')
 const SKILLS = ['os-setup','product-context','product-status','product-research','product-segment-hypotheses','product-job-map','product-brand-identity','product-reference-library']
-const SHARED = ['CONTRACT.md','GRAPH.md','GRAPH-WRITES.md','DESIGN-SYSTEM.md','CUSTOM-SKILLS.md','SHARING.md','TELEMETRY.md']
+const SHARED = ['CONTRACT.md','GRAPH.md','GRAPH-WRITES.md','DESIGN-SYSTEM.md','CUSTOM-SKILLS.md','SHARING.md']
 
 function parseInstallArgs(args) {
   let workspace,agent='both'
@@ -24,7 +24,7 @@ function installationTargets(base,agent) {
 function assertNoLinks(file) {
   const stat=fs.lstatSync(file,{throwIfNoEntry:false})
   if(!stat)return
-  if(stat.isSymbolicLink())throw new Error('Установка не записывает через символические ссылки: '+file)
+  if(stat.isSymbolicLink())throw new Error("Installation does not write through symbolic links: "+file)
   if(stat.isDirectory())for(const name of fs.readdirSync(file))assertNoLinks(path.join(file,name))
 }
 function installedGlobally(agent,{userHome=os.homedir()}={}) {
@@ -42,31 +42,25 @@ function install(workspace, {agent='both',userHome=os.homedir()}={}) {
   const customRegistry=path.join(workspace,'.product-os','custom-skills.json')
   if(fs.existsSync(customRegistry)) {
     const custom=JSON.parse(fs.readFileSync(customRegistry,'utf8')).skills||{}
-    if(SKILLS.some(name=>Object.hasOwn(custom,name)))throw new Error('Имя нового базового навыка занято пользовательским. Сначала переименуйте своё расширение.')
+    if(SKILLS.some(name=>Object.hasOwn(custom,name)))throw new Error("The name of the new basic skill is taken by a custom one. First, rename your extension.")
   }
-  if(workspace===root)throw new Error('Создайте отдельную папку продукта, вне репозитория инструментария')
+  if(workspace===root)throw new Error("Create a separate product folder, outside of the toolkit repository")
   if(!global)require('./workspace').assertWorkspace(workspace)
   const targets=installationTargets(workspace,agent)
-  const previousVersions=targets.flatMap(({tools})=>{try{const info=JSON.parse(fs.readFileSync(path.join(tools,'package.json'),'utf8'));return info.name==='product-os-public'?[info.version]:[]}catch{return []}})
   // Validate all destinations before changing either agent's installation.
   for(const {name,config,target,tools} of targets) {
-    for(const dir of [workspace,path.join(workspace,config),target,tools,...SKILLS.map(skill=>path.join(target,skill)),...SHARED.map(file=>path.join(target,file))])if(fs.lstatSync(dir,{throwIfNoEntry:false})?.isSymbolicLink())throw new Error('Установка не записывает через символические ссылки: '+dir)
+    for(const dir of [workspace,path.join(workspace,config),target,tools,...SKILLS.map(skill=>path.join(target,skill)),...SHARED.map(file=>path.join(target,file))])if(fs.lstatSync(dir,{throwIfNoEntry:false})?.isSymbolicLink())throw new Error("Installation does not write through symbolic links: "+dir)
     for(const file of [tools,...SKILLS.map(skill=>path.join(target,skill))])assertNoLinks(file)
-    const telemetryDoc=path.join(target,'TELEMETRY.md'),ownedTelemetry=path.join(tools,'TELEMETRY.md')
-    if(fs.existsSync(telemetryDoc)) {
-      const adapt=text=>text.replace(/\.claude\/skills\/product-os-tools|\.agents\/(?:skills\/)?product-os-tools/g,name==='codex'?'.agents/product-os-tools':'.claude/skills/product-os-tools')
-      if(!fs.lstatSync(telemetryDoc).isFile()||!fs.existsSync(ownedTelemetry)||!fs.lstatSync(ownedTelemetry).isFile()||fs.readFileSync(telemetryDoc,'utf8')!==adapt(fs.readFileSync(ownedTelemetry,'utf8')))throw new Error('Общий документ TELEMETRY.md изменён или не принадлежит этой установке. Сохраните его перед обновлением.')
-    }
     if(fs.existsSync(tools)) {
       let existing;try{existing=JSON.parse(fs.readFileSync(path.join(tools,'package.json'),'utf8'))}catch{}
-      if(existing?.name!=='product-os-public')throw new Error('В папке уже установлен другой Product OS. Выберите отдельный воркспейс для Product OS.')
-      if(fs.readdirSync(path.join(tools,'skills'),{withFileTypes:true}).some(entry=>entry.isDirectory()&&!SKILLS.includes(entry.name)))throw new Error('В runtime есть дополнительные навыки; выберите чистый воркспейс для Product OS.')
+      if(existing?.name!=='product-os-public')throw new Error("Another Product OS is already installed in the folder. Choose a separate workspace for Product OS.")
+      if(fs.readdirSync(path.join(tools,'skills'),{withFileTypes:true}).some(entry=>entry.isDirectory()&&!SKILLS.includes(entry.name)))throw new Error("There are additional skills in runtime; choose a pure workspace for Product OS.")
       if(global) {
         let owned;try{owned=JSON.parse(fs.readFileSync(path.join(tools,'INSTALLATION.json'),'utf8'))}catch{}
-        for(const skill of SKILLS)if(fs.existsSync(path.join(target,skill))&&!(owned?.schemaVersion===1&&Array.isArray(owned.skills)&&owned.skills.includes(skill)))throw new Error('Общий навык не принадлежит этой установке: '+skill)
+        for(const skill of SKILLS)if(fs.existsSync(path.join(target,skill))&&!(owned?.schemaVersion===1&&Array.isArray(owned.skills)&&owned.skills.includes(skill)))throw new Error("The general skill does not belong to this installation: "+skill)
       }
     } else if(global&&[...SKILLS.map(skill=>path.join(target,skill)),...SHARED.map(file=>path.join(target,file))].some(file=>fs.existsSync(file))) {
-      throw new Error('В общих каталогах уже есть отдельные навыки или правила Product OS. Сохраните их перед установкой.')
+      throw new Error("Shared catalogs already have individual skills or Product OS rules. Save them before installation.")
     }
     if(!global) {
       const instructions=path.join(workspace,name==='codex'?'AGENTS.md':'CLAUDE.md')
@@ -79,14 +73,14 @@ function install(workspace, {agent='both',userHome=os.homedir()}={}) {
     const adapt=text=>text.replace(/\.claude\/skills\/product-os-tools|\.agents\/(?:skills\/)?product-os-tools/g,name==='codex'?'.agents/product-os-tools':'.claude/skills/product-os-tools')
     // Retire only a byte-identical document owned by the previous Public install.
     // User-authored changes in the discovery directory are never deleted.
-    const retired=path.join(target,'COMMUNICATIONS.md'),old=path.join(tools,'COMMUNICATIONS.md')
+    const retiredFiles=['COMMUNICATIONS.md','TELEMETRY.md'].map(file=>({retired:path.join(target,file),old:path.join(tools,file)}))
     const oldEdition=(()=>{try{return JSON.parse(fs.readFileSync(path.join(tools,'package.json'),'utf8')).name}catch{return null}})()
-    const removeRetired=oldEdition==='product-os-public'&&fs.lstatSync(retired,{throwIfNoEntry:false})?.isFile()&&fs.lstatSync(old,{throwIfNoEntry:false})?.isFile()&&fs.readFileSync(retired,'utf8')===adapt(fs.readFileSync(old,'utf8'))
+    const removeRetired=retiredFiles.filter(({retired,old})=>oldEdition==='product-os-public'&&fs.lstatSync(retired,{throwIfNoEntry:false})?.isFile()&&fs.lstatSync(old,{throwIfNoEntry:false})?.isFile()&&fs.readFileSync(retired,'utf8')===adapt(fs.readFileSync(old,'utf8')))
     fs.mkdirSync(target,{recursive:true})
     // Installing from this very runtime (e.g. installed CLI repeating setup):
     // its own copy is already in place; replacing it deletes the running source.
     if(samePhysical(root,tools)) {
-      for(const file of ['package.json','PUBLIC-RELEASE.json'])if(!fs.existsSync(path.join(tools,file)))throw new Error('Установленный runtime повреждён: повторите установку из checkout')
+      for(const file of ['package.json','PUBLIC-RELEASE.json'])if(!fs.existsSync(path.join(tools,file)))throw new Error("Installed runtime is damaged: repeat installation from checkout")
     } else {
       if(fs.existsSync(tools))fs.rmSync(tools,{recursive:true})
       fs.mkdirSync(tools,{recursive:true})
@@ -99,7 +93,7 @@ function install(workspace, {agent='both',userHome=os.homedir()}={}) {
       const file=path.join(target,skill,'SKILL.md');fs.writeFileSync(file,adapt(fs.readFileSync(file,'utf8')))
     }
     for(const file of SHARED)fs.writeFileSync(path.join(target,file),adapt(fs.readFileSync(path.join(root,file),'utf8')))
-    if(removeRetired)fs.unlinkSync(retired)
+    for(const {retired} of removeRetired)fs.unlinkSync(retired)
     const adaptTree=dir=>{for(const entry of fs.readdirSync(dir,{withFileTypes:true})){const file=path.join(dir,entry.name);if(entry.isDirectory())adaptTree(file);else if(entry.name.endsWith('.md'))fs.writeFileSync(file,adapt(fs.readFileSync(file,'utf8')))}}
     adaptTree(path.join(tools,'skills'))
     for(const script of ['pages','segments','graph-write','product-os'])fs.writeFileSync(path.join(tools,script+'.js'),`#!/usr/bin/env node\n${['graph-write','product-os'].includes(script)?`Promise.resolve().then(()=>require('./bin/${script}').main()).catch(error=>{console.error(error.message);process.exitCode=1})`:`require('./bin/${script}')`}\n`)
@@ -107,9 +101,9 @@ function install(workspace, {agent='both',userHome=os.homedir()}={}) {
     results.push({agent:name,target,installed:SKILLS})
   }
   if(!global)writeWorkspaceInstructions(workspace,agent)
-  console.log('Product OS установлен '+(global?'для пользователя '+workspace:'в '+workspace)+' для '+targets.map(t=>t.name).join(', '))
-  if(global)console.log('Откройте папку своего продукта в агенте и попросите: «Настрой Product OS через os-setup и покажи консоль».')
-  return {scope:global?'global':'project',installations:results,previousVersions}
+  console.log(`Product OS installed ${global?'for this user':'in this project'}: ${workspace} (${targets.map(t=>t.name).join(', ')})`)
+  if(global)console.log("Open your product folder in the agent and ask: “Set up Product OS via os-setup and show the console.”")
+  return {scope:global?'global':'project',installations:results}
 }
 if(require.main===module){try{const {workspace,agent}=parseInstallArgs(process.argv.slice(2));install(workspace,{agent})}catch(error){console.error(error.message);process.exitCode=1}}
 module.exports={install,installedGlobally,installationTargets,parseInstallArgs}

@@ -1,38 +1,38 @@
-# Интерфейс Product OS
+# Interface Product OS
 
-Консоль показывает сохранённые сведения. Изменения и запуск скиллов выполняются
-в Codex или Claude Code в папке продукта.
+The console shows saved information. Changes and launch of skills are performed
+in Codex or Claude Code in the product folder.
 
-## Разделы
+## Sections
 
-Основное меню: Продукт, Сегменты, Карта работ, Конкуренты, Библиотека.
-Исследования доступны со страниц продукта и сегмента. Библиотека содержит
-айдентику и референсы. Документы и источники открываются с возвратом в консоль.
+Main menu: Product, Segments, Job map, Competitors, Library.
+Research is available from the product and segment pages. The library contains
+identity and references. Documents and sources are opened and returned to the console.
 
-## Общие компоненты
+## Common components
 
-Цвета и размеры заданы в `bin/console/public/ui-tokens.css`, шрифты — в
-`fonts.css`. Компоненты находятся в `ui-components.js` и `ui-components.css`.
-Страницы используют общие заголовки, открытые разделы, списки и текстовые ссылки.
-Один основной заголовок на страницу; содержательные ограничения — у результата.
-Источники сохраняют собственные ссылки. Предположение не обозначается успехом.
+Colors and sizes are set to `bin/console/public/ui-tokens.css`, fonts are set to
+`fonts.css`. The components are located in `ui-components.js` and `ui-components.css`.
+Pages use common headings, open sections, lists and text links.
+One main heading per page; the result has substantive restrictions.
+Sources retain their own links. The guess is not indicated as success.
 
-Корпусный текст — 18px, подписи и контролы — 16px; минимальная зона действия —
-44px. Используются Onest и Source Serif 4, поставляемые со своими лицензиями.
-Текст переносится без уменьшения кегля. На узком экране и при увеличении текста
-до 200% главные действия, подписи, источники и возврат остаются доступны.
+Body text - 18px, captions and controls - 16px; minimum coverage area—
+44px. Uses Onest and Source Serif 4, supplied with their own licenses.
+Text is wrapped without reducing the size. On a narrow screen and with text enlarged
+up to 200% main actions, signatures, sources and returns remain available.
 
-Карта имеет графическое и списочное представления одних сохранённых данных.
-Покрытие берётся из сохранённой области карты; отсутствие данных показано явно.
-В айдентике сохранены версии и различие предложенных и принятых решений.
-У референсов сохраняются область, фильтры, источники и возврат к подборке.
+The map has graphical and list views of some saved data.
+Coverage is taken from a saved map area; missing data is shown explicitly.
+The identity preserves the versions and differences between proposed and accepted solutions.
+References retain their area, filters, sources and return to selection.
 
-## Проверка
+## Check
 
-`npm run test:design-system` создаёт отдельный вымышленный продукт, проверяет все
-пять разделов, источники и возврат, desktop/390px/200%, клавиатуру, пустые и
-недоступные данные. Скиллы и агенты в этой проверке не запускаются.
-Результаты пользователя не используются как фикстуры и не изменяются.
+`npm run test:design-system` creates a separate fictitious product, checks everything
+five sections, sources and returns, desktop/390px/200%, keyboard, empty and
+Data not available. Skills and agents are not launched in this test.
+User results are not used as fixtures and are not modified.
 
-Проверки кнопок и размеров не заменяют чтение реальной страницы: нужно понимать,
-какой результат показан, на чём он основан и куда ведёт следующее действие.
+Checking buttons and sizes is not a substitute for reading the actual page: please understand
+what result is shown, what it is based on and where the next action leads.

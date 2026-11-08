@@ -1,79 +1,78 @@
-# Когда уже есть интервью или другое исследование
+# When interviews or other research already exist
 
-Читай при построении и обновлении карты с существующими клиентскими материалами.
-Объяснение одной карточки не запускает эту процедуру. Если исследования нет,
-строй объяснимые гипотезы из продукта; интервью не становятся условием входа.
+Read this when building or updating a map from existing customer materials.
+Explaining one saved job does not initiate this process. Without research, build
+explicit hypotheses from the product; interviews are not a prerequisite.
 
-## Подготовь основу до рисования
+## Establish coverage before drawing
 
-Начни с актуального синтеза через общий reader:
-`node <tools>/bin/product-os.js research summary <workspace> segmentId=<id> topic=jobs`
-(и `research read`/`research source` для конкретных записей). Product OS не включает
-навык обработки интервью; раздел применим, когда реестр исследования уже существует
-в этом воркспейсе.
-Зафиксируй область, ревизию, устаревшие и незавершённые части. Затем для задачи
-полноты раскрой перечень индивидуальных работ, а не только вошедшие в синтез
-примеры или нынешние сегменты. Не перечитывай все транскрипты: сохрани уже
-извлечённые работы, их случаи, критерии, утверждения и ссылки на основания.
-Оригинал нужен для конкретного пропуска, конфликта или неясной формулировки.
+Start with the current synthesis through the shared reader:
+`node <tools>/bin/product-os.js research summary <workspace> segmentId=<id> topic=jobs`.
+Use `research read` and `research source` for specific records. This edition has no
+interview-processing skill; these instructions apply when a research registry
+already exists in the workspace.
 
-Для типизированного реестра подготовь один снимок до генерации:
+Record scope, revision, superseded material and gaps. Then assemble the complete
+list of individual jobs for the task, not merely examples in the synthesis or
+current segments. Reuse extracted jobs, cases, criteria, statements and source
+references instead of rereading every transcript. Open an original for a specific
+omission, conflict or unclear wording.
+
+For a typed registry, prepare one snapshot before generation:
 
 ```sh
 node <skill>/scripts/research-inputs.cjs <workspace> productId=<id> > <workspace>/reports/job-map/<run>/research-inputs.json
 ```
 
-Скрипт использует общий read-only снимок реестра и берёт **все текущие JobInstance
-этого продукта**, независимо от принадлежности к фокусному сегменту. Исправленные
-старые версии не становятся дополнительными людьми. Снимок содержит исходную и
-нормализованную формулировки, акторов/случаи, цитируемые основания, критерии,
-состояния утверждений, сохранённые отношения и происхождение полей. Полные
-транскрипты и посторонние данные респондента в него не копируются.
-Повторяющиеся цитаты и примечания хранятся один раз в словарях `evidence` и `notes`;
-`evidenceRefIds` и `noteId` сохраняют точные связи. Начни с полного списка `jobs`,
-затем раскрывай утверждения и критерии нужных случаев по ID. В изолированный
-сабтред передай этот вход целиком как доступный файл, не выбранные автором примеры.
+The script uses the shared read-only registry snapshot and includes **all current
+JobInstance records for the product**, regardless of segment focus. Superseded
+versions do not become extra people. It includes original/normalized wording,
+actors and cases, cited evidence, criteria, statement states, saved relationships
+and field provenance. It excludes full transcripts and unrelated respondent data.
 
-Пустой реестр не доказывает отсутствия интервью. Проверь доступный индекс и
-сохранённые разборы: старые работы могут существовать только в графе или отчётах.
-Добавь их в исходный inventory с точными источниками. Сырые неразобранные интервью
-в Product OS не обрабатываются (навык обработки интервью не входит в выпуск) — сообщите
-этот пробел владельцу; до обработки полнота по корпусу
-остаётся непроверенной. Не извлекай вторую конкурирующую версию индивидуальных фактов.
+Duplicate quotations and notes appear once in `evidence` and `notes` dictionaries;
+`evidenceRefIds` and `noteId` preserve exact links. Read the full `jobs` list first,
+then expand relevant cases by ID. Give an independent reviewer the complete snapshot
+as an accessible file, not examples selected by the generator.
 
-Если нужные записи недоступны или установлена лишь часть корпуса, сохрани карту
-как частичную с точной областью. Не сужай вход задним числом под нарисованные узлы.
-Неизвестную принадлежность записи к продукту сначала разреши по сохранённым
-связям исследования; ошибка чтения не превращается в нулевое число работ.
+An empty registry does not prove interviews are absent. Check saved indexes and
+analyses: older jobs may exist only in the graph or reports. Add them to the input
+inventory with exact sources. Unprocessed interviews remain outside this edition's
+capabilities; report the gap and leave completeness unverified. Do not extract a
+competing second version of individual research facts.
 
-## Соедини доказательства с гипотезами
+If records are unavailable or only part of the corpus is accounted for, save a
+partial map with exact scope. Do not retroactively narrow the inputs to the drawn
+nodes. Resolve unknown product ownership through saved research relationships;
+a read error does not mean zero jobs.
 
-Каждый пункт снимка получает строку `inventory`: скопируй `id`, `text`, `evidence`
-без изменения; добавь `jobIds`, объяснение соответствия и `sourceRefs` на основание.
-Указанное основание должно быть доступно также у соответствующей работы карты.
-Несколько случаев могут вести к одному узлу, если результат совпадает; их контекст,
-альтернативы, критерии и источники всё равно остаются раздельными в снимке и профилях.
-Неодинаковые результаты раздели, даже если у них похожие названия.
+## Connect evidence and hypotheses
 
-Узлы могут включать новые гипотезы, верхние цели и недостающие связки. Их
-существование и причинные рёбра не становятся подтверждёнными по факту соседства
-с работой из интервью. Сохранённая аналитическая формулировка тоже не равна
-дословной цитате; речь респондента находится в её `evidenceRefs`.
+Each snapshot job gets an `inventory` row. Preserve `id`, `text` and `evidence`
+unchanged; add `jobIds`, the mapping rationale and `sourceRefs`. The same evidence
+must be available on its corresponding map job.
 
-Покажи и внешние работы. Отсутствие функции, сложность изображения и текущий
-фокус не разрешают исключить собранную работу из общей карты продукта. При явно
-порученном узком фрагменте сохрани остальные работы в общей карте/реестре покрытия
-и назови непокрытую область; не выдавай фрагмент за полную карту.
+Several cases can share a node if the outcome matches. Their contexts, alternatives,
+criteria and sources remain separate in snapshots and profiles. Split different
+outcomes even when their names are similar.
 
-## Приёмка
+New hypotheses, higher outcomes and connecting jobs are allowed. Their proximity
+to an interview job does not validate them or their causal edges. An analytical
+formulation is not a verbatim quote; respondent wording remains in `evidenceRefs`.
 
-Запусти check-map с `--research-inputs reports/job-map/<run>/research-inputs.json`.
-При наличии реестра checker независимо сверяет карту с текущими записями даже
-без этого флага; переданный снимок дополнительно проверяется на актуальность.
-Сравнение только с ручным списком `--inventory` не заменяет сверку исследования.
+Keep external jobs visible. Missing product capabilities, diagram complexity or
+current focus do not justify dropping known jobs from a product-wide map. For an
+explicitly narrow task, retain the remaining jobs in the overall coverage registry
+and state the uncovered scope. A fragment is not a complete map.
 
-Критик получает исходный снимок, карту и соответствия, а не только отчёт автора.
-Он проверяет смысл каждого объединения и источник названия; формальный checker
-проверяет сохранность записей и ссылок, но не устанавливает равенство задач.
-В результате отдельно назови покрытие известных работ, пробелы разбора интервью
-и гипотезы карты. Отсутствие пропусков не доказывает спрос или пользу продукта.
+## Verify
+
+Run check-map with `--research-inputs reports/job-map/<run>/research-inputs.json`.
+With a registry, the validator also checks current records without that flag;
+a supplied snapshot is additionally checked for freshness. `--inventory` alone
+does not replace registry reconciliation.
+
+The critic receives the original snapshot, map and mappings. They check each merge
+and the basis of each title. The structural validator checks record/link integrity,
+not semantic equivalence. Report known-job coverage, extraction gaps and map
+hypotheses separately. Complete coverage does not prove demand or product advantage.

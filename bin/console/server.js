@@ -50,7 +50,7 @@ function runFile(file, args, options = {}) {
     }, (error, stdout, stderr) => {
       if (error) {
         const message = String(stderr || stdout || error.message).trim().slice(0, 1200)
-        const wrapped = new Error(message || 'Команда завершилась с ошибкой.')
+        const wrapped = new Error(message || "The command completed with an error.")
         wrapped.code = error.killed ? 'TIMEOUT' : (error.code || 'COMMAND_FAILED')
         reject(wrapped)
       } else resolve({ stdout, stderr })
@@ -99,7 +99,7 @@ class BbClient {
       this.projectId = process.env.BB_PROJECT_ID || null
     }
     if (!this.projectId) {
-      const error = new Error(`Воркспейс ${this.workspace} не привязан к проекту bb. Добавь его в bb и повтори запуск.`)
+      const error = new Error(`Workspace ${this.workspace} not associated with a project bb. Add it to bb and restart.`)
       error.code = 'BB_PROJECT_NOT_FOUND'
       throw error
     }
@@ -122,7 +122,7 @@ class BbClient {
 
   async launch(move) {
     if (!this.path) {
-      const error = new Error('bb не найден на этом компьютере.')
+      const error = new Error("bb was not found on this computer.")
       error.code = 'BB_NOT_FOUND'
       throw error
     }
@@ -135,7 +135,7 @@ class BbClient {
     const parsed = parseJsonOutput(result.stdout)
     const threadId = parsed?.id || parsed?.threadId || parsed?.thread?.id || parsed?.data?.id
     if (!threadId) {
-      const error = new Error('Агент создан, но команда не вернула его идентификатор.')
+      const error = new Error("The agent was created, but the command did not return its identifier.")
       error.code = 'INVALID_BB_RESPONSE'
       throw error
     }
@@ -147,12 +147,12 @@ class BbClient {
   }
 
   async open(threadId) {
-    if (!this.path) throw new Error('bb не найден на этом компьютере.')
+    if (!this.path) throw new Error("bb was not found on this computer.")
     await runFile(this.path, ['thread', 'open', threadId], { cwd: this.workspace, timeout: 5000 })
   }
 
   async stop(threadId) {
-    if (!this.path) throw new Error('bb не найден на этом компьютере.')
+    if (!this.path) throw new Error("bb was not found on this computer.")
     await runFile(this.path, ['thread', 'stop', threadId, '--json'], { cwd: this.workspace, timeout: 10000 })
     this.cache.at = 0
   }
@@ -167,7 +167,7 @@ class ClaudeClient {
   get available() { return Boolean(this.path) }
 
   async launch(move) {
-    if (!this.path) throw new Error('Claude Code не найден. Скопируй готовую команду и запусти её в терминале.')
+    if (!this.path) throw new Error("Claude Code not found. Copy the finished command and run it in the terminal.")
     const result = await runFile(this.path, ['--bg', '--name', move.title, move.prompt], { cwd: this.workspace, timeout: 10000 })
     const externalId = String(result.stdout || '').trim().split(/\s+/).pop() || `claude-${Date.now()}`
     return { externalId }
@@ -198,7 +198,7 @@ class GraphStore {
   readUnlocked() {
     let stat
     try { stat = fs.statSync(this.file) } catch {
-      return { graph: this.lastGood, status: { state: 'error', mtime: 0, message: 'Файл карты исследования (research-graph.json) не найден', recovery: 'Запустите os setup — он создаст карту продукта.' } }
+      return { graph: this.lastGood, status: { state: 'error', mtime: 0, message: "Research map file (research-graph.json) not found", recovery: "Run os setup - it will create a product map." } }
     }
     const source = fs.readFileSync(this.file, 'utf8')
     try {
@@ -215,11 +215,11 @@ class GraphStore {
       return {
         graph: this.lastGood,
         status: freshWrite
-          ? { state: 'saving', mtime: stat.mtimeMs, message: 'Агент обновляет карту — обычно это занимает несколько секунд.' }
+          ? { state: 'saving', mtime: stat.mtimeMs, message: "The agent is updating the map - this usually takes a few seconds." }
           : {
             state: 'error', mtime: stat.mtimeMs,
-            message: `Карта исследования не читается${position ? `: строка ${position.line}, столбец ${position.column}` : `: ${error.message}`}.`,
-            recovery: 'Откройте research-graph.json, исправьте ошибку формата JSON и обновите страницу. До этого показана последняя читаемая версия.',
+            message: `Research map cannot be read${position ? `: string ${position.line}, column ${position.column}` : `: ${error.message}`}.`,
+            recovery: "Open research-graph.json, fix the JSON format error and refresh the page. Before this, the last read version is shown.",
           },
       }
     }
@@ -280,10 +280,10 @@ function reportPage(markdown, title, documentPath, missing=false) {
   const isReport=documentPath?.startsWith('reports/')
   const publicReader=isPublicEdition(),publicMaterials=documentPath?.startsWith('sources/')||isReport
   const backHref=publicReader&&publicMaterials?'#materials':isReport?'#reports':'#product'
-  const backLabel=missing||publicReader?'Вернуться в консоль':isReport?'Отчёты':'Продукт'
-  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(title)}</title><link rel="icon" href="data:"><link rel="stylesheet" href="/fonts.css"><link rel="stylesheet" href="/ui-tokens.css"><link rel="stylesheet" href="/design-system.css"><link rel="stylesheet" href="/ui-components.css"><link rel="stylesheet" href="/report-reading.css"></head><body class="atlas-document"><main class="wrap"><nav aria-label="Возврат"><a class="back" href="/${backHref}" data-reader-back>← ${backLabel}</a></nav>${markdownBody(markdown, documentPath).replace(/<h2>([\s\S]*?)<\/h2>/,'<h1>$1</h1>')}${isReport&&!publicReader?`<p><a class="os-text-link" href="/#next?work-report=${encodeURIComponent(documentPath)}">Взять следующий шаг в работу →</a></p>`:''}</main><script type="module" src="/report-reading.js"></script></body></html>`
+  const backLabel=missing||publicReader?"Return to console":isReport?"Reports":"Product"
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(title)}</title><link rel="icon" href="data:"><link rel="stylesheet" href="/fonts.css"><link rel="stylesheet" href="/ui-tokens.css"><link rel="stylesheet" href="/design-system.css"><link rel="stylesheet" href="/ui-components.css"><link rel="stylesheet" href="/report-reading.css"></head><body class="atlas-document"><main class="wrap"><nav aria-label="Return"><a class="back" href="/${backHref}" data-reader-back>← ${backLabel}</a></nav>${markdownBody(markdown, documentPath).replace(/<h2>([\s\S]*?)<\/h2>/,'<h1>$1</h1>')}${isReport&&!publicReader?`<p><a class="os-text-link" href="/#next?work-report=${encodeURIComponent(documentPath)}">Take the next step to work →</a></p>`:''}</main><script type="module" src="/report-reading.js"></script></body></html>`
 }
-function missingDocumentPage(kind){return reportPage(`# ${kind} не найден\n\nВозможно, ссылка устарела или файл перенесён.`,kind+' не найден',null,true)}
+function missingDocumentPage(kind){return reportPage(`# ${kind} not found\n\nThe link may be outdated or the file has been moved.`,kind+" not found",null,true)}
 
 function sendJson(response, status, payload, request) {
   return sendContent(response,status,`${JSON.stringify(payload)}\n`,'application/json; charset=utf-8',{request:request||response.req})
@@ -304,12 +304,12 @@ function readBody(request) {
     const chunks = []
     request.on('data', chunk => {
       size += chunk.length
-      if (size > MAX_BODY) { reject(new Error('Слишком большой запрос.')); request.destroy(); return }
+      if (size > MAX_BODY) { reject(new Error("The request is too large.")); request.destroy(); return }
       chunks.push(chunk)
     })
     request.on('end', () => {
       try { resolve(chunks.length ? JSON.parse(Buffer.concat(chunks).toString('utf8')) : {}) }
-      catch { reject(new Error('Запрос содержит неверный JSON.')) }
+      catch { reject(new Error("The request contains invalid JSON.")) }
     })
     request.on('error', reject)
   })
@@ -339,21 +339,21 @@ function normalizeMove(body, snapshot, workspace, issued) {
   const id = body.moveId || body.move?.id
   const custom = issued.get(id)
   const source = findMove(snapshot, id) || (custom?.signature === snapshot.graphSignature ? custom.move : null)
-  if (!source?.prompt?.trim()) throw Object.assign(new Error('Задача не найдена или устарела. Обновите страницу и выберите её снова.'), { status: 409 })
-  if (snapshot.todo.some(item => item.id === id && item.status === 'blocked')) throw Object.assign(new Error('Уточните план задачи перед запуском.'), { status: 409 })
-  if (source.action === 'open') throw Object.assign(new Error('Этот ход требует ответа в существующей работе агента.'), { status: 409 })
+  if (!source?.prompt?.trim()) throw Object.assign(new Error("The task was not found or is out of date. Refresh the page and select it again."), { status: 409 })
+  if (snapshot.todo.some(item => item.id === id && item.status === 'blocked')) throw Object.assign(new Error("Clarify the task plan before running."), { status: 409 })
+  if (source.action === 'open') throw Object.assign(new Error("This move requires a response in the agent's existing job."), { status: 409 })
   if (snapshot.graphStatus.state !== 'saved') throw Object.assign(new Error(snapshot.graphStatus.state === 'saving'
-    ? 'Карта исследования обновляется. Подождите несколько секунд и повторите действие.'
-    : [snapshot.graphStatus.message || 'Карта исследования не читается.', snapshot.graphStatus.recovery].filter(Boolean).map(text => /[.!?]$/.test(text) ? text : text + '.').join(' ')), { status: 409 })
+    ? "The exploration map is being updated. Wait a few seconds and repeat the action."
+    : [snapshot.graphStatus.message || "The exploration map cannot be read.", snapshot.graphStatus.recovery].filter(Boolean).map(text => /[.!?]$/.test(text) ? text : text + '.').join(' ')), { status: 409 })
   const node = snapshot.graph.nodes.find(item => item.id === source.node?.id)
-  if (!node || node.status === 'dropped' || node.data?.retired) throw Object.assign(new Error('Целевой узел больше не активен.'), { status: 409 })
-  if (source.skill === 'nmt-analyze-interviews') { source.skill = 'product-interviews'; source.prompt = 'Product OS: используем product-interviews вместо прежнего обработчика.\n' + source.prompt.replaceAll('nmt-analyze-interviews', 'product-interviews') }
+  if (!node || node.status === 'dropped' || node.data?.retired) throw Object.assign(new Error("The target node is no longer active."), { status: 409 })
+  if (source.skill === 'nmt-analyze-interviews') { source.skill = 'product-interviews'; source.prompt = "Product OS: use product-interviews instead of the previous handler.\n" + source.prompt.replaceAll('nmt-analyze-interviews', 'product-interviews') }
   if (source.skill === 'product-hq') {
     source.skill = source.kind === 'hq' ? 'product-status' : source.kind === 'ingest' || source.kind === 'reconsider' ? 'product-context' : 'custom'
-    source.prompt = source.skill === 'custom' ? source.prompt.replace(/Запусти \/product-hq[^\n]*/, 'Выполни порученную задачу доступными инструментами.') : source.prompt.replaceAll('/product-hq', `/${source.skill}`)
+    source.prompt = source.skill === 'custom' ? source.prompt.replace(/Запусти \/product-hq[^\n]*/, "Complete the assigned task using the available tools.") : source.prompt.replaceAll('/product-hq', `/${source.skill}`)
   }
-  if(body.context!==undefined && (typeof body.context!=='string'||body.context.length>10000))throw Object.assign(new Error('Уточнение должно быть текстом до 10 000 символов.'),{status:400})
-  const prompt=source.prompt+(body.context?.trim()?'\n\nУточнение пользователя:\n'+body.context.trim():'')
+  if(body.context!==undefined && (typeof body.context!=='string'||body.context.length>10000))throw Object.assign(new Error("The qualification must be text of up to 10,000 characters."),{status:400})
+  const prompt=source.prompt+(body.context?.trim()?"\n\nUser clarification:\n"+body.context.trim():'')
   return attachFallback({ ...source, prompt, node: { id: node.id, label: node.label, type: node.type } }, workspace)
 }
 
@@ -367,12 +367,12 @@ function authorizeRequest(request, token, allowedOrigins = []) {
   const port = request.socket.localPort
   const local = [`127.0.0.1:${port}`, `localhost:${port}`, `[::1]:${port}`]
   const allowed = new Set([...local.map(h => `http://${h}`), ...allowedOrigins])
-  if (!local.includes(host) && !allowedOrigins.some(origin => new URL(origin).host === host)) return 'Неподдерживаемый Host.'
+  if (!local.includes(host) && !allowedOrigins.some(origin => new URL(origin).host === host)) return "Unsupported Host."
   const origin = request.headers.origin
-  if ((origin && !allowed.has(origin)) || request.headers['sec-fetch-site'] === 'cross-site') return 'Запрос с другого сайта отклонён.'
+  if ((origin && !allowed.has(origin)) || request.headers['sec-fetch-site'] === 'cross-site') return "The request from another site was rejected."
   if (!['GET', 'HEAD'].includes(request.method)) {
-    if (request.headers['x-product-os-token'] !== token) return 'Нужен токен текущей консоли.'
-    if (request.method !== 'DELETE' && !/^application\/json(?:;|$)/i.test(request.headers['content-type'] || '')) return 'Нужен application/json.'
+    if (request.headers['x-product-os-token'] !== token) return "Current console token required."
+    if (request.method !== 'DELETE' && !/^application\/json(?:;|$)/i.test(request.headers['content-type'] || '')) return "Need application/json."
   }
   return null
 }
@@ -389,7 +389,7 @@ async function createConsoleServer(options) {
   const token = randomBytes(32).toString('hex')
   const issued = new Map()
   const issue = (move, snap) => {
-    if (publicEdition && !PUBLIC_SKILLS.includes(move.skill)) throw new Error('Этот навык не входит в Product OS Public.')
+    if (publicEdition && !PUBLIC_SKILLS.includes(move.skill)) throw new Error("This skill is not included in Product OS Public.")
     if (issued.size > 500) issued.delete(issued.keys().next().value)
     issued.set(move.id, { move, signature: snap.graphSignature }); return move
   }
@@ -437,8 +437,8 @@ async function createConsoleServer(options) {
       if (publicEdition) {
         if (url.pathname === '/api/research-briefs') return request.method === 'GET'
           ? sendJson(response, 200, { briefs: [], modules: [], capabilities: { bb: false, claude: false } })
-          : sendJson(response, 404, { error: 'Запуск исследований не входит в Product OS Public.' })
-        if (url.pathname.startsWith('/api/chrome/') || url.pathname === '/chrome-extension.zip') return sendJson(response, 404, { error: 'Инструмент не входит в Product OS Public.' })
+          : sendJson(response, 404, { error: "Launching research is not included in Product OS Public." })
+        if (url.pathname.startsWith('/api/chrome/') || url.pathname === '/chrome-extension.zip') return sendJson(response, 404, { error: "The tool is not included in Product OS Public." })
       }
       if (url.pathname === '/api/research-briefs') {
         const briefs=require('../research-brief/store'), service=require('../research-brief/service')
@@ -446,7 +446,7 @@ async function createConsoleServer(options) {
           let saved=url.searchParams.get('id')?[briefs.read(workspace,url.searchParams.get('id'))].filter(Boolean):briefs.read(workspace)
           if(url.searchParams.get('view')==='reading') {
             const {graph,status}=graphStore.read()
-            if(status.state!=='saved') return sendJson(response,503,{error:'Карта исследования недоступна; актуальные уточнения не загружены.'})
+            if(status.state!=='saved') return sendJson(response,503,{error:"Research map not available; current clarifications have not been loaded."})
             saved=saved.map(brief=>require('../research-brief/reading-review').projectBriefReading(workspace,brief,graph))
           }
           return sendJson(response,200,{briefs:saved,modules:service.modules,capabilities:{bb:bb.available,claude:claude.available}})
@@ -457,7 +457,7 @@ async function createConsoleServer(options) {
           if(body.action==='save') return sendJson(response,200,{brief:service.operation(workspace,{action:'save',id:body.id,expectedRevision:body.expectedRevision,patch:body.patch})})
           if(body.action==='launch'){
             const provider=body.provider==='claude'?'claude':'bb'
-            if(!(provider==='bb'?bb:claude).available) return sendJson(response,409,{error:'Агент недоступен. Бриф сохранён; запуск не начат.'})
+            if(!(provider==='bb'?bb:claude).available) return sendJson(response,409,{error:"Agent unavailable. Brief saved; launch has not started."})
             const launchToken=randomUUID()
             const brief=service.start(workspace,{id:body.id,expectedRevision:body.expectedRevision,kind:body.kind||'modules',itemIds:body.itemIds||[],idempotencyKey:body.idempotencyKey,refresh:body.refresh===true,launchToken})
             const run=brief.runs.find(r=>r.idempotencyKey===body.idempotencyKey)
@@ -474,7 +474,7 @@ async function createConsoleServer(options) {
               return sendJson(response,202,{brief:saved,error:error.message})
             }
           }
-          return sendJson(response,400,{error:'Неизвестное действие брифа'})
+          return sendJson(response,400,{error:"Unknown brief action"})
         }
       }
       if(request.method==='GET'&&url.pathname==='/api/segment-model')return sendJson(response,200,require('../research/store').snapshot(workspace,Object.fromEntries(url.searchParams),(_data,graph)=>require('../segment-model').segmentModelView(graph,Object.fromEntries(url.searchParams))))
@@ -496,7 +496,7 @@ async function createConsoleServer(options) {
         const graph=graphStore.read().graph,identity=require('./product-identity'),params=Object.fromEntries(url.searchParams)
         if(url.pathname.endsWith('/file')){
           const file=identity.identityFile(workspace,graph,params)
-          if(!file)return sendText(response,404,'Файл айдентики недоступен.','text/plain; charset=utf-8')
+          if(!file)return sendText(response,404,"The identity file is not available.",'text/plain; charset=utf-8')
           response.setHeader('X-Content-Type-Options','nosniff')
           response.setHeader('Content-Security-Policy',"default-src 'none'; sandbox")
           if(params.download==='1'||!file.mime)response.setHeader('Content-Disposition',"attachment; filename*=UTF-8''"+encodeURIComponent(file.name))
@@ -509,7 +509,7 @@ async function createConsoleServer(options) {
         const params = Object.fromEntries(url.searchParams)
         if (url.pathname.endsWith('/image')) {
           const image = references.libraryImage(workspace,graph,params)
-          if (!image) return sendText(response,404,'Изображение недоступно.','text/plain; charset=utf-8')
+          if (!image) return sendText(response,404,"Image not available.",'text/plain; charset=utf-8')
           response.setHeader('X-Content-Type-Options','nosniff')
           response.setHeader('Content-Security-Policy',"default-src 'none'; sandbox")
           return sendBuffer(response,200,image.buffer,image.mime)
@@ -526,14 +526,14 @@ async function createConsoleServer(options) {
         if (redirected) body.skill = 'product-interviews'
         if (body.skill === 'product-hq') body.skill = body.materialId || body.report ? 'product-context' : 'product-status'
         const skill = snap.skills.find(item => item.slug === body.skill)
-        if (!node || !skill) return sendJson(response, 404, { error: 'Узел или скилл не найден.' })
-        if (skill.targetTypes && !skill.targetTypes.includes(node.type)) return sendJson(response, 400, { error: 'Этот скилл не работает с выбранным типом узла.' })
+        if (!node || !skill) return sendJson(response, 404, { error: "Node or skill not found." })
+        if (skill.targetTypes && !skill.targetTypes.includes(node.type)) return sendJson(response, 400, { error: "This skill does not work with the selected node type." })
         const base = moveFor('custom', node, workspace, { id: `skill:${skill.slug}:${node.id}`, skill: skill.slug, title: skill.title, objective: skill.title, output: skill.output })
-        if (redirected) base.prompt = 'Старый обработчик nmt-analyze-interviews заменён на product-interviews. ' + base.prompt
+        if (redirected) base.prompt = "The old nmt-analyze-interviews handler has been replaced with product-interviews. " + base.prompt
         base.skill = skill.slug
         base.duration = skill.duration
         base.minutes = skill.minutes
-        base.prompt += `\nИнструкции скилла: ${path.join(repoRoot, 'skills', skill.slug, 'SKILL.md')}. Прочитай этот файл перед выполнением работы.`
+        base.prompt += `\nSkill instructions: ${path.join(repoRoot, 'skills', skill.slug, 'SKILL.md')}. Read this file before doing work.`
         return sendJson(response, 200, issue(attachFallback(base, workspace), snap))
       }
 
@@ -542,8 +542,8 @@ async function createConsoleServer(options) {
         const snap = await snapshot()
         const file = safeReportPath(workspace, body.path)
         const node = snap.graph.nodes.find(item => item.id === body.nodeId) || snap.graph.nodes.find(item => item.id === snap.graph.productId)
-        if (!file || !node) return sendJson(response, 404, { error: 'Отчёт или узел не найден.' })
-        if (snap.reports.find(report => report.path === body.path)?.integrated) return sendJson(response, 409, { error: 'Выводы этого отчёта уже связаны с картой. Откройте отчёт или источники в досье.' })
+        if (!file || !node) return sendJson(response, 404, { error: "Report or node not found." })
+        if (snap.reports.find(report => report.path === body.path)?.integrated) return sendJson(response, 409, { error: "The findings of this report are already associated with the map. Open the report or sources in the dossier." })
         const move = moveFor('ingest', node, workspace, { id: `ingest:${hash(body.path)}`, report: body.path })
         return sendJson(response, 200, issue(attachFallback(move, workspace), snap))
       }
@@ -551,7 +551,7 @@ async function createConsoleServer(options) {
       if (request.method === 'POST' && ['/api/launch', '/api/launch-claude'].includes(url.pathname)) {
         const body = await readBody(request)
         const provider = url.pathname === '/api/launch' ? 'bb' : 'claude'
-        if (typeof body.idempotencyKey !== 'string' || !/^[a-z0-9-]{16,100}$/i.test(body.idempotencyKey)) return sendJson(response, 400, { error: 'Нужен idempotencyKey запуска.' })
+        if (typeof body.idempotencyKey !== 'string' || !/^[a-z0-9-]{16,100}$/i.test(body.idempotencyKey)) return sendJson(response, 400, { error: "Need idempotencyKey to start." })
         const snap = await snapshot()
         const move = normalizeMove(body, snap, workspace, issued)
         let previous, launch
@@ -560,14 +560,14 @@ async function createConsoleServer(options) {
           if (previous) return
           const requestPrompt=move.prompt
           const runId = `run-${randomUUID()}`
-          if (move.skill === 'product-status') move.prompt += `\nИдентификатор запуска: ${runId}. Сохрани только служебный итог командой status-receipt: runId=${runId}, nodeId=${move.receiptNodeId || move.node.id}, outcome=completed или failed, summary=фактический итог. Граф, паспорт, план и отчёты не изменяй.`
-          else move.prompt += `\nИдентификатор запуска: ${runId}. В конце запиши результат через graph-write: операция receipt, runId=${runId}, nodeId=${move.receiptNodeId || move.node.id}, skill=${move.skill}, outcome=completed или failed, report=путь к существующему отчёту в reports/ или summary=конкретный итог. Отчёт другого запуска использовать нельзя. Все изменения графа выполняй через graph-write.`
-          if (move.skill === 'product-design') move.prompt += `\nДля outcome=completed сохрани полный результат workflow с runKey и referenceHandoff, подготовь closure manifest с runId=${runId}, nodeId=${move.receiptNodeId || move.node.id}, skill=product-design и передай в receipt storage:{workflow:{path,sha256},closure:{path,sha256}}. Graph-write сам проверит реальные файлы этапов, повторит storage/final gates и выполнит очистку перед записью completed. Не вызывай close заранее и не удаляй промежуточные результаты до этой записи. Без проверяемых pins завершение отклоняется. outcome=failed сохраняет рабочие файлы.`
+          if (move.skill === 'product-status') move.prompt += `\nLaunch ID: ${runId}. Save only the service result with the command status-receipt: runId=${runId}, nodeId=${move.receiptNodeId || move.node.id}, outcome=completed or failed, summary=actual total. Do not change the graph, passport, plan and reports..`
+          else move.prompt += `\nLaunch ID: ${runId}. At the end, write down the result via graph-write: operation receipt, runId=${runId}, nodeId=${move.receiptNodeId || move.node.id}, skill=${move.skill}, outcome=completed or failed, report=path to an existing report in reports/ or summary=specific result. The report from another run cannot be used. Make all changes to the graph using graph-write.`
+          if (move.skill === 'product-design') move.prompt += `\nFor outcome=completed save full result workflow s runKey and referenceHandoff, prepare closure manifest s runId=${runId}, nodeId=${move.receiptNodeId || move.node.id}, skill=product-design and pass it to receipt storage:{workflow:{path,sha256},closure:{path,sha256}}. Graph-write it will check the actual stage files and repeat storage/final gates and will clean up before writing completed. Don't call close in advance and do not delete intermediate results before this entry. Without verifiable pins completion rejected. outcome=failed saves working files.`
           launch = { requestPrompt, context: body.context||'', id: runId, runId, idempotencyKey: body.idempotencyKey, moveId: move.id, provider, startedAt: Date.now(), move, prompt: move.prompt, launchState: 'pending' }
           state.launches.push(launch)
         })
         if (previous) {
-          if (previous.moveId !== move.id || previous.provider !== provider || (previous.context||'') !== (body.context||'')) return sendJson(response, 409, { error: 'Этот запрос уже использован с другими параметрами. Проверьте существующую работу в «Что дальше» перед новым запуском.' })
+          if (previous.moveId !== move.id || previous.provider !== provider || (previous.context||'') !== (body.context||'')) return sendJson(response, 409, { error: "This request has already been used with other parameters. Review existing work in What's Next before starting a new one." })
           return sendJson(response, previous.launchState === 'pending' || previous.launchState === 'unknown' ? 202 : 200, { ok: true, launch: previous, replayed: true })
         }
         try {
@@ -579,14 +579,14 @@ async function createConsoleServer(options) {
           // same request must never start a second agent.
           const definite = ['BB_NOT_FOUND', 'BB_PROJECT_NOT_FOUND', 'ENOENT'].includes(error.code)
           store.update(state => { const row = state.launches.find(r => r.id === launch.id); Object.assign(row, { launchState: definite ? 'failed' : 'unknown', error: error.message }); launch = row })
-          return sendJson(response, 202, { ok: false, launch, warning: 'Проверьте статус существующего запуска перед повтором.' })
+          return sendJson(response, 202, { ok: false, launch, warning: "Check the status of an existing run before retrying." })
         }
       }
 
       if (request.method === 'POST' && url.pathname === '/api/open') {
         const body = await readBody(request)
         const launch = store.get().launches.find(item => item.threadId === body.threadId)
-        if (!launch || launch.provider === 'claude') return sendJson(response, 404, { error: 'Работа агента не найдена в bb.' })
+        if (!launch || launch.provider === 'claude') return sendJson(response, 404, { error: "Agent job not found in bb." })
         await bb.open(body.threadId)
         return sendJson(response, 200, { ok: true })
       }
@@ -594,7 +594,7 @@ async function createConsoleServer(options) {
       if (request.method === 'POST' && url.pathname === '/api/stop') {
         const body = await readBody(request)
         const launch = store.get().launches.find(item => item.threadId === body.threadId)
-        if (!launch || launch.provider === 'claude') return sendJson(response, 404, { error: 'Эту работу нельзя остановить из консоли.' })
+        if (!launch || launch.provider === 'claude') return sendJson(response, 404, { error: "This job cannot be stopped from the console." })
         await bb.stop(body.threadId)
         store.update(state => { const item = state.launches.find(row => row.threadId === body.threadId); if (item) item.statusOverride = 'stopped' })
         return sendJson(response, 200, { ok: true })
@@ -609,7 +609,7 @@ async function createConsoleServer(options) {
         const body = await readBody(request)
         const snap = await snapshot()
         const suggestion = snap.suggestions.find(item => item.id === body.suggestionId)
-        if (body.action !== 'undo' && !suggestion) return sendJson(response, 404, { error: 'Предложение уже разобрано или устарело.' })
+        if (body.action !== 'undo' && !suggestion) return sendJson(response, 404, { error: "The offer has already been dismantled or is out of date." })
         if (body.action === 'accept') {
           if (suggestion.action === 'open') {
             await bb.open(suggestion.threadId)
@@ -631,7 +631,7 @@ async function createConsoleServer(options) {
             delete state.deck.deferred[suggestion.id]
           } else if (body.action === 'later') state.deck.deferred[suggestion.id] = { fingerprint: suggestion.fingerprint, at: Date.now() }
           else if (body.action === 'undo') delete state.deck.rejected[body.suggestionId]
-          else throw new Error('Неизвестное действие с предложением.')
+          else throw new Error("Unknown offer action.")
         })
         return sendJson(response, 200, { ok: true })
       }
@@ -640,26 +640,26 @@ async function createConsoleServer(options) {
         const body = await readBody(request)
         const task = loadArena(repoRoot).tasks.find(item => item.id === body.task)
         const pair = task?.calibration.find(item => item.pairId === body.pairId)
-        if (!pair || !['A', 'B'].includes(body.choice)) return sendJson(response, 404, { error: 'Пара для калибровки не найдена.' })
+        if (!pair || !['A', 'B'].includes(body.choice)) return sendJson(response, 404, { error: "Calibration pair not found." })
         const file = path.join(repoRoot, 'evals', task.id, 'calibration.jsonl')
         const alreadyRecorded = fs.existsSync(file) && fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).some(line => {
           try { return JSON.parse(line).pairId === pair.pairId } catch { return false }
         })
-        if (alreadyRecorded) return sendJson(response, 409, { error: 'Выбор по этой паре уже зафиксирован.' })
+        if (alreadyRecorded) return sendJson(response, 409, { error: "The choice for this pair has already been fixed." })
         fs.appendFileSync(file, `${JSON.stringify({ pairId: pair.pairId, choice: body.choice, judgeChoice: pair.winner, matched: body.choice === pair.winner, reason: pair.reason, createdAt: new Date().toISOString() })}\n`)
         return sendJson(response, 200, { ok: true, matched: body.choice === pair.winner, judgeChoice: pair.winner, reason: pair.reason })
       }
 
       if (request.method === 'GET' && url.pathname === '/report') {
         const file = safeReportPath(workspace, url.searchParams.get('path'))
-        if (!file) return sendText(response,404,missingDocumentPage('Отчёт'),'text/html; charset=utf-8')
+        if (!file) return sendText(response,404,missingDocumentPage("Report"),'text/html; charset=utf-8')
         const markdown = fs.readFileSync(file, 'utf8')
         return sendText(response, 200, reportPage(markdown, path.basename(file, '.md'), path.relative(workspace, file).split(path.sep).join('/')), 'text/html; charset=utf-8')
       }
 
       if (request.method === 'GET' && url.pathname === '/asset') {
         const asset = require('./report-assets').readAsset(workspace, url.searchParams.get('path'))
-        if (!asset) return sendText(response, 404, 'Файл не найден.', 'text/plain; charset=utf-8')
+        if (!asset) return sendText(response, 404, "File not found.", 'text/plain; charset=utf-8')
         const file = asset.file
         // Raster previews only; editable SVG/HTML/JS are served as inert text.
         response.writeHead(200, { 'content-type': ASSET_MIME[path.extname(file).toLowerCase()] || 'text/plain; charset=utf-8',
@@ -671,15 +671,15 @@ async function createConsoleServer(options) {
         const relative = url.searchParams.get('path') || ''
         if (!/\.(md|txt|json|html|csv|log)$/i.test(require('../source-locator').localSourceLocator(relative))) {
           const record = graphStore.read().graph.nodes.find(node => node.type === 'artifact' && node.data?.kind === 'source-material' && node.source === relative)
-          if (!record || !relative.startsWith('sources/')) return sendText(response, 404, 'Источник не найден.', 'text/plain; charset=utf-8')
-          let real; try { real = fs.realpathSync(path.resolve(workspace, relative)) } catch { return sendText(response, 404, 'Источник не найден.', 'text/plain; charset=utf-8') }
-          if (!real.startsWith(fs.realpathSync(path.join(workspace, 'sources')) + path.sep)) return sendText(response, 404, 'Источник не найден.', 'text/plain; charset=utf-8')
+          if (!record || !relative.startsWith('sources/')) return sendText(response, 404, "Source not found.", 'text/plain; charset=utf-8')
+          let real; try { real = fs.realpathSync(path.resolve(workspace, relative)) } catch { return sendText(response, 404, "Source not found.", 'text/plain; charset=utf-8') }
+          if (!real.startsWith(fs.realpathSync(path.join(workspace, 'sources')) + path.sep)) return sendText(response, 404, "Source not found.", 'text/plain; charset=utf-8')
           response.setHeader('Content-Disposition', "attachment; filename*=UTF-8''" + encodeURIComponent(record.label))
           response.setHeader('X-Content-Type-Options', 'nosniff')
           return sendBuffer(response, 200, fs.readFileSync(real), 'application/octet-stream')
         }
         const source = require('./source-path').readSource(workspace, url.searchParams.get('path'))
-        if (!source) return sendText(response,404,missingDocumentPage('Источник'),'text/html; charset=utf-8')
+        if (!source) return sendText(response,404,missingDocumentPage("Source"),'text/html; charset=utf-8')
         const file = source.file
         // Serve collected HTML/JSON as text, never execute downloaded page content.
         const content = source.content
@@ -708,22 +708,22 @@ async function createConsoleServer(options) {
           const productName=product?displayLabel(product):path.basename(workspace)
           const description=product?.data?.description?.what||product?.data?.summary||product?.data?.context||product?.context||''
           const bootstrap={workspace,productName,description:typeof description==='string'?description:''}
-          content=content.replace('Загружаю продукт…',escapeHtml(productName)).replace('</head>',`<script type="application/json" id="productOsBootstrap">${JSON.stringify(bootstrap).replace(/</g,'\\u003c')}</script></head>`)
+          content=content.replace("Loading product...",escapeHtml(productName)).replace('</head>',`<script type="application/json" id="productOsBootstrap">${JSON.stringify(bootstrap).replace(/</g,'\\u003c')}</script></head>`)
         }
         return sendContent(response,200,content,type,staticFiles[url.pathname]==='index.html'?{}:{cache:'public, no-cache',etag:true})
       }
       if (request.method === 'GET' && url.pathname.startsWith('/assets/')) {
         const root = path.resolve(staticRoot, 'assets')
         const file = path.resolve(staticRoot, `.${url.pathname}`)
-        if (!file.startsWith(`${root}${path.sep}`) || !fs.existsSync(file) || !fs.statSync(file).isFile()) return sendJson(response, 404, { error: 'Asset не найден.' })
+        if (!file.startsWith(`${root}${path.sep}`) || !fs.existsSync(file) || !fs.statSync(file).isFile()) return sendJson(response, 404, { error: "Asset not found." })
         const extension = path.extname(file).toLowerCase()
         const mime = { '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.woff2': 'font/woff2', '.glb': 'model/gltf-binary', '.ogg': 'audio/ogg', '.mp3': 'audio/mpeg', '.png': 'image/png', '.svg': 'image/svg+xml' }[extension] || 'application/octet-stream'
         return sendContent(response,200,fs.readFileSync(file),mime,{cache:'public, no-cache',etag:true})
       }
-      sendJson(response, 404, { error: 'Не найдено.' })
+      sendJson(response, 404, { error: "Not found." })
     } catch (error) {
       const timeout = error.code === 'TIMEOUT' || /timed out/i.test(error.message)
-      sendJson(response, error.status || (error.code === 'REVISION_CONFLICT' ? 409 : timeout ? 504 : 500), { error: timeout ? 'Агент не ответил за 10 секунд. Проверьте существующий запуск перед повтором.' : error.message, code: error.code || 'ERROR' })
+      sendJson(response, error.status || (error.code === 'REVISION_CONFLICT' ? 409 : timeout ? 504 : 500), { error: timeout ? "The agent did not respond in 10 seconds. Check the existing run before retrying." : error.message, code: error.code || 'ERROR' })
     }
   })
 

@@ -43,13 +43,13 @@ function currencyOf(token) {
 const RANGE = /(\d+(?:[.,]\d+)?)\s*(?:[–—-]|до)\s*(\d+(?:[.,]\d+)?)\s*(k|тыс\.?|тысяч\w*|m|млн\.?)?\s*(\$|€|£|usd|eur|gbp|руб\.?|₽|rub|р\.)/gi
 function pricedAmountsUsd(text) {
   const amounts = []
-  // "5–12 тыс. руб." — the low end shares the high end's multiplier and currency
+  // "5–12 thousand rubles." — the low end shares the high end's multiplier and currency
   for (const match of String(text).matchAll(RANGE)) {
     const currency = currencyOf(match[4])
     let amount = Number(String(match[1]).replace(',', '.'))
     const mult = String(match[3] || '').toLowerCase()
-    if (mult.startsWith('k') || mult.startsWith('тыс')) amount *= 1000
-    if (mult === 'm' || mult.startsWith('млн')) amount *= 1000000
+    if (mult.startsWith('k') || mult.startsWith("thousand")) amount *= 1000
+    if (mult === 'm' || mult.startsWith("million")) amount *= 1000000
     if (Number.isFinite(amount) && amount > 0) amounts.push(amount * RATES[currency])
   }
   for (const match of String(text).matchAll(NUMBER)) {
@@ -58,8 +58,8 @@ function pricedAmountsUsd(text) {
     let amount = Number(String(match[2]).replace(/[  ,]/g, m => (m === ',' && /^\d+,\d{1,2}$/.test(match[2]) ? '.' : '')))
     if (!Number.isFinite(amount)) continue
     const mult = String(match[3] || '').toLowerCase()
-    if (mult.startsWith('k') || mult.startsWith('тыс')) amount *= 1000
-    if (mult === 'm' || mult.startsWith('млн')) amount *= 1000000
+    if (mult.startsWith('k') || mult.startsWith("thousand")) amount *= 1000
+    if (mult === 'm' || mult.startsWith("million")) amount *= 1000000
     amounts.push(amount * RATES[currency])
   }
   return amounts

@@ -1,162 +1,131 @@
 ---
 name: product-job-map
-description: >-
-  Построить или обновить стратегическую карту работ: связанные верхние и нижние
-  задачи на рынке, вклад и пределы продукта, возможные сегменты и выбор области
-  исследования. Для «за какие работы конкурировать», «покажи общую карту работ»,
-  «свяжи наш список задач в графы», «где нужны изменения продукта» и карт перед
-  исследованием/позиционированием. Не заменяет сегментацию, извлечение графа из
-  интервью или UI-реализацию. Вопрос по существующей карте обслуживает чтением.
+description: Build or update a strategic job map connecting customer goals, lower-level jobs, product contributions, limits and possible segments. Use for "which jobs should we compete for", "map customer jobs", "connect these jobs" or "where would the product need to change". Does not replace segmentation, interview extraction or UI implementation. Questions about an existing map are read operations.
 user-invocable: true
 ---
 
-# Карта работ для выбора, где конкурировать
+# Map the jobs worth competing for
 
-Человек должен увидеть несколько понятных областей клиентской деятельности,
-связи между задачами внутри них и реальные пределы продукта. Карта помогает
-выбрать **работу и возможный сегмент для проверки**, а не объявляет победителя.
-Соблюдай [CONTRACT.md](../CONTRACT.md). Не своди карту к списку функций/навыков.
+Help the owner see distinct areas of customer activity, their connected jobs and
+the product's actual limits. The map supports choosing **a job and possible segment
+to investigate**; it does not declare a winner. Follow [CONTRACT.md](../CONTRACT.md).
+Do not reduce the map to a feature or skill list.
 
-## Границы поручения
+## Scope
 
-- Объяснить существующую работу или источник — прочитай нужную карточку/срез,
-  ответь без генерации, новой команды, исследования и записей.
-- Построить/пересобрать карту — выполни порядок ниже. Достаточно описания продукта,
-  ограничений и цели. Список работ, профили сегментов, интервью и прежняя карта
-  полезны, когда они уже есть; не делай интервью и готовую сегментацию условием входа.
-- Обновить после исследования — меняй только затронутые работы, связи и области;
-  сохраняй прежнюю версию, исходные пункты и невыбранные направления.
+- To explain an existing job or its source, read the relevant slice and answer.
+  Do not regenerate the map, start research or write records.
+- To build a map, start from the product, constraints and goal. Existing job lists,
+  profiles, interviews and maps are useful inputs, not required prerequisites.
+- After research, update affected jobs, links and areas. Preserve prior versions,
+  evidence and directions that were not selected.
 
-Узкий разбор рекламы, текста или одного интервью не запускает общую карту.
-Обычный рисунок процесса команды и календарный план — другие задачи.
+A narrow review of an ad, text or interview does not initiate a market-wide map.
+Process diagrams and schedules are different tasks.
 
-## Восстанови продукт и исходный материал
+## Recover the product and inputs
 
-Прочитай PRODUCT.md, актуальное описание возможностей и ограничений нужного
-предложения, разрешённые примеры использования и относящиеся к вопросу синтезы.
-Разделяй: работает сегодня / требует доработки / вне продукта / неизвестно.
-Не подменяй весь продукт его бесплатной основой или одним знакомым навыком.
+Read PRODUCT.md, the current offering's capabilities and limits, authorized examples
+and relevant syntheses. Separate available functionality, required changes,
+external work and unknowns. Do not substitute the free edition or one familiar skill
+for the whole product.
 
-Сохрани входной список работ целиком и его происхождение. Если были десятки
-пунктов, не замени их десятью названиями: нужны явные соответствия каждого пункта
-узлам, обоснованные объединения или явное исключение из scope. При отсутствии
-списка сначала предложи возможные задачи из механизма ценности и нынешних способов
-их решения. Не задавай произвольную квоту графов или работ ради широты.
+Preserve the complete input job list and its provenance. Account for every item
+through a node mapping, justified merge or explicit scope exclusion. Do not replace
+a long list with a handful of names. Without an input list, propose jobs from the
+product's value mechanism and customers' current alternatives. Do not impose an
+arbitrary quota of graphs or jobs.
 
-Если исследование уже есть, сначала прочитай [сбор доказательств и покрытие](references/evidence-coverage.md).
-Собери все сохранённые работы респондентов в области продукта, включая людей вне
-нынешнего фокуса; текущие профили и краткий синтез не заменяют этот перечень.
-Для каждой работы сохрани случай, исходную формулировку и основания и покажи
-соответствие узлам карты. Неспособность продукта решить её не повод исключать
-работу: покажи внешний результат или необходимое изменение. Гипотезы дополняют
-эту основу, с отдельным происхождением. Неполный разбор интервью назови пробелом;
-проверка сохранённых записей не доказывает полного извлечения исходного корпуса.
+If research exists, read [evidence coverage](references/evidence-coverage.md).
+Collect saved respondent jobs in the product area, including people outside the
+current focus. Profiles and short syntheses do not replace that inventory. Keep
+each case, original wording, rationale and mapping to nodes. A job the product
+cannot perform still belongs on the map as an external outcome or required change.
+Keep added hypotheses distinct. Mark incomplete interview extraction as a gap;
+checking saved records does not prove the original case was fully extracted.
 
-Вопросы задавай связанным блоком только о пробелах, меняющих картину: для чего
-делаем выбор, что продукт реально выполняет, какие изменения допустимы. Не
-выспрашивай критерии за гипотетического клиента. Пробел может остаться неизвестным.
+Clarify gaps that change the map: the decision being made, what the product actually
+does and which changes are permitted. Do not ask the owner to invent criteria for
+hypothetical customers. Some gaps can remain unknown.
 
-## Построй несколько связных фрагментов
+## Build connected areas
 
-Отдельный канон AJTBD в этом выпуске не поставляется; используй ограничения ниже
-и назови этот предел. Не копируй в навык частную карту прошлого продукта.
+A separate AJTBD canon is not bundled in this edition. State that limitation and
+use the rules below; do not copy another product's private map into the skill.
 
-Для каждой области найди результат, которого человек пытается достичь, и
-проверь связки вверх и вниз: **«делаю это, чтобы получить что?»** и **«какие
-действия могут дать этот результат?»**. Обсуждай существующий способ, сильную
-альтернативу и то, что продукт меняет в ней. Добавляй соседние задачи и допустимые
-расширения продукта, если они открывают другой путь к значимому результату.
+For each area, identify the desired outcome. Check both directions: **"What does
+this help achieve?"** and **"Which actions could produce this outcome?"** Compare
+the current method, a strong alternative and the product's contribution. Include
+adjacent jobs and permitted product extensions when they open a meaningful path.
 
-- Узел — понятное действие/результат клиента. «Исследование» и «маркетинг» без
-  предмета слишком широки; имя навыка, функция и изготовленный файл ещё не работа.
-  Формулируй то, чего хочет добиться человек, а не действие внутри нашего
-  интерфейса. Проверь название вместе с результатом и контекстом; язык клиента
-  не требует превращать аналитическую формулировку в дословную цитату.
-- Вертикальное ребро — нижняя задача **как средство** верхней с конкретным
-  объяснением и условием. Порядок абзацев, хронология и похожие слова не дают ребра.
-  Альтернативные/условные пути не становятся обязательными этапами для всех.
-- Это граф: одна работа может помогать нескольким целям, а несколько работ — одной.
-  Повторно используй ID только при совпадении смысла, не просто формулировки.
-- Покажи и задачи, которые продукт не выполняет. Если для верхнего результата
-  нужны интервью, физическое действие, согласование, продажа или выпуск изменений,
-  их нельзя скрыть и объявить верхнюю работу закрытой по числу доступных подзадач.
-- В карточке объясни вклад продукта, требуемые входы, нынешнюю альтернативу,
-  пределы и конкретную доработку при необходимости. Критерии преимущества пока
-  могут быть гипотезой; не выдумывай измерения или предпочтения реального клиента.
-- Глубина рисунка не определяет Big/Core/Small/Micro. Эти уровни относительны
-  продукту. Заголовок фрагмента — рассматриваемая цель, не автоматически его Core.
-  Наличие инструкции/AI не доказывает полного исполнения или преимущества.
+- A node names a clear customer action or outcome. "Research" or "Marketing"
+  without an object is too broad. A skill, feature or output file is not itself a
+  customer job. Check the title with its outcome and context; analytical wording
+  need not be a verbatim customer quotation.
+- A vertical edge says the lower job is a **means** to the higher one, with a
+  concrete reason and condition. Sequence, chronology and similar words do not
+  establish causality. Conditional alternatives are not mandatory steps for everyone.
+- Reuse a node when its meaning matches, not merely its wording. One job may serve
+  several outcomes, and several jobs may serve one outcome.
+- Show work the product cannot do: interviews, physical actions, approvals, sales
+  and releases. Available subtasks do not prove a higher outcome is complete.
+- Explain the product's contribution, required inputs, current alternative, limits
+  and specific changes needed. Advantage criteria may be hypotheses; do not invent
+  customer preferences or measurements.
+- Big/Core/Small/Micro levels depend on the product, not graph depth. An area's
+  heading is not automatically its Core Job. Instructions or AI availability do not
+  prove complete delivery or superiority.
 
-Не отображай «весь рынок»: объясни взятый срез и явно оставшиеся области.
-Ширина нужна, чтобы человек увидел различающиеся возможности; десятки синонимов
-не расширяют картину.
+Explain the chosen market slice and remaining areas. Different possibilities add
+useful breadth; dozens of synonyms do not.
 
-## Свяжи работы с возможными клиентами
+## Link jobs to possible customers
 
-Если профили уже есть, предложи точные связи «фрагмент/работа ↔ профиль» и объясни
-почему. Если их пока нет, опиши возможных людей и ситуации в отчёте; это вход для
-[product-segment-hypotheses](../product-segment-hypotheses/SKILL.md), а не повод
-создавать пустые профили или фальшивые ID. Соседние области, требующие изменений
-продукта, остаются видимыми как идеи расширения.
+With existing profiles, propose exact area/job-to-profile links and explain them.
+Without profiles, describe plausible people and situations as input to
+[product-segment-hypotheses](../product-segment-hypotheses/SKILL.md). Do not create
+empty profiles or fake IDs. Keep extension ideas visible.
 
-Одинаковый узел у разных людей не означает одинаковые контекст, критерии, приоритет
-или решение о покупке. Сходство графов — повод исследовать границу сегментов,
-не правило объединения. В консоли условия и критерии читаются из каждого точного
-профиля. Не копируй один набор на все связанные работы и не записывай гипотезы
-карты как `performs`, `judged_by` или клиентское доказательство.
+A shared node does not imply shared context, criteria, priorities or purchasing
+behavior. Similar graphs suggest a segmentation question, not an automatic merge.
+The console reads conditions and criteria from each specific profile. Do not copy
+one profile's criteria to all jobs or register map hypotheses as `performs`,
+`judged_by` or customer evidence.
 
-## Проверь смысл до регистрации
+## Check meaning before registration
 
-При полном flow используй уже назначенного независимого критика сегментации для
-проверки карты; не создавай вторую команду с тем же вопросом. При отдельном поручении
-построить карту допустим один независимый проверяющий: субагент или второй экземпляр
-агента, если такой механизм реально доступен в твоей среде. Передай ему тот же
-продуктовый контекст, весь входной список, карту и [критерии](references/review.md).
-При наличии исследования передай также полный снимок работ и соответствия по
-случаям. Проверяющий сверяет его с реестром, а не только с выбранными автором
-карточками; отсутствие работы респондента блокирует полноту карты.
-Генератор отвечает на конкретные замечания; не более двух исправлений по найденным
-существенным дефектам. Проверяющий не запускает вложенные команды. Если независимая
-проверка недоступна, сохрани **непроверенный черновик**; не объявляй его reviewed.
+Reuse an already assigned segmentation critic when this map is part of that flow.
+For a separately commissioned map, use one independent reviewer if available and
+authorized. Give them the same product context, complete input list, map and
+[review criteria](references/review.md). With research, include the full job
+inventory and case mappings; missing respondent jobs block a completeness claim.
 
-Независимый review проверяет объяснение ценности и причинные связи, а не только
-формат. Возражения и нерешённые вопросы остаются доступны. Согласие агентов не
-подтверждает существование сегмента, важность задачи или готовность платить.
+Respond to concrete findings and make at most two revision rounds for substantive
+defects. The reviewer does not launch nested teams. Without independent review,
+save an **unreviewed draft**. Review checks causal links and value explanations,
+not only file shape. Keep objections and unresolved questions. Agent agreement
+does not prove demand, job importance or willingness to pay.
 
-## Доставь карту и передай следующий шаг
+## Deliver and hand off
 
-Читай [формат и регистрацию](references/map-format.md). Сохрани один понятный
-отчёт и рабочую карту, проверь её скриптом, зарегистрируй обычным graph-write и
-открой раздел «Карта работ» в консоли (`#jobs`). Карта — данные для штатного
-viewer; не пиши отдельный React Flow/HTML на каждый продукт. При обновлении
-сохраняй ID смысла и историю, не пересоздавай карту вслед за каждым новым источником.
+Follow [the format and registration guide](references/map-format.md). Save one
+readable report and a working map, run its validator, register it with graph-write
+and open `#jobs` in the console. Use the standard viewer rather than a one-off
+HTML/React Flow application. Preserve semantic IDs and history when updating.
 
-Покажи в чате ссылку, какие области получились, где продукт помогает/требует
-изменений/не выполняет работу и какой выбор карта теперь позволяет сделать.
-Укажи текущий статус: черновик, смысловая проверка, исследованные участки.
+Explain the areas found, where the product helps, needs changes or cannot help,
+and the decision the map now supports. State whether it is a draft, semantically
+reviewed or supported by research.
 
-Для проверки выбранной связки передай [product-research](../product-research/SKILL.md)
-**содержание** выбранной связки «работа — ситуация/сегмент»: цель, текущий способ,
-ожидаемую добавку продукта, внешние разрывы и один конкретный вопрос. Прикрепи
-точный файл карты; один путь или список job ID недостаточен. Сохрани выбор
-владельца или точное делегирование в решениях запуска. Без выбора показывай
-варианты и жди решения; с ним продолжай порученные части без повторного согласования.
+For a selected job/situation/segment link, pass [product-research](../product-research/SKILL.md)
+its actual content: the goal, current method, expected product contribution,
+external gaps and one concrete question. Attach the exact map; a path or ID list
+alone is insufficient. Record the owner's choice or explicit delegation. If no
+choice exists, show the options and wait. Continue already assigned parts without
+asking for the same authorization again.
 
-После принятого исследования вернись сюда только для затронутого обновления.
-Новые результаты могут уточнить, разделить или опровергнуть связи. Остальные
-направления остаются гипотезами. Для решения «как выигрывать по важным критериям»
-переходи к конкретному профилю сегмента; отдельного навыка коммерческой оценки
-в Product OS нет — ответь по сохранённому контексту честно или зафиксируй открытый
-вопрос, не имитируй оценку.
-
-<!-- product-os-public:usage:start -->
-## Учёт применения
-
-После первого содержательного результата этого навыка в текущем разговоре следуй
-[правилам аналитики](../TELEMETRY.md):
-
-`node <tools>/bin/product-os.js telemetry skill-used product-job-map`
-
-Учитывай один раз за разговор. Чтение этого файла, установка и проверка кода
-не являются применением. Отключение и недоступность счётчика не мешают основной задаче.
-<!-- product-os-public:usage:end -->
+After accepted research, update only affected parts. New results can clarify,
+split or refute links; other areas remain hypotheses. Questions about winning on
+specific criteria belong with the exact segment profile. This edition has no
+separate commercial valuation skill: use saved evidence honestly or state the
+open question rather than fabricating an estimate.

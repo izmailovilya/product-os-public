@@ -45,7 +45,7 @@ function customerProfileSources(workspace, nodes = []) {
     if (!record) return []
     const source = typeof record.source === 'string' ? record.source : null
     const references = [...(record.sourceRefs || []), ...(record.evidenceRefs || []), ...(record.sourceIds || []), ...(record.claimIds || []), ...(record.observations || []).map(o=>o.sourceId), ...(record.sources || []).map(s=>typeof s==='string'?s:s.source||s.url||s.id), ...(source ? [source] : [])]
-    const label = record.name || record.label || record.criterion || record.statement || 'Исходная запись'
+    const label = record.name || record.label || record.criterion || record.statement || "Original entry"
     const resolved = references.flatMap(item => resolve(item, origins, next, depth + 1))
     const entry = origin && document(origin) ? [{kind:'record',label,href:href(origin)}] : []
     // Only a stored excerpt is quoted; never turn an inferred statement into a quote.

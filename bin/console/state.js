@@ -38,7 +38,7 @@ class StateStore {
       return normalize(JSON.parse(fs.readFileSync(this.file, 'utf8')))
     } catch (error) {
       if (error.code === 'ENOENT') return cloneEmpty()
-      throw new Error(`Не удалось прочитать состояние консоли: ${error.message}`)
+      throw new Error(`Failed to read console status: ${error.message}`)
     }
   }
 

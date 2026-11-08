@@ -1,48 +1,49 @@
-# Где искать референсы
+# Where to look for references
 
-Читай при выборе источников для нового сбора. Сначала сформулируй нужную механику
-и момент её использования, затем выбери подходящий ресурс. Это отправные точки,
-а не обязательный список сайтов, гарантия покрытия или рейтинг сервисов.
-Для порученного переиспользования архива новые открытия не требуются.
+Read when choosing sources for a new collection. First formulate the required mechanics
+and the moment of its use, then select the appropriate resource. These are the starting points,
+not a mandatory list of sites, guarantee of coverage or rating of services.
+No new openings are required for mandated archive reuse.
 
-## Выбери источник под вопрос
+## Select source in question
 
-| Ресурс | Когда уместен | Что учитывать |
+| Resource | When appropriate | What to consider |
 | --- | --- | --- |
-| [Page Flows](https://pageflows.com/) | Нужен связный пользовательский сценарий: вход, действие, соседние шаги и результат. Есть записи экранов и покадровые последовательности. | Открывай конкретный сценарий, смотри необходимые шаги. Версия архивной записи не подтверждает текущее поведение приложения; кадры без просмотра перехода не доказывают его выполнение. |
-| [Mobbin](https://mobbin.com/) | Нужны примеры экранов, UI-элементов, анимаций или сценариев мобильных и веб-продуктов. | Выбирай нужную платформу и контекст. Наличие экрана отдельно не устанавливает условие показа, возможность пропуска или ответ после действия. |
-| [Refero Styles](https://styles.refero.design/) | Нужен визуальный язык сайта: цвет, типографика, интервалы, компоненты и описание DESIGN.md. | Подходит для изучения оформления. Само описание стиля не доказывает реальный пользовательский сценарий или эффективность механики. |
-| [Scrolltide](https://www.scrolltide.co/) | Нужны идеи веб-композиции, анимаций при прокрутке, секций, компонентов и шаблонов. | Это библиотека шаблонов и промптов. Отмечай такой материал как пример предлагаемого оформления; не выдавай его за наблюдение механики работающего конкурента. |
-| Сам продукт, его официальная справка и демонстрации | Нужно уточнить конкретное действие, доступность функции или поведение, которого нет в выбранной записи. | Живое наблюдение, заявление справки и демонстрация — разные основания. Поиск по официальным материалам дополняет подходящий визуальный пример; текст справки не становится просмотренным экраном. |
+| [Page Flows](https://pageflows.com/) | We need a coherent user scenario: input, action, adjacent steps and result. There are screen recordings and time-lapse sequences. | Open a specific script, see the necessary steps. The archive version does not confirm the current behavior of the application; Frames without viewing the transition do not prove its completion. |
+| [Mobbin](https://mobbin.com/) | We need examples of screens, UI elements, animations or scripts for mobile and web products. | Choose the right platform and context. The presence of a screen separately does not determine the display condition, the possibility of skipping, or the response after the action. |
+| [Refero Styles](https://styles.refero.design/) | We need the visual language of the site: color, typography, spacing, components and description DESIGN.md. | Suitable for studying design. The style description itself does not prove the actual user scenario or the effectiveness of the mechanics. |
+| [Scrolltide](https://www.scrolltide.co/) | Need ideas for web composition, scroll animations, sections, components and templates. | This is a library of templates and prompts. Mark such material as an example of the proposed design; don’t pass it off as observing the mechanics of a working competitor. |
+| The product itself, its official information and demonstrations | You need to clarify a specific action, feature availability, or behavior that is not in the selected entry. | Live observation, application of a certificate and demonstration are different grounds. A search of official materials is complemented by a suitable visual example; Help text does not become the viewed screen. |
 
-Описание ресурсов сверено с их публичными страницами 21 октября 2026. Для Page Flows
-использованы также публичные страницы конкретных сценариев: [пример последовательности
-с отправкой и подтверждением](https://pageflows.com/post/ios/sharing-a-video/vimeo/).
-Доступность функций и каталога проверяется в конкретном запуске; цены, объёмы
-библиотек и наличие подписки не фиксируются как постоянные свойства.
+Descriptions of resources verified against their public pages on October 21, 2026. For Page Flows
+public pages of specific scripts are also used: [example sequence
+with sending and confirmation](https://pageflows.com/post/ios/sharing-a-video/vimeo/).
+The availability of functions and directory is checked in a specific run; prices, volumes
+Libraries and subscription availability are not captured as persistent properties.
 
-## Как применять
+## How to use
 
-Для вопроса о поведении начни с конкретной записи сценария в Page Flows, Mobbin
-или доступного наблюдения самого продукта. Ищи по действию и его моменту,
-а не только по названию известной компании. Если нужен стиль, выбери Refero Styles;
-если веб-шаблон или выразительный эффект — Scrolltide. Оформление и поведение
-могут потребовать разных источников.
+For a behavior question, start with a specific script entry in Page Flows, Mobbin
+or accessible observation of the product itself. Search by action and its moment,
+and not just by the name of a well-known company. If you need a style, choose Refero Styles;
+If the web template or expressive effect is Scrolltide. Appearance and behavior
+may require different sources.
 
-Сохраняй прямую ссылку на пример, платформу, показанную версию и исходные кадры
-в разрешённом объёме. Различай дату записи, публикации, скачивания и своего просмотра.
-Если известна только метка версии каталога, так и назови её. Укажи, какие состояния
-и переходы действительно просмотрены. Порядок файлов в ZIP не заменяет порядок
-наблюдаемого сценария. Собственный макет не является оригиналом конкурента.
+Save direct link to example, platform, version shown and source footage
+within the authorized scope. Distinguish between the date of recording, publication, downloading and your viewing.
+If only the directory version label is known, name it that way. Indicate which states
+and the transitions are actually viewed. ZIP file order does not replace
+ order
+observed script. Your own layout is not a competitor’s original.
 
-Ссылка на каталог не даёт разрешения на вход, оплату, установку интеграции или
-использование аккаунта. Соблюдай исходное поручение и действующие ограничения
-доступа из [контракта](contract.md#scope-dates-and-access); не проси повторно уже
-выданное разрешение. При недоступности сохрани точный пробел и используй разрешённый
-альтернативный источник либо предоставленный архив. Ошибка автоматического открытия
-не доказывает недоступность всего сайта или отсутствие функции у продукта.
+The directory link does not provide permission to login, pay, install integration or
+account usage. Comply with the original order and applicable restrictions
+access from [contract](contract.md#scope-dates-and-access); don't ask again
+Permission issued. If unavailable, save the exact space and use the allowed one
+alternative source or provided archive. Automatic opening error
+does not prove the entire site is unavailable or the product lacks a function.
 
-Не переноси шаблон целиком без связи с задачей человека. В выдаче объясни,
-какой элемент стоит рассмотреть, что в нём наблюдалось и что остаётся предложением
-для нашего продукта. Сам факт наличия примера не доказывает рост ответов, продаж
-или удержания.
+Do not transfer the entire template without connection with the human task. Explain in the search results,
+which element is worth considering, what was observed in it and what remains a proposal
+for our product. The very fact of having an example does not prove an increase in responses and sales
+or hold.

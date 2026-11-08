@@ -1,239 +1,242 @@
-# Процесс: от задачи до применимой системы
+# Process: from task to applicable system
 
-Читай раздел текущего этапа. Метод встроен в навык; частная библиотека дополняет его.
+Read the section of the current stage. The method is built into the skill; a private library complements it.
 
-## Объём
+## Volume
 
-| Комплект | Уместен | Результат |
+| Kit | Appropriate | Result |
 | --- | --- | --- |
-| logo | Запрошен знак, его варианты или логобук | Нужные версии, правила знака, исходники и экспорты, иконка/favicon и аватар для знака |
-| brand | Новый бренд или существенное развитие; обычный старт | Бриф, широкий поиск, концепции, выбранные знак/цвет/шрифт/графика, мини-гайд со смысловой первой страницей, цифровые носители, несколько нужных носителей, пакет файлов, список действий владельца |
-| system | Много продуктов, языков или исполнителей | brand плюс действительно нужные подбренды, языки, шаблоны, управление вариациями; движение/звук только по задаче |
+| logo | Requested sign, its variants or brand guidelines | Required versions, sign rules, sources and exports, icon/favicon and avatar for the sign |
+| brand | New brand or significant development; normal start | Brief, broad search, concepts, selected sign/color/font/graphics, mini-guide with semantic first page, digital media, several required media, package of files, list of owner actions |
+| system | Many products, languages ​​or artists | brand plus really necessary sub-brands, languages, templates, variation management; movement/sound only by task |
 
-Не требуй все блоки для частного запроса. `requestedDeliverables` фиксирует заказанный
-объём: brief, concepts, identity-system, logobook, asset-pack, applications. Новая
-полная айдентика обычно включает их все; для уже выбранного решения concepts можно
-опустить. Если есть существующая система, сначала проверить, достаточно ли её адаптации.
+Don't require all blocks for a private request. `requestedDeliverables` fixes ordered
+scope: brief, concepts, identity-system, brand guidelines, asset-pack, applications. New
+a full identity usually includes all of them; for the already selected concept solution you can
+omit. If there is an existing system, first check whether adapting it is sufficient.
 
-## Бриф
+## Brief
 
-Извлеки из PRODUCT.md, принятой стратегии и беседы ответы на шесть вопросов бренда:
-зачем бренд существует; для кого; что и как делает; чем отличается; что ценит; каков
-характер (с наблюдаемыми признаками). Для действующего бренда порядок «что делаем и для
-кого → чем отличаемся → зачем», для нового — «зачем → остальное». Ответы на «зачем» и
-«что ценим» попадают в отчёт и на первую страницу логобука: без них правила описывают
-форму, но не объясняют, что защищать при следующих правках. Добавь: аудиторию и
-ситуацию; основания обещания; окружение категории; носители, языки и размеры;
-существующие неизменяемые активы; ресурсы команды; критерии выбора. Не заставляй
-пользователя заполнять форму заново. Если сведения неизвестны, назови пробел и самый
-короткий способ уточнить. Не превращай работу в обязательное новое исследование рынка.
+Extract from PRODUCT.md, the adopted strategy and conversation the answers to six brand questions:
+why the brand exists; for whom; what it does and how it does it; how is it different? what it values; what is
+character (with observable characteristics). For an existing brand, the order is “what we do for
+whom → how we differ → why”, for the new one - “why → the rest”. Answers to “why” and
+“what we value” are included in the report and on the first page of the brand guidelines: without them the rules describe
+form, but do not explain what to protect for future edits. Add: audience and
+situation; reasons for the promise; category environment; media, languages and sizes;
+existing immutable assets; team resources; selection criteria. Don't force
+The user must fill out the form again. If the information is unknown, indicate the space and the most
+a short way to clarify. Don't turn work into mandatory new market research.
 
-Сделай короткую опись активов: вид → реальный файл/снимок → статус → основание статуса
-→ действие (сохранить / разработать / адаптировать). Статусы «используется», «предложен»
-и «принят» различаются. Утверждение названия не принимает автоматически его текущее
-написание, знак или весь дизайн. Не превращай наблюдаемое CSS-оформление в запрет
-разрабатывать заказанный логотип. Если тип требуемого логотипа неясен, разреши вопрос
-по поручению и контексту, а при значимом пробеле уточни именно его. Архитектуру
-зафиксируй одной строкой («один бренд, подбрендов нет»); отдельный знак для функции или
-тарифа требует явного основания.
+Make a short inventory of assets: view → real file/snapshot → status → basis of status
+→ action (save / develop / adapt). Statuses “in use”, “offered”
+and "accepted" are different. Title approval does not automatically accept its current
+writing, sign or entire design. Don't turn observable CSS styling into a ban
+develop the ordered logo. If the type of logo required is unclear, resolve the issue
+according to instructions and context, and if there is a significant gap, specify it. Architecture
+record in one line (“one brand, no sub-brands”); separate sign for function or
+tariff requires an explicit basis.
 
-Раздели «меняем / сохраняем / пока проверяем». При развитии оформления используй
-текущий смысл, факты и контент. Новое обещание, слоган, порядок действий или схема
-работы — отдельное предложение; не встраивай его незаметно в показ выбранного стиля.
-Явный заказ на стратегию или изменение содержания расширяет эту границу. Коррекцию
-пользователя применяй ко всем затронутым местам: обложке, гайду, носителям и архиву.
+Separate “changing / saving / while checking.” When developing the design, use
+current meaning, facts and content. New promise, slogan, course of action or scheme
+works - separate offer; do not integrate it discreetly into the display of the chosen style.
+An explicit order for strategy or content change extends this boundary. Correction
+apply the user to all affected places: cover, guide, media and archive.
 
-Требование «сохранить знак» — ограничение дизайна. Утверждение «наш знак вызывает доверие»
-— гипотеза о восприятии, пока нет соответствующих наблюдений. В отчёте блок
-«Что взяли из ваших материалов и что ещё нужно проверить» сохраняет эту разницу.
-У каждого допущения с `fatal: true` есть `check` — дешёвый протокол проверки с порогом
-(формат в artifacts.md); допущение без протокола — незавершённый бриф.
+The "keep the sign" requirement is a design limitation. Statement “our mark inspires trust”
+- hypothesis about perception, there are no corresponding observations yet. In the report block
+“What was taken from your materials and what else needs to be checked” preserves this difference.
+Each assumption with `fatal: true` has `check` - cheap verification protocol with threshold
+(format in artifacts.md); admission without protocol - unfinished brief.
 
-> <sub>**▸ trace.** Для аудитории и задачи — релевантный срез NMT canon по CONTRACT
-(например communication.md и job-types-and-properties.md). Для выражения бренда —
-Johnson: шесть вопросов и порядок для нового/действующего бренда (с. 92–93), три группы
-вопросов исследования (с. 51), контрольный список перед дизайном и шаблон брифа
-(с. 170–173); Wheeler: смысл и целостность, архитектура и имя (с. 20–24). NMT не
-выдаётся за источник правил построения логотипа. Точные локаторы — knowledge.md.</sub>
+> <sub>**▸ trace.** For audience and task - relevant NMT canon slice by CONTRACT
+(for example communication.md and job-types-and-properties.md). For brand expression -
+Johnson: six questions and order for a new/existing brand (p. 92–93), three groups
+Research Questions (p. 51), Pre-Design Checklist and Brief Template
+(pp. 170–173); Wheeler: meaning and integrity, architecture and name (pp. 20–24). NMT not
+passed off as a source of logo construction rules. Accurate locators - knowledge.md.</sub>
 
-## Конкуренты и окружение
+## Competitors and environment
 
-До заявления об отличимости сравни решение с релевантными реальными альтернативами
-на сопоставимых носителях: где используются общие коды категории, где появляется своё.
-Порядок сбора: сначала `sources/` продукта и синтез сегмента (конкуренты уже названы
-там); затем, если есть браузер, 3–5 скриншотов сайтов или приложений альтернатив на тех
-же носителях, что и наши макеты (первый экран, иконка/аватар, письмо), сохранённых в
-`sources/` запуска с URL, датой и происхождением; положи их рядом с нашими макетами на
-одном листе. Референсы красивых логобуков помогают сдаче, но не заменяют окружение
-бренда. Если сбор невозможен (нет браузера, альтернативы неизвестны), запиши пробел
-допущением с `check` («собрать 3 скриншота альтернатив X, Y, Z и сравнить первый экран;
-порог: наш знак и композиция не совпадают по типу и цвету с двумя из трёх») — не оставляй
-«открытым» без действия. Проверка без названия и знака показывает вклад остальных
-элементов; это ревью дизайна, не доказательство узнавания клиентами.
+Before claiming distinctiveness, compare the solution to relevant real-world alternatives
+on comparable media: where general category codes are used, where your own appears.
+Collection order: first `sources/` product and segment synthesis (competitors already named
+there); then, if you have a browser, 3-5 screenshots of alternative sites or applications on those
+same media as our layouts (first screen, icon/avatar, letter), saved in
+`sources/` launch with URL, date and origin; put them next to our layouts on
+one sheet. References of beautiful brand guideliness help pass the test, but do not replace the environment
+brand. If collection is impossible (no browser, no alternatives), write a space
+assumption with `check` (“collect 3 screenshots of alternatives X, Y, Z and compare the first screen;
+threshold: our sign and composition do not match in type and color with two of the three") - do not leave
+"open" without action. Check without name and sign shows the contribution of the rest
+elements; This is a design review, not proof of customer recognition.
 
-> <sub>**▸ trace.** Johnson: пять аудитов и «стадное» сходство категории (с. 38–45);
-Budelmann и Kim: знать конкурентов, но не следовать (70), отличаться программой
-применений (71), позиция относительно альтернатив (72).</sub>
+> <sub>**▸ trace.** Johnson: five audits and category herding (pp. 38–45);
+Budelmann and Kim: know competitors, but not follow (70), differ in program
+applications (71), position relative to alternatives (72).</sub>
 
-## Широкий поиск
+## Broad search
 
-Перед направлениями — короткий этап: 8–12 идей по одной строке или грубому эскизу.
-Идея — это «тип знака + приём + что он говорит», не название концепции. Расширяй
-охват подходами: типографика и написание; монограмма; символ; рамка-контейнер;
-метафора или диаграмма; язык как формат; развитие существующего. Из списка выбираются
-2–3 направления; остальные сохраняются в отчёте одной таблицей «идея → почему
-отброшена». Это полчаса работы, а не второй конкурс: без рендеров каждой идеи и без
-голосования. Референсы открывай до поиска, а не вместо него.
+Before directions - short stage: 8-12 ideas per line or rough sketch.
+An idea is “the type of sign + device + what it says,” not the name of the concept. Expand
+Coverage of approaches: typography and writing; monogram; symbol; container frame;
+metaphor or diagram; language as format; development of the existing one.
+ is selected from the list
+2–3 directions; the rest are stored in the report in one table “idea → why
+discarded." This is half an hour of work, not a second competition: without renderings of each idea and without
+voting. Open references before searching, not instead of it.
 
-> <sub>**▸ trace.** Johnson: держать «сеть» широкой, отсеивание сужает поиск (с. 174–176),
-каталог подходов (с. 183–203); Budelmann и Kim: много идей, затем обязательное
-редактирование (49), прототипы как «пограничный объект» (52–53). Число идей —
-прикладной вывод, не норма из книг.</sub>
+> <sub>**▸ trace.** Johnson: keep the 'net' wide, sifting narrows the search (pp. 174-176),
+catalog of approaches (pp. 183–203); Budelmann and Kim: many ideas, then obligatory
+editing (49), prototypes as “boundary object” (52–53). Number of ideas—
+applied output, not the norm from the books.</sub>
 
-## Направления и выбор
+## Directions and selection
 
-Выдели разную логику выражения, а не три цвета одного шаблона. Для каждого направления:
-одна идея и её связь с задачей; тип знака с названием и причиной (словесный, буквенный,
-изобразительный, абстрактный, эмблема, динамический) и само написание/знак; типографика,
-цветовые роли, композиция и графический приём; 2–3 важных носителя, если пользователь
-не задал другой объём; где решение сильнее и какие ограничения проявляются. Сравнение
-должно использовать одинаковый контент и сопоставимые поверхности; направления
-различаются логикой, а не только цветом и шрифтом. Не добавляй случайный мерч ради мокапов.
+Highlight different expression logic rather than three colors of the same pattern. For each direction:
+one idea and its connection with the task; type of sign with name and reason (verbal, letter,
+figurative, abstract, emblem, dynamic) and the writing/sign itself; typography,
+color roles, composition and graphic technique; 2-3 important media if user
+did not specify another volume; where the solution is stronger and what limitations appear. Comparison
+must use the same content and comparable surfaces; directions
+differ in logic, not just color and font. Don't add random merch for the sake of mockups.
 
-Открой референсы, затем сделай своё решение. Для раннего сравнения достаточно честных
-визуальных эскизов. Красивая сцена не подтверждает работоспособность мелкого знака:
-рядом нужны плоский макет и настоящий размер, включая иконку 32 px и favicon 16 px.
-Не выдавай сгенерированные впечатления потребителей за исследование. Сравни выбранные
-критерии словами и видимыми примерами.
+Open the references, then make your decision. For early comparison, fair
+ is enough
+visual sketches. The beautiful scene does not confirm the functionality of the small sign:
+Next we need a flat layout and actual size, including a 32 px icon and a 16 px favicon.
+Don't pass off generated consumer impressions as research. Compare selected
+criteria in words and visible examples.
 
-Сохрани основания выбора и точный источник решения. До ответа человека можно
-доделывать обзор и технически независимые проверки, но не объявлять фаворит принятым.
-Если человек делегировал выбор, выполняй его и помечай собственное решение как
-предложенное; не добавляй подтверждение, которого не было. Команда, которая будет
-применять систему, видит направления до финальной сборки, а не на сдаче.
+Save the reasons for the choice and the exact source of the decision. Before the person answers, you can
+complete the review and technically independent checks, but do not declare the favorite accepted.
+If a person delegated a choice, carry it out and mark your own decision as
+suggested; don't add confirmation that didn't exist. The team that will be
+apply the system, sees directions before final assembly, and not at delivery.
 
-> <sub>**▸ trace.** Wheeler: типы знаков и отсутствие правила «какой тип какой компании»
-(с. 48–64); Johnson: 2–3 маршрута, различающиеся не цветом и шрифтом, решение по
-стратегии (с. 210–213), «безопасный → радикальный» толкает в середину (с. 211), команда
-принимает систему до окончания внедрения (с. 272); Budelmann и Kim: фильтры и стратегия
+> <sub>**▸ trace.** Wheeler: sign types and lack of "which type of company" rule
+(pp. 48–64); Johnson: 2–3 routes, differing not in color and font, solution by
+strategies (p. 210–213), “safe → radical” pushes to the middle (p. 211), command
+accepts the system until implementation is completed (p. 272); Budelmann and Kim: filters and strategy
 (50–51).</sub>
 
-## Выбранная система
+## Selected system
 
-- Знак: тип с причиной; мастер, необходимые варианты, дескриптор/языки, позитив/негатив,
-  выбор варианта, охранное поле и ограничения в нужных размерах. Новые версии
-  обосновывай носителем. Рисуй знак сначала одноцветным: он обязан работать в нескольких
-  исполнениях.
-- Цвет: роли и сочетания, цифровые значения; печатные спецификации только при печатной
-  задаче и с указанием условий. Экранный цвет не считается проверенной печатью. Для
-  каждой пары «текст на фоне», заявленной правилом, укажи коэффициент контраста (WCAG,
-  относительная яркость) и порог, ниже которого пара допустима только для декоративных
-  элементов; порог задаёт продукт, по умолчанию 4.5:1 для текста и 3:1 для крупного
-  текста и иконок. Это прикладной вывод навыка, не норма из книг по айдентике.
-- Шрифт: назначение гарнитур/начертаний, нужные языки и знаки, масштаб, переносы,
-  доступные файлы и fallback. Недоступную гарнитуру нельзя считать установленной.
-  Проверь абзац на реальной длине строки носителя вместе с интерлиньяжем и заголовок
-  в прописных отдельно; трекинг основного текста не меняй без названной причины —
-  межбуквенный ритм заложен автором шрифта. Книжные числа интерлиньяжа и полей в CSS
-  не переносятся.
-- Композиция: иерархия, поля, ритм, правила вариаций; проверить реальные короткие/длинные
-  названия и плотный контент. Процентные поля референса не универсальны.
-- Изображения/графика: роль, характер и условия использования. Разделить то, что всегда
-  сохраняется, и то, что меняется по контенту. Разработать реальные элементы по объёму.
-  Фото или иллюстрация могут быть главным носителем узнаваемости при малой роли
-  логотипа — тогда их правила (сюжет, свет, обрезка, палитра) занимают в системе то же
-  место, что и знак. Для приёма объяснить функцию: узнаваемый акцент, организация,
-  иллюстрация или объяснение. Декоративная абстракция допустима; не приписывать ей
-  понятность процесса без проверки. Указать, когда приём полезен, когда второстепенен и
-  когда не нужен. Если он похож на интерфейс или схему, он не должен изображать
-  выдуманные возможности. Движение — только по задаче; книжного основания у навыка нет.
-- Голос: сохранить принятую редакционную основу; если её нет, сформулировать только
-  нужные этому заказу принципы. Полный editorial-profile не обязателен для логобука.
+- Sign: type with reason; master, required options, descriptor/languages, positive/negative,
+choice of option, security field and restrictions in the required sizes. New versions
+justify with a medium. Draw the sign first in one color: it must work in several
+versions.
+- Color: roles and combinations, digital values; printed specifications only when printed
+task and indicating conditions. Screen color is not considered a verified print. For
+for each “text on background” pair declared by the rule, indicate the contrast coefficient (WCAG,
+relative brightness) and the threshold below which the pair is allowed only for decorative
+elements; the threshold is set by the product, by default 4.5:1 for text and 3:1 for large
+text and icons. This is an applied skill output, not the norm from books on identity.
+- Font: purpose of typefaces/styles, required languages and characters, scale, hyphens,
+available files and fallback. An unavailable typeface cannot be considered installed.
+Check the paragraph on the actual media line length along with leading and heading
+in capitals separately; do not change the tracking of the main text without a specified reason —
+the interletter rhythm was established by the author of the font. Book leading and margin numbers in CSS
+not transferred.
+- Composition: hierarchy, fields, rhythm, rules of variations; check real short/long
+titles and dense content. Reference percentage fields are not universal.
+- Images/graphics: role, nature and terms of use. Divide what is always
+what changes in content is saved as well. Develop real elements by volume.
+A photo or illustration can be the main medium of recognition with a small role
+logo - then their rules (story, light, cropping, palette) occupy the same place in the system
+same place as the sign. For reception, explain the function: recognizable accent, organization,
+illustration or explanation. Decorative abstraction is acceptable; do not attribute to her
+Process clarity without verification. Indicate when the technique is useful, when it is secondary and
+when not needed. If it looks like an interface or schematic, it should not depict
+imaginary possibilities. Movement - only according to the task; The skill has no book basis.
+- Voice: maintain the accepted editorial basis; if it is not there, formulate only
+the principles needed for this order. A full editorial-profile is not required for a brand guidelines.
 
-### Цифровые носители
+### Digital media
 
-Для продуктов, которые живут в мессенджерах, магазинах приложений и почте, это главные
-носители, а не «применения по желанию».
+For products that live in messengers, app stores and mail, these are the main ones
+media, not "optional uses".
 
-| Носитель | Что сделать | logo | brand |
+| Carrier | What to do | logo | brand |
 | --- | --- | --- | --- |
-| Иконка приложения | Знак в 16, 32, 64, 180, 512 px из мастера; в 16 и 32 px допустима упрощённая версия с указанием отличий | обязательно | обязательно |
-| Favicon | SVG + PNG 16/32; проверить на светлой и тёмной вкладке браузера | обязательно | обязательно |
-| Аватар Telegram и соцсетей | Квадрат 512 px и превью круглой обрезки; знак не режется, поле учтено | обязательно | обязательно |
-| Тёмная тема | Версия знака и пары палитры на тёмном фоне с контрастом | по задаче | обязательно |
-| Превью ссылки (og-image) | 1200×630 с реальным заголовком продукта | по задаче | обязательно |
-| Письмо | Шапка и подпись с реальным текстом в ширине 600 px | по задаче | по задаче |
+| Application icon | Sign at 16, 32, 64, 180, 512 px from the master; in 16 and 32 px a simplified version indicating the differences is acceptable | necessarily | mandatory |
+| Favicon | SVG + PNG 16/32; check on light and dark browser tabs | necessarily | mandatory |
+| Avatar of Telegram and social networks | 512 px square and round crop preview; the sign is not cut, the field is taken into account | necessarily | mandatory |
+| Dark theme | Version of sign and palette pair on dark background with contrast | by task | mandatory |
+| Link preview (og-image) | 1200x630 with real product title | by task | mandatory |
+| Letter | Header and signature with real text 600 px wide | by task | by task |
 
-Размеры — требования платформ на момент выпуска; проверяй их, а не переписывай из
-навыка. Каждый носитель просматривается в реальном размере (превью 1:1 в `previews/`),
-не в увеличенном макете. Просмотр 16 px по превью 512 px — не проверка.
+Dimensions - platform requirements at the time of release; check them, don't rewrite them from
+skill. Each media is viewed in real size (1:1 preview in `previews/`),
+not in enlarged layout. View 16 px from a preview 512 px - not verified.
 
-> <sub>**▸ trace.** Budelmann и Kim: знак без цвета сначала (4), цвет как сигнал (5–6),
-роль шрифта (8–9), форма знака (10), постоянное и переменное (25–27), универсальный
-дизайн (81); Королькова: назначение пары, качество знаков, трекинг и внутрибуквенное
-белое (176–177), длина строки и интерлиньяж вместе (184–185); Johnson: изображения как
-носитель узнаваемости (с. 251), favicon 16×16 и иконка 48 px как самое трудное испытание
-(с. 190); Wheeler: буквенный знак и иконка приложения (с. 54), эмблема и миниатюра
-(с. 60), мобильные и приложения (с. 72–74). Круглая обрезка, тёмная тема и og-image —
-прикладной вывод без книжного основания. Пороги контраста — из практики доступности,
-не из книг.</sub>
+> <sub>**▸ trace.** Budelmann and Kim: sign without color first (4), color as signal (5–6),
+font role (8–9), character shape (10), constant and variable (25–27), universal
+design(81); Korolkova: pair assignment, quality of characters, tracking and intraletter
+white (176–177), line length and leading together (184–185); Johnson: images like
+medium of recognition (p. 251), favicon 16×16 and icon 48 px as the most difficult test
+(p. 190); Wheeler: letter and application icon (p. 54), emblem and miniature
+(p. 60), mobile and applications (p. 72–74). Round crop, dark theme and og-image —
+Application pin without book base. Contrast thresholds - from accessibility practice,
+not from the books.</sub>
 
-## Выходные документы
+## Output documents
 
-**Презентация концепций:** контекст и критерии → таблица широкого поиска → идея каждого
-направления → элементы и носители → ограничения и рекомендация. Показывать реальные
-варианты. Если запрос ограничен концепциями, это завершённый объём с предложенными
-решениями, а не ожидание производства всей системы.
+**Presentation of concepts:** context and criteria → broad search table → idea of each
+directions → elements and media → restrictions and recommendations. Show real
+options. If the request is limited to concepts, this is a completed scope with the proposed
+solutions rather than waiting for the production of the entire system.
 
-**Логобук:** первая страница обязательна и идёт до технических правил: обещание (ответ
-«зачем»), характер и ценности, «всегда / иногда / никогда» тремя реальными примерами из
-этого комплекта. Затем: идея и тип знака, назначение версий, цвет с контрастными парами,
-поле, фон, хорошие/плохие применения, минимальные размеры, цифровые носители, нужные
-языки, ревизия, указатель на файлы, что закреплено надолго и что пересматривается по
-плану. Для полной айдентики добавить типографику, графику и носители либо оформить
-заказанный более широкий гайд. PDF/PPTX создаётся и проверяется профильным инструментом,
-когда заказан именно этот формат; Markdown не объявлять готовым PDF. По умолчанию
-пригоден читаемый гайд Markdown с изображениями, векторные мастера и растровые превью;
-формат согласованной сдачи приоритетен.
+**Logobook:** first page is required and goes before technical rules: promise (response
+“why”), character and values, “always / sometimes / never” with three real examples from
+this kit. Then: the idea and type of sign, the purpose of versions, color with contrasting pairs,
+field, background, good/bad uses, minimum sizes, digital media, needed
+languages, revision, pointer to files, what is fixed for a long time and what is being revised by
+plan. For a complete identity, add typography, graphics and media or design
+ordered wider guide. PDF/PPTX is created and verified by a profile tool,
+when this particular format is ordered; Markdown does not declare PDF ready. Default
+Readable Markdown guide with images, vector masters and raster previews available;
+agreed delivery format has priority.
 
-**Комплект файлов:** понятные папки/имена по версии, цвету и назначению, редактируемые
-мастера и фактические экспорты. Не имитировать AI-файл переименованным SVG. Для экрана
-обычно SVG и прозрачный PNG, для печати — нужный типографскому процессу экспорт.
-Обозначить источники и непередаваемые зависимости; не заявлять лицензии без основания.
+**Set of files:** clear folders/names by version, color and purpose, editable
+masters and actual exports. Don't simulate an AI file with a renamed SVG. For screen
+usually SVG and transparent PNG, for printing - the export required by the printing process.
+Indicate sources and non-transferable dependencies; do not claim licenses without reason.
 
-**Применения:** макеты нужных носителей с исходником и готовым экспортом. Проверить
-замену контента и размер просмотра; фиксированный баннер не обещает адаптивный шаблон.
-Для передачи команде выясни фактический инструмент выпуска. Повторный выпуск типичного
-материала из передаваемого комплекта выполняет отдельный субагент вслепую по review.md.
-Зафиксируй рабочие зависимости и команду/действия; наличие SVG с текстом не доказывает
-редактируемость в Figma/Illustrator. Если проверен только кодовый процесс, так и укажи.
-Макет, шаблон для команды и внедрение — разные уровни результата. Логобук и пакет могут
-быть выполнены без переноса чужого корпуса или установки новых плагинов. Если недоступна
-одна форма вывода, завершить доступную часть и явно назвать пробел.
+**Applications:** layouts of the required media with source and ready-made export. Check
+content replacement and view size; a fixed banner does not promise a responsive template.
+Find out the actual release tool to send to the team. Re-release of typical
+material from the transferred set is performed by a separate subagent blindly according to review.md.
+Capture working dependencies and command/actions; the presence of SVG with text does not prove
+Editable in Figma/Illustrator. If only the code process is checked, indicate so.
+Layout, team template and implementation - different levels of result. Logobook and package can
+be completed without transferring someone else's case or installing new plugins. If not available
+one output form, complete the available part and explicitly name the space.
 
-> <sub>**▸ trace.** Budelmann и Kim: гайд объясняет дух и обещание, не только запреты (60),
-спецификации и правила (58–59), «всегда / иногда / никогда» (27), шаблоны (62), жизненный
-цикл и план изменений (67–69); Johnson: шаблоны в инструментах команды (с. 266),
-проверка повторного выпуска — прикладной вывод.</sub>
+> <sub>**▸ trace.** Budelmann and Kim: guide explains spirit and promise, not just taboos (60),
+specifications and rules (58–59), "always/sometimes/never" (27), patterns (62), life
+cycle and change plan (67–69); Johnson: templates in command tools (p. 266),
+re-release check - application output.</sub>
 
-## Что владелец делает после сдачи
+## What does the owner do after delivery
 
-Навык этого не делает, но обязан оставить в отчёте и в конце логобука список с
-конкретными объектами:
+The skill does not do this, but must leave a list with
+ in the report and at the end of the brand guidelines
+specific objects:
 
-1. Проверка товарного знака: имя и знак; классы услуг продукта; поиск похожих имён и
-   знаков и заключение о риске; регистрация. Общие формы (круг, квадрат) не защищаются —
-   защищает сочетание с текстом.
-2. Лицензии шрифтов: для каждой гарнитуры — лицензия, где она разрешает использование
-   (веб, приложение, печать, логотип), что нужно купить. Открытая лицензия указывается
-   с именем и ссылкой на файл лицензии в комплекте.
-3. Домены и ники: домен, Telegram, App Store/Google Play, соцсети — что свободно, что
-   занято, что нужно занять.
-4. Передача прав от подрядчиков и исполнителей на знак и графику, если они привлекались.
+1. Trademark verification: name and sign; product service classes; search for similar names and
+signs and statement of risk; registration. General shapes (circle, square) are not protected —
+Protects combination with text.
+2. Font licenses: per typeface - license where it allows use
+(web, app, print, logo) what to buy. The open license is indicated by
+with name and link to the license file included.
+3. Domains and nicknames: domain, Telegram, App Store/Google Play, social networks - what is free, what is
+busy, what needs to be taken.
+4. Transfer of rights from contractors and performers to the sign and graphics, if they were involved.
 
-Каждый пункт — с состоянием «не проверялось» или с фактом проверки и датой. Отчёт не
-заявляет их выполнения.
+Each item has the status “not checked” or with the fact of verification and date. Report not
+declares their execution.
 
-> <sub>**▸ trace.** Budelmann и Kim: десять советов о защите знака (64); Johnson: проверка
-знаков ближе к финалу, классы и общие формы (с. 217–218); Wheeler: доступность имени и
-домена (с. 22–23).</sub>
+> <sub>**▸ trace.** Budelmann and Kim: ten tips for protecting your mark (64); Johnson: check
+signs closer to the final, classes and general forms (pp. 217–218); Wheeler: name availability and
+domain (pp. 22–23).</sub>

@@ -1,76 +1,76 @@
-# Product OS · Опора
+# Product OS · Opora
 
-Владелец выбрал направление «Опора» 26 сентября 2026. Эта система применяется к самому Product OS. Имена, данные и айдентика исследуемых продуктов остаются самостоятельными.
+The owner chose the "Opora" direction on September 26, 2026. This system is applied to the Product OS itself. The names, data and identity of the researched products remain separate.
 
-## Смысл
+## Meaning
 
-Product OS помогает владельцу продукта разобраться в материалах, принять решение и сделать следующий проверяемый шаг. Его ценности — ясность, сохранённые основания и честное отношение к неизвестному. Айдентика выражает внимательного продуктового партнёра; она не обещает доказанный спрос или прибыль.
+Product OS helps the product owner understand the materials, make decisions and take the next verifiable step. His values ​​are clarity, staying grounded, and an honest approach to the unknown. The identity expresses an attentive product partner; it does not promise proven demand or profits.
 
-Скобки знака удерживают контекст, квадрат выделяет предмет работы. Тёплые поверхности и редакционные заголовки поддерживают чтение. Терракота отмечает переход или выбор. Сам знак не является кнопкой и не сообщает статус исследования.
+Sign brackets hold the context, a square highlights the subject of the work. Warm surfaces and editorial headlines support reading. Terracotta marks a transition or choice. The sign itself is not a button and does not indicate the status of the study.
 
-- **Всегда:** сохраняем пропорции знака, читаемый текст и различие Product OS / рабочего продукта. Пример — подпись в навигации консоли.
-- **Иногда:** скобки и квадрат занимают крупное поле на обложке, где есть место для выражения бренда. Пример — шаблон обложки исследования.
-- **Никогда:** не ставим декоративные скобки вокруг каждого факта, не красим предупреждения в фирменный цвет, не скрываем оговорки ради композиции.
+- **Always:** preserve sign proportions, readable text, and Product OS/workspace product distinction. Example - signature in console navigation.
+- **Sometimes:** brackets and a square take up a large area on the cover where there is room for brand expression. Example - Study Cover Template.
+- **Never:** We don't put decorative brackets around every fact, we don't paint warnings in a corporate color, we don't hide disclaimers for the sake of composition.
 
-## Знак и подпись
+## Sign and signature
 
-Мастера находятся в `bin/console/public/assets/brand/`.
+Masters are located in `bin/console/public/assets/brand/`.
 
-| Файл | Использование |
+| File | Usage |
 | --- | --- |
-| `mark-ink.svg` | Основной знак на светлом фоне |
-| `mark-accent.svg` | Терракотовый знак на бумажном фоне |
-| `mark-inverse.svg` | Светлый знак на тёмном фоне |
-| `wordmark-ink.svg` / `wordmark-inverse.svg` | Подпись со шрифтовой частью в кривых; не требует установленных шрифтов |
-| `favicon.svg` | Адаптируется к светлой и тёмной вкладке браузера |
-| `app-icon.svg` | Квадратная иконка с полем для круглой обрезки |
-| `app-icon-16/32/64/180/512.png` | Растровые экспорты в указанном размере |
+| `mark-ink.svg` | Main sign on a light background |
+| `mark-accent.svg` | Terracotta sign on paper background |
+| `mark-inverse.svg` | Light sign on a dark background |
+| `wordmark-ink.svg` / `wordmark-inverse.svg` | Signature with font part in curves; does not require installed fonts |
+| `favicon.svg` | Adapts to light and dark browser tab |
+| `app-icon.svg` | Square icon with round crop box |
+| `app-icon-16/32/64/180/512.png` | Raster exports in the specified size |
 
-Знак построен в поле 64×64. Внешние границы — 6…58, основные штрихи — 8 единиц. Оставляйте вокруг видимой формы не менее 8 единиц свободного пространства; соседний текст или знак не входят в это поле. UI-подпись использует компактную композицию из компонента `brandSignature`; её интервал — 8 px при знаке 32 px.
+The sign is built in a 64x64 field. External boundaries - 6...58, main strokes - 8 units. Leave at least 8 units of free space around the visible form; adjacent text or character is not included in this field. The UI signature uses a compact composition from the `brandSignature` component; its spacing is 8 px with a sign of 32 px.
 
-Знак проверен в 16, 32 и 64 px. 16 px — только favicon/маленький идентификатор; обычный знак в интерфейсе — 32 px. Подпись с названием используйте от 160 px по ширине. Не растягивайте, не обводите, не вращайте и не меняйте квадрат на круг. Не создавайте отдельные знаки для разделов «Сегменты», «Конкуренты» и «Отчёты».
+Sign checked at 16, 32 and 64 px. 16 px - favicon/small identifier only; the usual sign in the interface is 32 px. Use a signature with a title starting at 160 px in width. Do not stretch, trace, rotate, or change the square to a circle. Do not create separate characters for the sections “Segments”, “Competitors” and “Reports”.
 
-SVG сохраняет точную форму. Подпись — набранное имя со знаком, а не заявление об эксклюзивности гарнитуры. Совместимость редактирования с Figma и Illustrator отдельно не проверена.
+SVG retains exact shape. The signature is a typed name with a sign, and not a statement about the exclusivity of the typeface. Editing compatibility with Figma and Illustrator has not been tested separately.
 
-## Цвет
+## Color
 
-Исполняемые значения принадлежат `ui-tokens.css`; страницы используют роли, а не копируют hex.
+Executable values belong to `ui-tokens.css`; pages use roles rather than copy hex.
 
-| Роль | Значение | Применение |
+| Role | Meaning | Application |
 | --- | --- | --- |
-| Бумага | `#F7F4ED` | Основная поверхность |
-| Светлая поверхность | `#FFFCF5` | Поля, редакторы, источники |
-| Чернила | `#272D28` | Основной текст, основная кнопка |
-| Вторичный текст | `#5B6057` | Метаданные и пояснения |
-| Терракота | `#963B25` | Ссылки, выбранные темы, акценты |
-| Выделение | `#EAD7C7` | Подложка выбранного пункта |
-| Навигация | `#F0EBE0` | Постоянное окружение рабочего материала |
-| Линия / контроль | `#D4CDBF` / `#818575` | Разделители / границы полей |
+| Paper | `#F7F4ED` | Main surface |
+| Light surface | `#FFFCF5` | Fields, editors, sources |
+| Ink | `#272D28` | Main text, main button |
+| Secondary text | `#5B6057` | Metadata and explanations |
+| Terracotta | `#963B25` | Links, selected topics, highlights |
+| Selection | `#EAD7C7` | Selected item background |
+| Navigation | `#F0EBE0` | Permanent environment of the working material |
+| Line/control | `#D4CDBF` / `#818575` | Field separators/borders |
 
-Контраст основного текста на бумаге — 12,81:1, вторичного — 5,87:1; терракоты на светлой поверхности — 6,95:1. Порог обычного текста — 4,5:1. Слабая разделительная линия не заменяет видимую границу интерактивного поля. Предупреждения, ошибки и поддержка интервью сохраняют отдельные семантические пары из токенов.
+The contrast of the main text on paper is 12.81:1, the secondary text is 5.87:1; terracotta on a light surface - 6.95:1. Plain text threshold is 4.5:1. A faint dividing line does not replace the visible boundary of the interactive field. Warnings, errors and interview support save individual semantic pairs from tokens.
 
-Инверсия знака для тёмного фона входит в брендовый комплект. Полная тёмная тема консоли не реализована: не включайте её переключением только фонового цвета.
+Inversion of the sign for a dark background is included in the branding kit. Full dark console theme is not implemented: do not enable it by switching just the background color.
 
-## Типографика и композиция
+## Typography and composition
 
-Source Serif 4 — заголовки; Onest — основной текст, управление и метаданные. Локальные variable WOFF2 содержат кириллицу и латиницу. Лицензии SIL OFL 1.1 включены в папки шрифтов. Оригиналы получены из официального каталога Google Fonts; ссылки и размеры указаны в `assets/README.md`.
+Source Serif 4 - headers; Onest - body text, controls and metadata. Local variables WOFF2 contain Cyrillic and Latin alphabet. SIL OFL 1.1 licenses are included in the font folders. The originals were obtained from the official Google Fonts directory; references and dimensions are indicated in `assets/README.md`.
 
-| Роль | Стандартный размер / интерлиньяж |
+| Role | Standard size / leading |
 | --- | --- |
-| Страница | 40 px / 1,25, Source Serif 4, 600 |
-| Раздел | 28 px / 1,35, Source Serif 4, 600 |
-| Заголовок записи | 24 px / 1,4, Source Serif 4, 600 |
-| Основной текст | 18 px / 1,6, Onest, 400 |
-| Управление и метаданные | 16 px / 1,5, Onest, 400–600 |
+| Page | 40 px / 1.25, Source Serif 4, 600 |
+| Section | 28 px / 1.35, Source Serif 4, 600 |
+| Post title | 24 px / 1.4, Source Serif 4, 600 |
+| Body text | 18 px / 1.6, Onest, 400 |
+| Controls and metadata | 16 px / 1.5, Onest, 400–600 |
 
-Размеры задаются в rem и увеличиваются вместе с корневым текстом. Не уменьшайте шрифт ради размещения. Ширина длинного чтения — до 68ch. Контрольные размеры, подписи и вторичный текст остаются читаемыми. Разделы отделяются полем и линией; карточка нужна для самостоятельной поверхности, а не каждого абзаца.
+Dimensions are set in rem and grow along with the root text. Don't make your font smaller for the sake of placement. Long reading width - up to 68ch. Reference dimensions, captions and secondary text remain legible. Sections are separated by a margin and a line; the card is needed for an independent surface, and not for each paragraph.
 
-Главное меню — Onest. Название Product OS сопровождается знаком; название рабочего продукта показано отдельно. В интерфейсе не повторяем большую графику обложки. Фокус, история, источники, конфликтующие данные и неизвестные значения сохраняют прежнее поведение.
+Main menu - Onest. The Product OS name is accompanied by a sign; The title of the workspace product is shown separately. In the interface we do not repeat the large graphics of the cover. Focus, history, sources, conflicting data and unknown values retain the same behavior.
 
-## Выпуск и проверка
+## Release and check
 
-Общие компоненты, их раскрытые состояния и каталог `/design-system` используют одну систему. После изменений выполняйте `npm run test:design-system`, затронутые потоки и просмотр широких/узких экранов с 200% текстом. Полные требования — в `DESIGN-SYSTEM.md`.
+Common components, their expanded states, and catalog `/design-system` use the same system. After changes, run `npm run test:design-system`, affected threads and viewing wide/narrow screens with 200% text. Full requirements are in `DESIGN-SYSTEM.md`.
 
-Шаблон обложки и переносимый набор выдаются вместе с версией отчёта об айдентике. Обложка 1200×630 — фиксированный формат, не универсальный адаптивный шаблон. Для нового материала используйте комплектный `scripts/render.cjs` и откройте экспорт. Длинный текст редактируется, а не ужимается. Файлы прошлых принятых выпусков не перезаписываются.
+The cover template and portable set are issued with the identity report version. Cover 1200x630 is a fixed format, not a universal adaptive template. For a new material, use the complete `scripts/render.cjs` and open export. Long text is edited rather than compressed. Files from past accepted issues are not overwritten.
 
-Проверки товарного знака Product OS и геометрического знака, доменов и ников не выполнялись. В комплекте не заявлены юридическая уникальность или рыночная узнаваемость. Сторонние исполнители не привлекались; покупок шрифтов и публикаций не было.
+Product OS trademark and geometric symbol, domain and nickname checks were not performed. The kit does not claim legal uniqueness or market recognition. No third party contractors were involved; there were no purchases of fonts or publications.

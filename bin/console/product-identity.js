@@ -44,21 +44,21 @@ function imageSize(buffer){
 const registrations=(graph,productId)=>list(graph.nodes).filter(n=>n.type==='artifact'&&n.data?.kind==='visual-profile'&&n.data.artifactKind==='brand-identity'&&n.data.productId===productId&&!n.data.channelId)
 function loadIdentity(workspace,graph,productId,profileId=''){
  const nodes=registrations(graph,productId),versions=nodes.map(n=>({id:n.id,title:n.label,version:n.data.version,decision:n.data.decision}))
- const base={state:'unregistered',productId,versions,issues:[],message:'Айдентика продукта пока не добавлена.'}
+ const base={state:'unregistered',productId,versions,issues:[],message:"Product identity has not been added yet."}
  if(!nodes.length)return base
  const accepted=nodes.filter(n=>n.data.decision==='accepted'),candidates=accepted.length?accepted:nodes
  const heads=candidates.filter(n=>!candidates.some(other=>other.data.supersedes===n.id))
  const chosen=profileId?nodes.find(n=>n.id===profileId):heads.length===1?heads[0]:null
- if(!chosen)return {...base,state:profileId?'missing':'choice',message:profileId?'Версия по этой ссылке не найдена. Выберите доступную версию.':'Сохранено несколько независимых версий. Выберите, какую открыть; общая принятая версия не определена.'}
+ if(!chosen)return {...base,state:profileId?'missing':'choice',message:profileId?"The version at this link was not found. Select an available version.":"Multiple independent versions saved. Choose which one to open; the general accepted version is not defined."}
  const result={...base,state:'ready',artifactId:chosen.id,profileFile:chosen.data.profileFile,message:''}
  try{
   const file=packageFile(workspace,chosen.data.profileFile)
   if(fs.statSync(file).size>5*1024*1024)throw Error()
   const profileBytes=fs.readFileSync(file),profile=JSON.parse(profileBytes)
-  if(![1,2,3].includes(profile.schemaVersion))return {...result,state:'unsupported',message:'Версия формата айдентики не поддерживается.'}
+  if(![1,2,3].includes(profile.schemaVersion))return {...result,state:'unsupported',message:"Identity format version is not supported."}
   if(profile.product?.id!==productId||profile.version!==chosen.data.version||!['proposed','accepted'].includes(profile.decision)||!Array.isArray(profile.rules)||profile.rules.length>1000||!Array.isArray(profile.files)||profile.files.length>1000||!Array.isArray(profile.sources)||profile.sources.length>1000||profile.rules.some(r=>!r||!text(r.id)||!text(r.topic)||!text(r.value))||profile.files.some(f=>!f||!text(f.id)||!text(f.path)||!text(f.role))||new Set(profile.files.map(f=>f.id)).size!==profile.files.length)throw Error()
   const decision=chosen.data.decision==='accepted'&&profile.decision==='accepted'&&text(profile.decisionSource)&&text(chosen.data.decisionSource)?'accepted':'proposed'
-  if(chosen.data.decision!==profile.decision||profile.decision==='accepted'&&decision!=='accepted')result.issues.push('Решение о принятии версии записано неоднозначно. Правила показаны для просмотра; принятие нужно сверить с источником.')
+  if(chosen.data.decision!==profile.decision||profile.decision==='accepted'&&decision!=='accepted')result.issues.push("The decision to accept the version was recorded ambiguous. The rules are shown for review; acceptance must be verified with the source.")
   const files=profile.files.map(f=>{
     // Bytes are read only on a cache miss, and only when something needs
     // them: a declared sha256 to compare or an intrinsic raster size to sniff.
@@ -75,7 +75,7 @@ function loadIdentity(workspace,graph,productId,profileId=''){
       }
       available=!changed
     }catch{}
-    if(!available)result.issues.push(changed?'Один файл изменился после сохранения версии. Его прежний просмотр больше не подтверждает текущий файл.':'Один файл айдентики недоступен. Правила и остальные материалы сохранены.')
+    if(!available)result.issues.push(changed?"One file has changed since the version was saved. Its previous browsing no longer confirms the current file.":"One identity file is not available. The rules and other materials have been preserved.")
     return {...f,available,changed,...(size?{width:size.width,height:size.height}:{}),preview:available&&/\.(png|jpe?g|webp|gif|svg)$/i.test(f.path)}
   })
   const current={...profile,decision,files};let presentation=profile.presentation,presentationSource=presentation?'authored':'legacy'
@@ -90,10 +90,10 @@ function loadIdentity(workspace,graph,productId,profileId=''){
    if(presentation&&validatePresentation(presentation,current).length)throw Error()
    if(profile.schemaVersion===3&&!presentation)throw Error()
   }catch{
-   presentation=null;presentationSource='unavailable';result.issues.push('Сохранённая презентация недоступна или не соответствует этой версии. Ниже показаны исходные материалы профиля.')
+   presentation=null;presentationSource='unavailable';result.issues.push("The saved presentation is not available or does not match this version. The source materials for the profile are shown below.")
   }
   return {...result,profile:current,presentation:presentation||legacyPresentation(current),presentationSource,issues:[...new Set(result.issues)]}
- }catch(error){return {...result,state:error.code==='ENOENT'?'awaiting':'error',message:error.code==='ENOENT'?'Профиль зарегистрирован, но файл с правилами пока недоступен.':'Не удалось прочитать профиль айдентики. Проверьте сохранённую версию.'}}
+ }catch(error){return {...result,state:error.code==='ENOENT'?'awaiting':'error',message:error.code==='ENOENT'?"The profile is registered, but the rules file is not yet available.":"Failed to read identity profile. Check the saved version."}}
 }
 function identityFile(workspace,graph,params){
  const data=loadIdentity(workspace,graph,params.productId,params.profile),file=data.profile?.files.find(f=>f.id===params.file&&f.available)

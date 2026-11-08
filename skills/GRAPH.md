@@ -1,38 +1,39 @@
-# Память продукта
+# Product memory
 
-`research-graph.json` хранит структурированные записи и связи. Оригинальные
-материалы находятся в sources/, производные тексты — в reports/.
-Файл создаёт и изменяет только общий writer; не переписывайте JSON вручную.
+`research-graph.json` stores structured records and relationships. Original
+materials are in sources/, derived texts are in reports/.
+The file is created and modified only by the shared writer; don't rewrite JSON manually.
 
-## Основные записи
+## Main entries
 
-| Тип | Содержание |
+| Type | Contents |
 | --- | --- |
-| product | Продукт, описание, стадия, цель и ограничения |
-| artifact | Сохранённый материал или производный документ |
-| evidence | Конкретное наблюдение с точным источником |
-| assumption | Проверяемое предположение |
-| move | Выбранное действие |
-| segment, job, criterion | Уже известная группа клиентов, её задача и критерий результата |
-| competitor | Известная альтернатива |
+| product | Product, Description, Stage, Purpose and Limitations |
+| artifact | Saved material or derivative document |
+| evidence | Specific observation with exact source |
+| assumption | Testable assumption |
+| move | Selected action |
+| segment, job, criterion | Already known group of clients, its task and result criterion |
+| competitor | Well-known alternative |
 
-Онтология закрытая. Полный список совместимых типов и разрешённых связей находится
-в `bin/graph/schema.js`. Нельзя придумывать новые типы или соединять записи только
-по похожим словам. Для хранения обычного документа достаточно artifact.
+The ontology is closed. A complete list of compatible types and allowed relationships can be found in
+to `bin/graph/schema.js`. You cannot invent new types or combine records only
+similar words. To store a regular document, artifact.
+ is enough
 
-У записи есть стабильный id, type, label, status, source и data. source — относительный
-путь к существующему оригиналу с уточнением места, когда оно нужно. Продукт хранит
-`data.description = {what, forWhom, outcome}`; неизвестное значение — null.
+The entry has a stable id, type, label, status, source and data. source — relative
+path to an existing original, specifying the location when needed. Product stores
+`data.description = {what, forWhom, outcome}`; unknown value - null.
 
-Статусы: hypothesis, evidenced, validated, contradicted, dropped. Источник и
-честная атрибуция важнее статуса. Сохранённый файл не становится проверенным выводом.
-Не меняйте статус на validated только потому, что в материале есть мнение автора.
-Для изменения статуса нужны связанные свидетельства; writer проверяет это.
+Statuses: hypothesis, evidenced, validated, contradicted, dropped. Source and
+Fair attribution is more important than status. The saved file does not become verified output.
+Do not change the status to validated just because the material contains the opinion of the author.
+Associated certificates are required to change status; writer checks it.
 
-Существующие индивидуальные данные исследования остаются совместимыми с консолью.
-Команды `research read`, `research source`, `research summary`, `research audit`
-читают сохранённое и ничего не исследуют самостоятельно. Стратегическая карта
-работ — отдельный JSON-документ в reports/, зарегистрированный как artifact
-с `artifactKind: "strategic-job-map"` (см. [GRAPH-WRITES.md](GRAPH-WRITES.md)).
+Existing individual study data remains compatible with the console.
+Commands `research read`, `research source`, `research summary`, `research audit`
+read what is saved and do not research anything on their own. Strategic map
+works - separate JSON document in reports/, registered as artifact
+from `artifactKind: "strategic-job-map"` (see [GRAPH-WRITES.md](GRAPH-WRITES.md)).
 
-Правила записи и пример пакета: [GRAPH-WRITES.md](GRAPH-WRITES.md).
+Writing rules and example packet: [GRAPH-WRITES.md](GRAPH-WRITES.md).

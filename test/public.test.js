@@ -35,8 +35,8 @@ test('retired routes and graph operation are unavailable without changing legacy
   graph.nodes.push({id:'old-channel',type:'channel',label:'Legacy channel',status:'hypothesis',data:{}})
   fs.writeFileSync(graphFile,JSON.stringify(graph,null,2)+'\n')
   const before=fs.readFileSync(graphFile)
-  assert.throws(()=>require('../bin/graph/writer').applyOperations(dir,{schemaVersion:1,source:'cleanup-test',expectedRevision:graph.revision,operations:[{op:'communication',type:'channel',label:'Unexpected'}]}),/не входят/)
-  assert.throws(()=>require('../bin/graph/writer').applyOperations(dir,{schemaVersion:1,source:'cleanup-test',expectedRevision:graph.revision,operations:[{op:'node',node:{id:'new-channel',type:'channel',label:'Unexpected'}}]}),/не входят/)
+  assert.throws(()=>require('../bin/graph/writer').applyOperations(dir,{schemaVersion:1,source:'cleanup-test',expectedRevision:graph.revision,operations:[{op:'communication',type:'channel',label:'Unexpected'}]}),/not included/)
+  assert.throws(()=>require('../bin/graph/writer').applyOperations(dir,{schemaVersion:1,source:'cleanup-test',expectedRevision:graph.revision,operations:[{op:'node',node:{id:'new-channel',type:'channel',label:'Unexpected'}}]}),/not included/)
   const {createConsoleServer,listen}=require('../bin/console/server')
   const app=await createConsoleServer({workspace:dir,repoRoot:root,bbPath:false,claudePath:false,chromeAgent:false})
   t.after(()=>new Promise(resolve=>app.server.close(resolve)))
@@ -83,7 +83,7 @@ test('import preserves exact bytes, deduplicates, and does not pretend to analyz
   assert.deepEqual(fs.readFileSync(path.join(dir,first.source)),bytes)
   assert.equal(sources(dir).length,1)
   const record=JSON.parse(fs.readFileSync(path.join(dir,'research-graph.json'))).nodes.find(n=>n.id===first.id)
-  assert.equal(record.status,'hypothesis');assert.match(record.data.summary,/ещё не разобрано/)
+  assert.equal(record.status,'hypothesis');assert.match(record.data.summary,/not yet analyzed/)
 })
 
 test('status completion writes only console metadata, never product memory',t=>{
@@ -93,9 +93,9 @@ test('status completion writes only console metadata, never product memory',t=>{
   const runId='run-test-status'
   fs.writeFileSync(path.join(dir,'.product-os','state.json'),JSON.stringify({launches:[{runId,move:{skill:'product-status',node:{id:'product'}}}]}))
   const {statusReceipt}=require('../bin/public-workspace')
-  statusReceipt(dir,{runId,nodeId:'product',summary:'Прочитан существующий контекст.'})
+  statusReceipt(dir,{runId,nodeId:'product',summary:"The existing context has been read."})
   assert.equal(fs.readFileSync(path.join(dir,'research-graph.json'),'utf8'),before)
-  assert.throws(()=>statusReceipt(dir,{runId:'run-unknown',nodeId:'product',summary:'Incorrect'}),/не найден/)
+  assert.throws(()=>statusReceipt(dir,{runId:'run-unknown',nodeId:'product',summary:'Incorrect'}),/not found/)
 })
 
 test('both agent installations contain only public skills and run independently',t=>{
@@ -128,10 +128,10 @@ test('global install is reused by two products and updates preserve unrelated sk
     fs.writeFileSync(path.join(workspace,'PRODUCT.md'),`# Product ${i}\n\nOwner description ${i}\n`)
     fs.writeFileSync(path.join(workspace,'AGENTS.md'),'Owner workspace instructions\n')
     await require(path.join(runtime,'bin/product-os')).main(['setup',workspace,'--agent','both'],{userHome})
-    await assert.rejects(require(path.join(runtime,'bin/product-os')).main(['setup',path.join(runtime,'nested-product'),'--agent','both'],{userHome}),/вне установленного инструментария/)
+    await assert.rejects(require(path.join(runtime,'bin/product-os')).main(['setup',path.join(runtime,'nested-product'),'--agent','both'],{userHome}),/outside of the installed toolkit/)
     assert.equal(fs.existsSync(path.join(runtime,'nested-product')),false)
     const other=runtimes[1-i],insideOther=path.join(other,'nested-product')
-    await assert.rejects(require(path.join(runtime,'bin/product-os')).main(['setup',insideOther,'--agent','both'],{userHome}),/вне установленного инструментария/)
+    await assert.rejects(require(path.join(runtime,'bin/product-os')).main(['setup',insideOther,'--agent','both'],{userHome}),/outside of the installed toolkit/)
     assert.equal(fs.existsSync(insideOther),false)
     for(const config of ['.agents','.claude'])assert.equal(fs.existsSync(path.join(workspace,config)),false,'No local copy: '+config)
     const instructions=fs.readFileSync(path.join(workspace,'AGENTS.md'),'utf8')
@@ -164,12 +164,12 @@ test('global install validates both agents before touching conflicts or symlink 
   const dir=temporary(t),userHome=path.join(dir,'user'),foreign=path.join(userHome,'.agents/product-os-tools')
   fs.mkdirSync(foreign,{recursive:true});fs.writeFileSync(path.join(foreign,'package.json'),'{"name":"product-os"}')
   const cli=require('../bin/product-os')
-  await assert.rejects(cli.main(['install','--agent','both'],{userHome}),/другой Product OS/)
+  await assert.rejects(cli.main(['install','--agent','both'],{userHome}),/[Aa]nother Product OS/)
   assert.equal(fs.existsSync(path.join(userHome,'.claude')),false)
   const other=path.join(dir,'other-user'),outside=path.join(dir,'outside');fs.mkdirSync(outside)
   fs.mkdirSync(path.join(other,'.agents/skills'),{recursive:true})
   fs.symlinkSync(outside,path.join(other,'.agents/skills/product-context'))
-  await assert.rejects(cli.main(['install','--agent','both'],{userHome:other}),/символические ссылки/)
+  await assert.rejects(cli.main(['install','--agent','both'],{userHome:other}),/[Ss]ymbolic links/)
   assert.equal(fs.existsSync(path.join(other,'.claude')),false)
   assert.deepEqual(fs.readdirSync(outside),[])
   for(const args of [['--agent'],['--unknown'],['--agent','missing']])await assert.rejects(cli.main(['install',...args],{userHome:path.join(dir,'invalid')}),/install/)
@@ -178,7 +178,7 @@ test('global install validates both agents before touching conflicts or symlink 
   await cli.main(['install','--agent','codex'],{userHome:nested})
   const skill=path.join(nested,'.agents/skills/product-status/SKILL.md'),outsideFile=path.join(dir,'outside.md')
   fs.writeFileSync(outsideFile,'Keep outside\n');fs.unlinkSync(skill);fs.symlinkSync(outsideFile,skill)
-  await assert.rejects(cli.main(['install','--agent','both'],{userHome:nested}),/символические ссылки/)
+  await assert.rejects(cli.main(['install','--agent','both'],{userHome:nested}),/[Ss]ymbolic links/)
   assert.equal(fs.readFileSync(outsideFile,'utf8'),'Keep outside\n')
   assert.equal(fs.existsSync(path.join(nested,'.claude')),false)
 })
@@ -224,7 +224,7 @@ test('setup prepares one workspace for both agents and preserves user work on re
   fs.writeFileSync(path.join(workspace,'AGENTS.md'),'Personal instructions\n')
   const cli=path.join(root,'bin/product-os.js')
   const output=execFileSync(process.execPath,[cli,'setup',workspace,'--agent','both'],{encoding:'utf8'})
-  assert.match(output,/Рабочее место готово/)
+  assert.match(output,/Workspace ready/)
   const graph=fs.readFileSync(path.join(workspace,'research-graph.json'),'utf8')
   const notes=path.join(workspace,'notes.md');fs.writeFileSync(notes,'Original user material\n')
   const saved=importSource(workspace,notes)
@@ -243,10 +243,10 @@ test('setup prepares one workspace for both agents and preserves user work on re
 
 test('installed runtimes repeat setup for both agents without self-deletion',t=>{
   const dir=temporary(t)
-  fs.writeFileSync(path.join(dir,'PRODUCT.md'),'# Мой продукт\n\nОписание владельца\n')
+  fs.writeFileSync(path.join(dir,'PRODUCT.md'),"# My product\n\nOwner description\n")
   fs.writeFileSync(path.join(dir,'AGENTS.md'),'Personal instructions\n')
   execFileSync(process.execPath,[path.join(root,'bin/product-os.js'),'setup',dir,'--agent','both'])
-  const notes=path.join(dir,'notes.md');fs.writeFileSync(notes,'Материал владельца\n')
+  const notes=path.join(dir,'notes.md');fs.writeFileSync(notes,"Owner material\n")
   const saved=importSource(dir,notes)
   for(const cli of ['.agents/product-os-tools/bin/product-os.js','.claude/skills/product-os-tools/bin/product-os.js'])
     execFileSync(process.execPath,[path.join(dir,cli),'setup',dir,'--agent','both'])
@@ -255,9 +255,9 @@ test('installed runtimes repeat setup for both agents without self-deletion',t=>
     assert.match(execFileSync(process.execPath,[path.join(dir,runtime,'bin','product-os.js'),'help'],{encoding:'utf8'}),/Product OS/)
     assert.deepEqual(skillDirs(path.join(dir,base,'skills')).filter(name=>name!=='product-os-tools'),expected)
   }
-  assert.equal(fs.readFileSync(path.join(dir,'PRODUCT.md'),'utf8'),'# Мой продукт\n\nОписание владельца\n')
+  assert.equal(fs.readFileSync(path.join(dir,'PRODUCT.md'),'utf8'),"# My product\n\nOwner description\n")
   assert.ok(fs.readFileSync(path.join(dir,'AGENTS.md'),'utf8').startsWith('Personal instructions\n'))
-  assert.equal(fs.readFileSync(path.join(dir,saved.source),'utf8'),'Материал владельца\n')
+  assert.equal(fs.readFileSync(path.join(dir,saved.source),'utf8'),"Owner material\n")
   execFileSync(process.execPath,[path.join(dir,'.agents/product-os-tools/bin/graph-write.js'),dir,'--check'])
 })
 
@@ -274,7 +274,7 @@ test('setup rejects another edition or an invalid agent without initializing pro
   const dir=temporary(t),foreign=path.join(dir,'.agents/product-os-tools')
   fs.mkdirSync(foreign,{recursive:true});fs.writeFileSync(path.join(foreign,'package.json'),'{"name":"product-os"}')
   const cli=path.join(root,'bin/product-os.js')
-  assert.throws(()=>execFileSync(process.execPath,[cli,'setup',dir,'--agent','both'],{stdio:'pipe'}),/другой Product OS/)
+  assert.throws(()=>execFileSync(process.execPath,[cli,'setup',dir,'--agent','both'],{stdio:'pipe'}),/[Aa]nother Product OS/)
   for(const file of ['PRODUCT.md','research-graph.json','CLAUDE.md','AGENTS.md'])assert.equal(fs.existsSync(path.join(dir,file)),false,file)
   assert.throws(()=>execFileSync(process.execPath,[cli,'setup',path.join(dir,'invalid'),'--agent','missing'],{stdio:'pipe'}),/setup/)
   assert.equal(fs.existsSync(path.join(dir,'invalid')),false)
@@ -283,7 +283,7 @@ test('setup rejects another edition or an invalid agent without initializing pro
 test('installation refuses another edition before changing either agent',t=>{
   const dir=temporary(t),foreign=path.join(dir,'.agents/product-os-tools')
   fs.mkdirSync(foreign,{recursive:true});fs.writeFileSync(path.join(foreign,'package.json'),'{"name":"product-os"}')
-  assert.throws(()=>require('../bin/install').install(dir,{agent:'both'}),/другой Product OS/)
+  assert.throws(()=>require('../bin/install').install(dir,{agent:'both'}),/[Aa]nother Product OS/)
   assert.equal(fs.existsSync(path.join(dir,'.claude')),false)
   assert.equal(fs.readFileSync(path.join(foreign,'package.json'),'utf8'),'{"name":"product-os"}')
 })
@@ -303,7 +303,7 @@ test('console serves source and public skills; advanced routes are unavailable',
   fs.writeFileSync(path.join(dir,'reports','saved-note.md'),'# Saved note\n\nSaved context.\n')
   const report=await(await fetch(base+'/report?path=reports%2Fsaved-note.md')).text()
   assert.ok(report.includes('href="/#materials"'))
-  assert.ok(!report.includes('Взять следующий шаг'))
+  assert.ok(!report.includes("Take next step"))
   const binary=Buffer.from([0,255,0,128,42]),binaryFile=path.join(dir,'sample.pdf');fs.writeFileSync(binaryFile,binary)
   const binarySource=importSource(dir,binaryFile)
   const download=await fetch(base+'/source?path='+encodeURIComponent(binarySource.source))
@@ -318,19 +318,19 @@ test('console serves source and public skills; advanced routes are unavailable',
 test('native job map round-trips through the public reader with a saved offering scope',t=>{
   const dir=temporary(t);init(dir)
   fs.mkdirSync(path.join(dir,'reports/job-map/run-1'),{recursive:true})
-  const map={version:1,title:'Карта работ',basis:'Гипотезы из описания продукта.',scope:{productId:'product',goal:'Выбрать работы для исследования',edition:'full'},
-    editions:{full:'Текущий продукт',public:'Отдельная версия не описана'},
-    jobs:{'job-plan':{id:'job-plan',label:'Спланировать следующий шаг',kind:'original',description:'Человек решает, что делать дальше.',input:'Сохранённый контекст продукта.',output:'Выбранное направление.',mechanism:'Продукт собирает контекст в одном месте.',alternatives:'Заметки в разных файлах.',basis:'hypothesis',sourceRefs:['product-description'],
-      full:{state:'assist',contribution:'Хранит контекст и решения с источниками.',limit:'Не выбирает направление за человека.',sources:['product-description']},
-      public:{state:'unknown',contribution:'Отдельная версия не описана.',limit:'Возможности этой версии неизвестны.',sources:[]}}},
-    graphs:[{id:'job-plan',title:'Спланировать следующий шаг',jobIds:['job-plan'],edges:[],note:'Один фрагмент.',boundary:'Решение остаётся за человеком.'}],
-    contexts:[],sources:{'product-description':{kind:'owner',title:'PRODUCT.md',text:'Описание продукта владельцем.'}},inventory:[],
+  const map={version:1,title:"Job map",basis:"Hypotheses from the product description.",scope:{productId:'product',goal:"Select works for research",edition:'full'},
+    editions:{full:"Current product",public:"Separate version not described"},
+    jobs:{'job-plan':{id:'job-plan',label:"Plan next step",kind:'original',description:"A man decides what to do next.",input:"Saved product context.",output:"Selected direction.",mechanism:"The product collects context in one place.",alternatives:"Notes in different files.",basis:'hypothesis',sourceRefs:['product-description'],
+      full:{state:'assist',contribution:"Stores context and solutions with sources.",limit:"Doesn't choose direction for a person.",sources:['product-description']},
+      public:{state:'unknown',contribution:"A separate version is not described.",limit:"The capabilities of this version are unknown.",sources:[]}}},
+    graphs:[{id:'job-plan',title:"Plan next step",jobIds:['job-plan'],edges:[],note:"One fragment.",boundary:"The decision remains with the person."}],
+    contexts:[],sources:{'product-description':{kind:'owner',title:'PRODUCT.md',text:"Description of the product by the owner."}},inventory:[],
     review:{status:'unreviewed',sourceRefs:[]}}
   const mapFile=path.join(dir,'reports/job-map/run-1/map.json'),mapBytes=Buffer.from(JSON.stringify(map,null,2)+'\n')
   fs.writeFileSync(mapFile,mapBytes)
-  fs.writeFileSync(path.join(dir,'reports/job-map/run-1/report.md'),'---\ntitle: Карта работ\ndate: 2026-10-21\nskill: product-job-map\nnodeId: product\noutcome: partial\nsummary: Черновик карты без независимой проверки.\n---\n\nЧерновик.\n')
+  fs.writeFileSync(path.join(dir,'reports/job-map/run-1/report.md'),"---\ntitle: Job map\ndate: 2026-10-21\nskill: product-job-map\nnodeId: product\noutcome: partial\nsummary: Draft map without independent checks.\n---\n\nDraft.\n")
   const operations=path.join(dir,'map-ops.json')
-  fs.writeFileSync(operations,JSON.stringify({schemaVersion:1,expectedRevision:1,source:'reports/job-map/run-1/report.md',operations:[{op:'node',node:{id:'artifact-job-map-product',type:'artifact',label:'Карта работ',status:'hypothesis',data:{confidence:'ai',artifactKind:'strategic-job-map',version:1,productId:'product',mapPath:'reports/job-map/run-1/map.json',mapSha256:createHash('sha256').update(mapBytes).digest('hex')}}}]},null,2))
+  fs.writeFileSync(operations,JSON.stringify({schemaVersion:1,expectedRevision:1,source:'reports/job-map/run-1/report.md',operations:[{op:'node',node:{id:'artifact-job-map-product',type:'artifact',label:"Job map",status:'hypothesis',data:{confidence:'ai',artifactKind:'strategic-job-map',version:1,productId:'product',mapPath:'reports/job-map/run-1/map.json',mapSha256:createHash('sha256').update(mapBytes).digest('hex')}}}]},null,2))
   execFileSync(process.execPath,[path.join(root,'bin/product-os.js'),'graph-write',dir,operations])
   const {strategicJobs}=require('../bin/console/strategic-jobs')
   const graph=JSON.parse(fs.readFileSync(path.join(dir,'research-graph.json'),'utf8'))
@@ -338,21 +338,21 @@ test('native job map round-trips through the public reader with a saved offering
   assert.equal(reading.state,'ready')
   assert.equal(reading.map.scope.edition,'full')
   assert.equal(reading.map.jobs['job-plan'].full.state,'assist')
-  assert.equal(reading.map.jobs['job-plan'].full.contribution,'Хранит контекст и решения с источниками.')
+  assert.equal(reading.map.jobs['job-plan'].full.contribution,"Stores context and solutions with sources.")
   assert.equal(reading.map.jobs['job-plan'].public.state,'unknown')
   const rejected=JSON.parse(mapBytes.toString());rejected.scope.edition='free'
-  assert.throws(()=>require('../bin/console/strategic-jobs').validateMap(rejected),/Некорректная структура/)
+  assert.throws(()=>require('../bin/console/strategic-jobs').validateMap(rejected),/Incorrect .* structure/)
 })
 
 test('focused research persists with the evidence op and reaches the console report list',async t=>{
   const dir=temporary(t);init(dir)
   const reportPath='reports/research/2026-10-21_probe.md'
   fs.mkdirSync(path.join(dir,'reports/research'),{recursive:true})
-  fs.writeFileSync(path.join(dir,reportPath),'---\ntitle: Проверка вопроса\ndate: 2026-10-21\nskill: product-research\nnodeId: seg-probe\noutcome: partial\nsummary: Часть фактов подтверждена; независимая проверка не выполнялась.\n---\n\nОтвет на вопрос.\n')
+  fs.writeFileSync(path.join(dir,reportPath),"---\ntitle: Question verification\ndate: 2026-10-21\nskill: product-research\nnodeId: seg-probe\noutcome: partial\nsummary: Some facts have been confirmed; No independent verification has been performed.\n---\n\nAnswer to question.\n")
   const operations=path.join(dir,'research-ops.json')
   fs.writeFileSync(operations,JSON.stringify({schemaVersion:1,expectedRevision:1,source:reportPath,operations:[
-    {op:'node',node:{id:'seg-probe',type:'segment',label:'Возможные клиенты',status:'hypothesis',source:'PRODUCT.md',data:{confidence:'ai',customerProfileSource:'PRODUCT.md',customerProfile:{version:1,group:{id:'g',label:'Группа'},summary:{text:'Практика людей, которым продукт может помочь.',basis:'hypothesis',sourceRefs:[]},context:{text:'Рабочий контекст.',basis:'hypothesis',sourceRefs:[]},recognition:{text:'Узнаются по ситуации.',basis:'hypothesis',sourceRefs:[]},whySeparate:{text:'Другая ценность.',basis:'hypothesis',sourceRefs:[]},primaryJob:{text:'Сделать шаг.',basis:'hypothesis',sourceRefs:[]},productFit:{text:'Помощь контекстом.',basis:'hypothesis',sourceRefs:[]},alternatives:{text:'Заметки.',basis:'hypothesis',sourceRefs:[]},successCriteria:[],otherJobs:[],roles:{user:{text:'Пользуется сам в своей работе.',basis:'hypothesis',sourceRefs:[]},decisionMaker:{text:'Кто решает о покупке — неизвестно.',basis:'unknown',sourceRefs:[]},payer:{text:'Кто платит — неизвестно.',basis:'unknown',sourceRefs:[]}},journey:{trigger:{text:'Возникает задача.',basis:'hypothesis',sourceRefs:[]},discovery:{text:'Как находят — неизвестно.',basis:'unknown',sourceRefs:[]},firstUse:{text:'Первый сценарий не описан.',basis:'unknown',sourceRefs:[]},purchase:{text:'Покупка не описана.',basis:'unknown',sourceRefs:[]},retention:{text:'Повторное использование не описано.',basis:'unknown',sourceRefs:[]}},unknowns:['Кто платит']}}}},
-    {op:'evidence',target:'seg-probe',text:'Публичная страница описывает практику.',source:'https://example.com/practice',origin:'web',relation:'evidenced_by'},
+    {op:'node',node:{id:'seg-probe',type:'segment',label:"Possible clients",status:'hypothesis',source:'PRODUCT.md',data:{confidence:'ai',customerProfileSource:'PRODUCT.md',customerProfile:{version:1,group:{id:'g',label:"Group"},summary:{text:"Practice of people who can benefit from the product.",basis:'hypothesis',sourceRefs:[]},context:{text:"Work context.",basis:'hypothesis',sourceRefs:[]},recognition:{text:"Recognized by the situation.",basis:'hypothesis',sourceRefs:[]},whySeparate:{text:"Another value.",basis:'hypothesis',sourceRefs:[]},primaryJob:{text:"Take a step.",basis:'hypothesis',sourceRefs:[]},productFit:{text:"Help with context.",basis:'hypothesis',sourceRefs:[]},alternatives:{text:"Notes.",basis:'hypothesis',sourceRefs:[]},successCriteria:[],otherJobs:[],roles:{user:{text:"He uses it himself in his work.",basis:'hypothesis',sourceRefs:[]},decisionMaker:{text:"Who decides to buy is unknown.",basis:'unknown',sourceRefs:[]},payer:{text:"Who pays is unknown.",basis:'unknown',sourceRefs:[]}},journey:{trigger:{text:"A task has occurred.",basis:'hypothesis',sourceRefs:[]},discovery:{text:"How they are found is unknown.",basis:'unknown',sourceRefs:[]},firstUse:{text:"The first scenario is not described.",basis:'unknown',sourceRefs:[]},purchase:{text:"Purchase not described.",basis:'unknown',sourceRefs:[]},retention:{text:"Reuse is not described.",basis:'unknown',sourceRefs:[]}},unknowns:["Who pays"]}}}},
+    {op:'evidence',target:'seg-probe',text:"Public page describes the practice.",source:'https://example.com/practice',origin:'web',relation:'evidenced_by'},
     {op:'complete',nodeId:'seg-probe',skill:'product-research',report:reportPath,outcome:'completed'}
   ]},null,2))
   execFileSync(process.execPath,[path.join(root,'bin/product-os.js'),'graph-write',dir,operations])

@@ -2,7 +2,7 @@
 const list=value=>Array.isArray(value)?value:[]
 const text=value=>typeof value==='string'&&value.trim().length>0&&value.length<=12000
 const hex=value=>typeof value==='string'&&/^#[a-f0-9]{6}$/i.test(value)
-const topics={logo:'Логотип',color:'Цвета',typography:'Типографика',character:'Персонаж',positioning:'Имя и описание',composition:'Композиция',layout:'Композиция',graphics:'Графика',graphic:'Графика',voice:'Голос бренда',tone:'Голос бренда',application:'Применение'}
+const topics={logo:"Logo",color:"Colors",typography:"Typography",character:"Character",positioning:"Name and description",composition:"Composition",layout:"Composition",graphics:"Graphics",graphic:"Graphics",voice:"Brand voice",tone:"Brand voice",application:"Use"}
 function contrast(a,b){
  const luminance=hex=>hex.slice(1).match(/../g).map(v=>parseInt(v,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4).reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0)
  const x=luminance(a),y=luminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)
@@ -58,7 +58,7 @@ function validatePresentation(value,profile){
  for(const rule of list(profile.rules))if(rule.strength==='required'&&!usedRules.has(rule.id))fail('Required rule is absent from the presentation: '+rule.id)
  return errors
 }
-function fileTitle(file){return file.title||file.label||({'logo':'Логотип','typography':'Образец типографики','palette':'Образец палитры','application':'Пример применения','concept-board':'Концепция','presentation':'Презентация','logobook':'Руководство'}[file.role])||file.path.split('/').pop()}
+function fileTitle(file){return file.title||file.label||({'logo':"Logo",'typography':"Typography sample",'palette':"Palette sample",'application':"Application example",'concept-board':"Concept",'presentation':"Presentation",'logobook':"Manual"}[file.role])||file.path.split('/').pop()}
 function legacyPresentation(profile){
  // A file inventory is not a brand presentation. In particular, the next
  // preview may be a favicon or an old concept, not a cover illustration.
@@ -71,8 +71,8 @@ function legacyPresentation(profile){
  for(const rule of list(profile.rules)){const group=groups.get(rule.topic)||[];group.push(rule);groups.set(rule.topic,group)}
  for(const [topic,rules] of groups){
   const images=visual.filter(f=>!used.has(f.id)&&!technical(f)&&(rules.some(r=>list(r.demoFileIds).includes(f.id))||({logo:'logo',color:'palette',typography:'typography'}[topic]===f.role)))
-  images.forEach(f=>used.add(f.id));const id='topic-'+sections.length,title=topics[topic]||'Правила применения'
-  const colors=topic==='color'?[...new Map(rules.flatMap(r=>list(r.pairs).flatMap(p=>[{value:p.fg,label:'Текст · '+(p.role||'основной')},{value:p.bg,label:'Фон · '+(p.role||'основной')}])).filter(c=>hex(c.value)).map(c=>[c.value,c])).values()]:[]
+  images.forEach(f=>used.add(f.id));const id='topic-'+sections.length,title=topics[topic]||"Application rules"
+  const colors=topic==='color'?[...new Map(rules.flatMap(r=>list(r.pairs).flatMap(p=>[{value:p.fg,label:"Text · "+(p.role||"main")},{value:p.bg,label:"Background · "+(p.role||"main")}])).filter(c=>hex(c.value)).map(c=>[c.value,c])).values()]:[]
   if(colors.length)sections.push({id,type:'palette',title,colors,ruleIds:rules.map(r=>r.id)})
   else if(images.length)sections.push({id,type:'showcase',title,items:images.map(f=>({title:fileTitle(f),image:{fileId:f.id,alt:fileTitle(f)}})),ruleIds:rules.map(r=>r.id)})
   else sections.push({id,type:'text',title,body:rules.map(r=>r.value).join('\n\n'),ruleIds:rules.map(r=>r.id)})
@@ -80,7 +80,7 @@ function legacyPresentation(profile){
  // Unassigned exports, research screenshots and historic concepts stay in the
  // complete file archive. Only authored sections can give them a primary role.
  const downloads=files.filter(f=>['logo','typography','logobook'].includes(f.role)||f.purpose==='brand-signature'||/\.(zip|woff2?|[ot]tf)$/i.test(f.path))
- if(downloads.length)sections.push({id:'files',type:'downloads',title:'Взять в работу',items:downloads.map(f=>({fileId:f.id,title:fileTitle(f)}))})
- return {schemaVersion:1,title:profile.product?.name||'Айдентика',description:profile.brief?.descriptor||'',cover:{title:profile.product?.name||'Айдентика',description:profile.brief?.descriptor||'',...(logo?{logoFileId:logo.id}:{})},sections}
+ if(downloads.length)sections.push({id:'files',type:'downloads',title:"Get to work",items:downloads.map(f=>({fileId:f.id,title:fileTitle(f)}))})
+ return {schemaVersion:1,title:profile.product?.name||"Brand identity",description:profile.brief?.descriptor||'',cover:{title:profile.product?.name||"Brand identity",description:profile.brief?.descriptor||'',...(logo?{logoFileId:logo.id}:{})},sections}
 }
 module.exports={validatePresentation,legacyPresentation,fileTitle,contrast}

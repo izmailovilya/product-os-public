@@ -20,8 +20,8 @@ export function segmentMarker({label,colorIndex=null,basis='supported'} = {}) {
   const color = Number.isInteger(colorIndex) && colorIndex >= 0 && colorIndex < 12 ? colorIndex : 'neutral'
   return `<span class="os-segment-marker" data-marker-color="${color}" data-basis="${basis === 'interpretation' ? 'interpretation' : 'supported'}">${escapeHTML(label)}</span>`
 }
-export function annotationLegend({segments=[],title='Цвета сегментов',uncertainty='Вероятная связь',uncertaintyDetail='пунктир под фразой.',neutral='Связь не найдена',neutralDetail='среди выбранных сегментов. Это не оценка качества текста.',detail='Тип фразы и все связи — в карточке при наведении. Текст без подсветки не размечен.'} = {}) {
-  return `<section class="os-annotation-legend" aria-label="Легенда подсветки"><h3>${escapeHTML(title)}</h3><ul>${segments.map((s,i) => `<li>${segmentMarker({label:s.label,colorIndex:s.colorIndex === 12 ? null : s.colorIndex ?? i % 12})}</li>`).join('')}</ul><p>${segmentMarker({label:uncertainty,colorIndex:segments[0]?.colorIndex ?? 0,basis:'interpretation'})} — ${escapeHTML(uncertaintyDetail)}</p><p>${segmentMarker({label:neutral})} — ${escapeHTML(neutralDetail)}</p><p>${escapeHTML(detail)}</p></section>`
+export function annotationLegend({segments=[],title="Segment colors",uncertainty="Probable connection",uncertaintyDetail="dotted line below the phrase.",neutral="Communication not found",neutralDetail="among selected segments. This is not an assessment of the quality of the text.",detail="The type of phrase and all connections are in the card when you hover. Text without highlighting is not marked."} = {}) {
+  return `<section class="os-annotation-legend" aria-label="Backlight legend"><h3>${escapeHTML(title)}</h3><ul>${segments.map((s,i) => `<li>${segmentMarker({label:s.label,colorIndex:s.colorIndex === 12 ? null : s.colorIndex ?? i % 12})}</li>`).join('')}</ul><p>${segmentMarker({label:uncertainty,colorIndex:segments[0]?.colorIndex ?? 0,basis:'interpretation'})} — ${escapeHTML(uncertaintyDetail)}</p><p>${segmentMarker({label:neutral})} — ${escapeHTML(neutralDetail)}</p><p>${escapeHTML(detail)}</p></section>`
 }
 export function field({name='',label,value='',type='text',optionsHtml='',required=false,disabled=false,attributes='',className='',hint='',error=''} = {}) {
   const id = typeof attributes === 'object' && attributes.id || (typeof attributes === 'string' && attributes.match(/\bid="([^"]+)"/)?.[1]) || `os-field-${++field.sequence}`, common = `${attrs(attributes).includes('id="')?'':`id="${id}"`} name="${escapeHTML(name)}" aria-label="${escapeHTML(label)}" ${required?'required':''} ${disabled?'disabled':''} ${error?'aria-invalid="true"':''} ${hint||error?`aria-describedby="${id}-help"`:''} ${attrs(attributes)}`
@@ -69,27 +69,27 @@ function scheduleTopics(){if(typeof requestAnimationFrame==='function'&&!topicFr
 if(typeof document!=='undefined'&&typeof MutationObserver==='function')new MutationObserver(records=>{
  if(records.some(record=>record.removedNodes.length))scheduleTopics()
 }).observe(document.documentElement,{childList:true,subtree:true})
-export function topicNav({label='Темы страницы',items=[],active,className='',actions=''} = {}) {
+export function topicNav({label="Page Topics",items=[],active,className='',actions=''} = {}) {
   scheduleTopics()
   const nav = `<nav class="${classes('os-topic-nav',className)}" aria-label="${escapeHTML(label)}">${items.map(item=>item.href?`<a href="${escapeHTML(item.href)}" ${item.id===active?'aria-current="page"':''} ${attrs(item.attributes)}>${escapeHTML(item.label)}</a>`:`<button type="button" aria-pressed="${item.id===active}" ${item.id===active?'aria-current="page"':''} ${attrs(item.attributes)}>${escapeHTML(item.label)}</button>`).join('')}</nav>`
   return actions ? `<div class="os-topic-toolbar">${nav}<div class="os-topic-actions">${actions}</div></div>` : nav
 }
 export function emptyState({kind='first-use',title='',description='',actions='',primaryAction='',secondaryAction='',className=''} = {}) { return `<section class="${classes('os-empty-state',className)}" data-empty-kind="${escapeHTML(kind)}" ${kind==='unavailable'?'role="alert"':''}>${title?`<h2>${escapeHTML(title)}</h2>`:''}${description?`<p>${escapeHTML(description)}</p>`:''}${actions||primaryAction||secondaryAction?`<div class="os-actions">${actions||primaryAction+secondaryAction}</div>`:''}</section>` }
-const filterTitle=active=>active?'Фильтры · применены':'Фильтры'
-export function filterBar({content='',label='Фильтры списка',className='',active=false,open=false,collapsible=true} = {}) {
+const filterTitle=active=>active?"Filters applied":"Filters"
+export function filterBar({content='',label="List filters",className='',active=false,open=false,collapsible=true} = {}) {
  const fields=`<div class="${classes('os-filter-bar',className)}" role="group" aria-label="${escapeHTML(label)}">${content}</div>`
  return collapsible?disclosure({title:filterTitle(active),content:fields,className:'os-filter-disclosure',open}):fields
 }
 // Update the indicator without replacing a focused field or changing disclosure state.
 export function setFilterActive(root,active){const panel=root.matches?.('.os-filter-disclosure')?root:root.querySelector('.os-filter-disclosure');const title=panel?.querySelector(':scope>summary>span');if(title)title.textContent=filterTitle(active)}
 /** One compact result count and page controls, composed from the existing button contract. */
-export function pagination({page=1,pages=1,total=0,size=12,href=()=>'#',label='Страницы списка',context=''}={}) {
- const range=total?`Показаны ${(page-1)*size+1}–${Math.min(page*size,total)} из ${total}`:'Нет результатов'
- return `<nav class="os-pagination" aria-label="${escapeHTML(label)}"><span class="os-pagination-context">${escapeHTML([range,pages>1?`Страница ${page} из ${pages}`:'',context].filter(Boolean).join(' · '))}</span>${pages>1?`<div class="os-actions">${button({label:'← Предыдущая',attributes:{'aria-label':'← Предыдущая страница'},href:page>1?href(page-1):undefined,disabled:page<=1})}${button({label:'Следующая →',attributes:{'aria-label':'Следующая страница →'},href:page<pages?href(page+1):undefined,disabled:page>=pages})}</div>`:''}</nav>`
+export function pagination({page=1,pages=1,total=0,size=12,href=()=>'#',label="List pages",context=''}={}) {
+ const range=total?`Shown ${(page-1)*size+1}–${Math.min(page*size,total)} from ${total}`:"No results"
+ return `<nav class="os-pagination" aria-label="${escapeHTML(label)}"><span class="os-pagination-context">${escapeHTML([range,pages>1?`Page ${page} from ${pages}`:'',context].filter(Boolean).join(' · '))}</span>${pages>1?`<div class="os-actions">${button({label:"← Previous",attributes:{'aria-label':"← Previous page"},href:page>1?href(page-1):undefined,disabled:page<=1})}${button({label:"Next →",attributes:{'aria-label':"Next page →"},href:page<pages?href(page+1):undefined,disabled:page>=pages})}</div>`:''}</nav>`
 }
 export function collectionLayout({header='',nav='',filters='',content='',notice='',className=''} = {}) {return `<div class="${classes('os-collection-layout',className)}" data-page-template="collection">${header}${nav}${filters}${notice}<div class="os-page-content">${content}</div></div>`}
 /** One recorded parent/child level. Text is escaped; meta/content are trusted slots. */
-export function hierarchyList({items=[],childrenLabel='Подсегменты',emptyChildren='Подсегменты пока не выделены.',showEmptyChildren=true}={}) {
+export function hierarchyList({items=[],childrenLabel="Subsegments",emptyChildren="No subsegments have been selected yet.",showEmptyChildren=true}={}) {
  const row=(item,child=false)=>`<${child?'li':'article'} class="os-hierarchy-item ${child?'os-hierarchy-child':'os-hierarchy-root'} os-object-card" data-hierarchy-id="${escapeHTML(item.id)}" ${child?`data-hierarchy-search="${escapeHTML((item.title||'').toLocaleLowerCase())}"`:`data-search="${escapeHTML([item.title,...(item.children||[]).map(c=>c.title)].join(' ').toLocaleLowerCase())}" data-hierarchy-own-search="${escapeHTML((item.title||'').toLocaleLowerCase())}"`}><div class="os-hierarchy-heading"><h${child?'3':'2'}>${textLink({href:item.href,label:item.title,attributes:{'data-hierarchy-link':true}})}</h${child?'3':'2'}>${item.badge||''}</div>${item.description?`<p>${escapeHTML(item.description)}</p>`:''}${item.content||''}${item.meta||''}${!child&&(showEmptyChildren||item.children?.length)?`<section class="os-hierarchy-children"><h3>${escapeHTML(childrenLabel)}</h3>${item.children?.length?`<ul>${item.children.map(c=>row(c,true)).join('')}</ul>`:`<p>${escapeHTML(emptyChildren)}</p>`}</section>`:''}</${child?'li':'article'}>`
  return `<div class="os-hierarchy-list">${items.map(item=>row(item)).join('')}</div>`
 }
@@ -109,7 +109,7 @@ export function readingSection({id='',title='',level=2,intro='',content='',class
 }
 /** Compose explicit, open sections. One section needs no contents panel.
  * Raw sources and editorial interpretation remain the caller's responsibility. */
-export function readingSections({sections=[],contentsTitle='На странице',className=''}={}) {
+export function readingSections({sections=[],contentsTitle="On page",className=''}={}) {
   const content=sections.map(section=>readingSection(section)).join('')
   return sections.length>1?readingLayout({content,className,contentsTitle,contents:sections.filter(s=>s.id&&s.title).map(s=>({id:s.id,label:s.title}))}):content
 }
@@ -121,7 +121,7 @@ export function summaryCard({title='',href,level=3,meta='',content='',actions=''
 }
 /** A reading page with in-page contents. Buttons scroll within the active outlet;
  * object actions keep real link semantics and use the shared button geometry. */
-export function readingLayout({content='',contents=[],contentsTitle='На странице',actions='',className=''} = {}) {
+export function readingLayout({content='',contents=[],contentsTitle="On page",actions='',className=''} = {}) {
   scheduleReadingContents()
   return `<div class="${classes('os-reading-layout',className)}"><div class="os-reading-columns"><div class="os-reading-body">${content}</div><aside class="os-reading-contents" aria-label="${escapeHTML(contentsTitle)}"><nav>${contents.map(item=>button({label:item.label,variant:'quiet',attributes:{'data-reading-target':item.id}})).join('')}</nav>${actions?`<div class="os-reading-actions">${actions}</div>`:''}</aside></div></div>`
 }
@@ -193,7 +193,7 @@ export function brandCanvas({content='',theme={},className='',attributes={},dens
 export function previewImage({src,alt='',region,className=''}={}){
  const r=region,sprite=r&&['columns','rows','column','row'].every(k=>Number.isInteger(r[k]))&&r.columns>0&&r.columns<=12&&r.rows>0&&r.rows<=12&&r.column>=0&&r.column<r.columns&&r.row>=0&&r.row<r.rows
  const style=sprite?`width:${r.columns*100}%;height:${r.rows*100}%;left:${-r.column*100}%;top:${-r.row*100}%`:''
- return `<div data-brand-media class="${classes('brand-media',(sprite?'brand-sprite ':'')+className)}"><div data-brand-loading>${loadingState({label:'Загрузка изображения…'})}</div><img data-brand-image src="${escapeHTML(src)}" alt="${escapeHTML(alt)}" ${attrs(style?{style}:{})} hidden><div data-brand-error hidden>${notice({kind:'warning',message:'Изображение не загрузилось. Можно открыть исходный файл и повторить просмотр.'})}</div></div>`
+ return `<div data-brand-media class="${classes('brand-media',(sprite?'brand-sprite ':'')+className)}"><div data-brand-loading>${loadingState({label:"Loading image..."})}</div><img data-brand-image src="${escapeHTML(src)}" alt="${escapeHTML(alt)}" ${attrs(style?{style}:{})} hidden><div data-brand-error hidden>${notice({kind:'warning',message:"The image did not load. You can open the original file and view it again."})}</div></div>`
 }
 export function applyPreviewFont(element,alias){if(/^brand-preview-\d+$/.test(alias))element.style.setProperty('--brand-font-family',alias)}
 /** A font specimen is brand artwork, with independent type roles and its own face. */
@@ -201,7 +201,7 @@ export function brandTypography({family='',sample='',specimen,fontFileId='',font
  const attributes=fontFileId?{'data-brand-font':fontFileId,...(Array.isArray(fontWeightRange)?{'data-brand-font-weight':fontWeightRange.join(' ')}:{})}:{}
  const name=`<p class="os-brand-type-family">${escapeHTML(family)}</p>`
  const content=specimen?`<div class="os-brand-type-nameplate">${name}<p class="os-brand-type-glyphs">${escapeHTML(specimen.glyphs)}</p>${specimen.secondaryGlyphs?`<p class="os-brand-type-secondary">${escapeHTML(specimen.secondaryGlyphs)}</p>`:''}</div><div class="os-brand-type-example"><p class="os-brand-type-title">${escapeHTML(specimen.title)}</p><div class="os-brand-type-exercise">${specimen.heading?`<p class="os-brand-type-heading">${escapeHTML(specimen.heading)}</p>`:''}<p class="os-brand-type-body">${escapeHTML(specimen.body)}</p></div></div><div class="os-brand-type-characters">${(specimen.characters||[]).map(line=>`<span>${escapeHTML(line)}</span>`).join('')}</div>`:`${name}<p class="os-brand-type-sample">${escapeHTML(sample)}</p>`
- return brandCanvas({theme,className:'os-brand-type-specimen'+(specimen?' os-brand-type-composed':''),attributes,content:content+(fontFileId?'<div class="os-brand-type-font-status" data-brand-font-status role="status">Шрифт загружается…</div>':'')})
+ return brandCanvas({theme,className:'os-brand-type-specimen'+(specimen?' os-brand-type-composed':''),attributes,content:content+(fontFileId?"<div class=\"os-brand-type-font-status\" data-brand-font-status role=\"status\">Font loading…</div>":'')})
 }
 /** A filter that navigates: link semantics with shared control geometry; the active state comes from aria-current. */
 export function filterLink({label,href='#',active=false,attributes='',className=''} = {}) {
@@ -214,7 +214,7 @@ export function disclosure({title='',content='',className='',bodyClassName='',at
 }
 export function editorLayout({content='',actions='',className='',attributes=''} = {}) {return `<form class="${classes('os-editor-layout',className)}" data-page-template="editor" ${attrs(attributes)}><div class="os-editor-fields">${content}</div><div class="os-editor-actions">${actions}</div></form>`}
 /** Immediate structural feedback. Caller owns aria-busy and removes this state when content resolves. */
-export function loadingState({kind='section',title='',label='Загрузка…',className=''} = {}) {
+export function loadingState({kind='section',title='',label="Loading...",className=''} = {}) {
  const variant=kind==='page'?'page':'section',heading=variant==='page'?'h1':'h2'
  return `<section class="${classes('os-loading-state',className)}" data-loading-kind="${variant}">${title?`<${heading} class="os-loading-title">${escapeHTML(title)}</${heading}>`:''}<p class="os-loading-status" role="status">${escapeHTML(label)}</p><div class="os-loading-skeleton" aria-hidden="true">${variant==='page'?(title?'':'<div class="os-loading-heading"></div>')+'<div class="os-loading-navigation"></div>':''}<div class="os-loading-lines"><span></span><span></span><span></span></div></div></section>`
 }
@@ -286,9 +286,9 @@ export function dialog(element, {background=[],onClose,initialFocus,onEscape} = 
  },close,destroy(){close();element.removeEventListener('close',restore);element.removeEventListener('cancel',cancel);element.removeEventListener('click',click);element.removeEventListener('keydown',keyboard);dialogs.delete(element);disposed=true}}
  dialogs.set(element,controller);return controller
 }
-export function evidencePanel({title='Источник',content='',trigger=document.activeElement,onClose} = {}) {
+export function evidencePanel({title="Source",content='',trigger=document.activeElement,onClose} = {}) {
  const element=document.createElement('dialog');element.className='os-dialog os-evidence-panel';element.setAttribute('aria-label',title)
- element.innerHTML=pageHeader({title,level:2,actions:button({label:'Закрыть',attributes:{'data-os-close':true}})})+`<div class="os-evidence-content">${content}</div>`
+ element.innerHTML=pageHeader({title,level:2,actions:button({label:"Close",attributes:{'data-os-close':true}})})+`<div class="os-evidence-content">${content}</div>`
  document.body.append(element);const controller=dialog(element,{onClose})
  // Source inspection is dismissible outside; editor dialogs keep explicit cancellation.
  const outside=event=>{const box=element.getBoundingClientRect();return event.target===element&&(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom)}
@@ -298,9 +298,9 @@ export function evidencePanel({title='Источник',content='',trigger=docum
  element.addEventListener('close',()=>{controller.destroy();element.remove()},{once:true});controller.open(trigger);return controller
 }
 /** Full raster inspection uses the shared evidence/dialog lifecycle. Context is a trusted slot. */
-export function imageFocus({src,alt='',title='Изображение',context='',trigger=document.activeElement,onClose} = {}) {
+export function imageFocus({src,alt='',title="Image",context='',trigger=document.activeElement,onClose} = {}) {
  const abort=new AbortController()
- const panel=evidencePanel({title,trigger,onClose(){abort.abort();onClose?.()},content:`<p>Прокручивайте изображение, чтобы увидеть его целиком.</p><div class="os-image-focus-media" role="region" aria-label="Изображение — прокрутка" tabindex="0" aria-busy="true"><div data-os-image-loading>${loadingState({label:'Загрузка изображения…'})}</div><img data-os-image-raster alt="${escapeHTML(alt)}" hidden><div data-os-image-error hidden>${notice({kind:'warning',message:'Изображение недоступно. Закройте просмотр и повторите попытку. Описание и источники доступны ниже.'})}</div></div>${context}`})
+ const panel=evidencePanel({title,trigger,onClose(){abort.abort();onClose?.()},content:`<p>Scroll image to see full image.</p><div class="os-image-focus-media" role="region" aria-label="Image - scrolling" tabindex="0" aria-busy="true"><div data-os-image-loading>${loadingState({label:"Loading image..."})}</div><img data-os-image-raster alt="${escapeHTML(alt)}" hidden><div data-os-image-error hidden>${notice({kind:'warning',message:"Image not available. Close viewing and try again. Description and sources are available below."})}</div></div>${context}`})
  panel.element.classList.add('os-image-focus')
  const region=panel.element.querySelector('.os-image-focus-media'),image=region.querySelector('img'),loading=region.querySelector('[data-os-image-loading]'),error=region.querySelector('[data-os-image-error]')
  const settle=failed=>{if(abort.signal.aborted)return;region.setAttribute('aria-busy','false');loading.hidden=true;image.hidden=failed;error.hidden=!failed}
@@ -314,16 +314,16 @@ export const OSUI={brandTypography,previewImage,applyPreviewFont,brandCanvas,bra
 if(typeof window!=='undefined')window.OSUI=OSUI
 
 /** A compact citation marker, an information icon, or a named textual action. Index is supplied by the source adapter, never counted here. */
-export function sourceTrigger({variant='compact',label='Открыть источник',attributes='',index='',className=''} = {}) {
+export function sourceTrigger({variant='compact',label="Open source",attributes='',index='',className=''} = {}) {
  const style=['link','icon'].includes(variant)?variant:'compact',extra=attrs(attributes),tooltip=style==='icon'&&!/\btitle\s*=/.test(extra)?`title="${escapeHTML(label)}"`:'',popup=/\baria-haspopup\s*=/.test(extra)?'':'aria-haspopup="dialog"'
  return `<button type="button" class="${classes(`source-icon os-source-trigger os-source-trigger-${style}`,className)}" aria-label="${escapeHTML(label)}" ${popup} ${tooltip} ${extra}>${style==='link'?escapeHTML(label):style==='icon'?'<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></svg>':`[${escapeHTML(index||1)}]`}</button>`
 }
 /** Selectable reading text, with explicit keyboard/touch access to its provenance. */
 export function sourceText({text='',label='',attributes='',className=''} = {}) {
- return `<span class="${classes('os-source-text',className)}" role="button" tabindex="0" aria-haspopup="dialog" aria-expanded="false" aria-label="${escapeHTML(label||text+' — источники и основания')}" ${attrs(attributes)}>${escapeHTML(text).replace(/\n/g,'<br>')}</span>`
+ return `<span class="${classes('os-source-text',className)}" role="button" tabindex="0" aria-haspopup="dialog" aria-expanded="false" aria-label="${escapeHTML(label||text+" - sources and grounds")}" ${attrs(attributes)}>${escapeHTML(text).replace(/\n/g,'<br>')}</span>`
 }
 /** A claim and its saved supporting markup travel together through any renderer. */
-export function sourceNote({text='',title='Источники и основания',content='',attributes='',className='',variant='text'}={}) {
+export function sourceNote({text='',title="Sources and reasons",content='',attributes='',className='',variant='text'}={}) {
  const trigger=variant==='link'?sourceTrigger({variant:'link',label:text,attributes:`data-source-note ${attrs(attributes)}`,className}):sourceText({text,attributes:`data-source-note ${attrs(attributes)}`,className})
  return `${trigger}<template data-source-note-content data-source-title="${escapeHTML(title)}">${content}</template>`
 }
@@ -367,8 +367,8 @@ export function mountSourcePreviews(root,{selector='.os-source-text',getSource}=
    const source=getSource(trigger);if(!source)return
    activeSourcePreview?.close();close()
    const element=document.createElement('div');element.className='os-source-preview';element.id='os-source-preview-'+(++mountSourcePreviews.sequence)
-   element.setAttribute('role','dialog');element.setAttribute('aria-label',source.title||'Источники и основания');element.setAttribute('popover','manual')
-   element.innerHTML=`<header class="os-source-preview-heading"><h2 tabindex="-1">${escapeHTML(source.title||'Источники и основания')}</h2>${button({label:'Закрыть источники',attributes:{'data-os-close':true},icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>'})}</header><div class="os-source-preview-content">${source.content||''}</div>`
+   element.setAttribute('role','dialog');element.setAttribute('aria-label',source.title||"Sources and reasons");element.setAttribute('popover','manual')
+   element.innerHTML=`<header class="os-source-preview-heading"><h2 tabindex="-1">${escapeHTML(source.title||"Sources and reasons")}</h2>${button({label:"Close sources",attributes:{'data-os-close':true},icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>'})}</header><div class="os-source-preview-content">${source.content||''}</div>`
    ;(trigger.closest('dialog')||document.body).append(element);element.showPopover?.()
    const resize=new ResizeObserver(position)
    const state={element,trigger,pinned:false,resize,close,history:[],sourceAbort:new AbortController()}
@@ -376,13 +376,13 @@ export function mountSourcePreviews(root,{selector='.os-source-text',getSource}=
     const body=element.querySelector('.os-source-preview-content'),heading=element.querySelector('h2')
     state.history.push({nodes:[...body.childNodes],title:heading.textContent,from})
     state.sourceAbort.abort();state.sourceAbort=new AbortController()
-    heading.textContent=source.title||'Источники и основания';element.setAttribute('aria-label',heading.textContent);body.innerHTML=source.content||'';body.scrollTop=0
+    heading.textContent=source.title||"Sources and reasons";element.setAttribute('aria-label',heading.textContent);body.innerHTML=source.content||'';body.scrollTop=0
     element.querySelector('[data-os-source-back]').hidden=false;state.pinned=true
     heading.focus({preventScroll:true});source.onOpen?.({element,body,signal:state.sourceAbort.signal});position()
    }
    state.originRoot=root;state.location=location.href
    current=state;activeSourcePreview=current
-   element.querySelector('.os-source-preview-heading').insertAdjacentHTML('afterbegin',button({label:'К основаниям',attributes:{'data-os-source-back':true,hidden:true},icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h12"/></svg>'}))
+   element.querySelector('.os-source-preview-heading').insertAdjacentHTML('afterbegin',button({label:"To the bases",attributes:{'data-os-source-back':true,hidden:true},icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h12"/></svg>'}))
    trigger.setAttribute('aria-expanded','true');trigger.setAttribute('aria-controls',element.id)
    element.addEventListener('pointerenter',()=>clearTimeout(closing))
    element.addEventListener('pointerleave',()=>scheduleClose())
@@ -466,11 +466,11 @@ export function sourceReferenceHref(reference) {
  return /^(?:(?:sources|reports|research|segments)\/.*\.(?:md|txt|json|csv|html|log)|[^/]+\.md|RESEARCH-RUNS\.json)$/i.test(locator)?'/source?path='+encodeURIComponent(reference):''
 }
 /** Source identity and source text stay separate. context/details are trusted, escaped-by-caller HTML slots. */
-export function sourceEntry({title='',relation='',author='',meta='',quote='',quotes=[],href='',linkLabel='Открыть оригинал',context='',details=''} = {}) {
+export function sourceEntry({title='',relation='',author='',meta='',quote='',quotes=[],href='',linkLabel="Open original",context='',details=''} = {}) {
  const original=sourceHref(href),excerpts=(quotes.length?quotes:[quote]).filter(value=>typeof value==='string'&&value.trim())
- return `<article class="os-source-entry">${title?`<p class="os-source-entry-title"><strong>${escapeHTML(title)}</strong></p>`:''}${relation?`<p class="os-source-entry-relation">${escapeHTML(relation)}</p>`:''}${author?`<p class="os-source-entry-author">${escapeHTML(author)}</p>`:''}${meta?`<p class="os-source-entry-meta">${escapeHTML(meta)}</p>`:''}${excerpts.map(value=>`<blockquote class="os-source-entry-quote">${escapeHTML(value)}</blockquote>`).join('')}${context?`<div class="os-source-entry-context">${context}</div>`:''}${original?`<a class="os-source-entry-original" href="${escapeHTML(original)}" target="_blank" rel="noopener noreferrer">${escapeHTML(linkLabel)}</a>`:''}${details?`<details class="os-source-entry-details"><summary>Как получен вывод</summary><div>${details}</div></details>`:''}</article>`
+ return `<article class="os-source-entry">${title?`<p class="os-source-entry-title"><strong>${escapeHTML(title)}</strong></p>`:''}${relation?`<p class="os-source-entry-relation">${escapeHTML(relation)}</p>`:''}${author?`<p class="os-source-entry-author">${escapeHTML(author)}</p>`:''}${meta?`<p class="os-source-entry-meta">${escapeHTML(meta)}</p>`:''}${excerpts.map(value=>`<blockquote class="os-source-entry-quote">${escapeHTML(value)}</blockquote>`).join('')}${context?`<div class="os-source-entry-context">${context}</div>`:''}${original?`<a class="os-source-entry-original" href="${escapeHTML(original)}" target="_blank" rel="noopener noreferrer">${escapeHTML(linkLabel)}</a>`:''}${details?`<details class="os-source-entry-details"><summary>How the output was received</summary><div>${details}</div></details>`:''}</article>`
 }
-export function sourceList({entries=[],emptyText='Источник не связан.'} = {}) {
+export function sourceList({entries=[],emptyText="Source not linked."} = {}) {
  return `<div class="os-source-entries">${entries.length?entries.map(entry=>sourceEntry(entry)).join(''):`<p class="os-source-empty">${escapeHTML(emptyText)}</p>`}</div>`
 }
 /** Nonmodal evidence: caller owns position and document content; Escape/outside/close restore origin. */
@@ -501,13 +501,13 @@ if(typeof document!=='undefined')document.addEventListener('keydown',event=>{
 export function parameterFilters({parameters=[],values={},prefix='selection'}={}) {
  return `<div class="os-parameter-grid">${parameters.map(p=>{
   const selected=values[p.id],known=p.known??0,total=p.total??0
-  const summary=p.kind==='number'?(selected?.unknown?'Не указано':selected?[selected.min!=null?'от '+selected.min:'',selected.max!=null?'до '+selected.max:''].filter(Boolean).join(' '):'Любое'):selected?.length?selected.map(v=>v==='__unknown'?'Не указано':p.values?.find(o=>o.id===v)?.label||v).join(', '):'Любые'
-  const control=p.kind==='number'?`<div class="os-parameter-range">${field({label:'От',type:'number',value:selected?.min??'',attributes:{min:0,'data-parameter':p.id,'data-side':prefix,'data-bound':'min'}})}${field({label:'До',type:'number',value:selected?.max??'',attributes:{min:0,'data-parameter':p.id,'data-side':prefix,'data-bound':'max'}})}</div><label class="os-parameter-option"><input type="checkbox" data-parameter="${escapeHTML(p.id)}" data-side="${prefix}" data-bound="unknown" ${selected?.unknown?'checked':''}>Не указано / неоднозначно</label>`:[...(p.values||[]),{id:'__unknown',label:'Не указано / неоднозначно',count:p.unknown||0}].map(v=>`<label class="os-parameter-option"><input type="checkbox" data-parameter="${escapeHTML(p.id)}" data-side="${prefix}" value="${escapeHTML(v.id)}" ${selected?.includes(v.id)?'checked':''}><span>${escapeHTML(v.label)} <span class="os-parameter-count">(${v.count??0})</span></span></label>`).join('')
-  return `<details class="os-parameter-filter" data-parameter-box="${escapeHTML(p.id)}"><summary><span>${escapeHTML(p.label)}</span><span class="os-parameter-value">${escapeHTML(summary)}</span></summary><p class="os-parameter-coverage">Известно в ${known} из ${total} материалов.</p><fieldset><legend class="sr-only">${escapeHTML(p.label)}</legend>${control}</fieldset></details>`
+  const summary=p.kind==='number'?(selected?.unknown?"Not specified":selected?[selected.min!=null?"from "+selected.min:'',selected.max!=null?"before "+selected.max:''].filter(Boolean).join(' '):"Any"):selected?.length?selected.map(v=>v==='__unknown'?"Not specified":p.values?.find(o=>o.id===v)?.label||v).join(', '):"Any"
+  const control=p.kind==='number'?`<div class="os-parameter-range">${field({label:"From",type:'number',value:selected?.min??'',attributes:{min:0,'data-parameter':p.id,'data-side':prefix,'data-bound':'min'}})}${field({label:"Before",type:'number',value:selected?.max??'',attributes:{min:0,'data-parameter':p.id,'data-side':prefix,'data-bound':'max'}})}</div><label class="os-parameter-option"><input type="checkbox" data-parameter="${escapeHTML(p.id)}" data-side="${prefix}" data-bound="unknown" ${selected?.unknown?'checked':''}>Not specified / ambiguous</label>`:[...(p.values||[]),{id:'__unknown',label:"Unspecified/ambiguous",count:p.unknown||0}].map(v=>`<label class="os-parameter-option"><input type="checkbox" data-parameter="${escapeHTML(p.id)}" data-side="${prefix}" value="${escapeHTML(v.id)}" ${selected?.includes(v.id)?'checked':''}><span>${escapeHTML(v.label)} <span class="os-parameter-count">(${v.count??0})</span></span></label>`).join('')
+  return `<details class="os-parameter-filter" data-parameter-box="${escapeHTML(p.id)}"><summary><span>${escapeHTML(p.label)}</span><span class="os-parameter-value">${escapeHTML(summary)}</span></summary><p class="os-parameter-coverage">Known in ${known} from ${total} materials.</p><fieldset><legend class="sr-only">${escapeHTML(p.label)}</legend>${control}</fieldset></details>`
  }).join('')}</div>`
 }
 /** Side-by-side facts reflow into labelled cells, keeping every number's scope. */
-export function comparisonRows({rows=[],leftLabel='Выбранная группа',rightLabel='Весь сегмент'}={}) {
- return `<div class="os-comparison-rows">${rows.map(row=>`<article class="os-comparison-row"><div class="os-comparison-title"><h4>${escapeHTML(row.label)}</h4>${row.description?`<p>${escapeHTML(row.description)}</p>`:''}${row.actions||''}</div><div class="os-comparison-cell"><p class="os-comparison-label">${escapeHTML(leftLabel)}</p>${row.left||'<p>Нет данных</p>'}</div><div class="os-comparison-cell"><p class="os-comparison-label">${escapeHTML(rightLabel)}</p>${row.right||'<p>Нет данных</p>'}</div></article>`).join('')}</div>`
+export function comparisonRows({rows=[],leftLabel="Selected group",rightLabel="Entire segment"}={}) {
+ return `<div class="os-comparison-rows">${rows.map(row=>`<article class="os-comparison-row"><div class="os-comparison-title"><h4>${escapeHTML(row.label)}</h4>${row.description?`<p>${escapeHTML(row.description)}</p>`:''}${row.actions||''}</div><div class="os-comparison-cell"><p class="os-comparison-label">${escapeHTML(leftLabel)}</p>${row.left||"<p>No data</p>"}</div><div class="os-comparison-cell"><p class="os-comparison-label">${escapeHTML(rightLabel)}</p>${row.right||"<p>No data</p>"}</div></article>`).join('')}</div>`
 }
 Object.assign(OSUI,{parameterFilters,comparisonRows})

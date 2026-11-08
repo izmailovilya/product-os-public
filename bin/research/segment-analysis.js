@@ -5,28 +5,28 @@ const fail=message=>{throw Object.assign(new Error(message),{status:400})}
 const current=data=>{const retired=new Set(data.records.flatMap(x=>x.supersedes||[]));return data.records.filter(r=>!retired.has(r.id))}
 function configuration(graph,id){
  const by=new Map(graph.nodes.map(n=>[n.id,n])),segment=by.get(id)
- if(segment?.type!=='segment')throw Object.assign(new Error('Сегмент не найден'),{status:404})
+ if(segment?.type!=='segment')throw Object.assign(new Error("Segment not found"),{status:404})
  const base=segment.data?.cohortView?by.get(segment.data.cohortView.baseSegmentId):segment
- if(base?.type!=='segment'||base.data?.cohortView)fail('Основание подсегмента недоступно')
+ if(base?.type!=='segment'||base.data?.cohortView)fail("Subsegment base not available")
  let owner=base;const seen=new Set()
  while(!owner.data?.analysisParameters&& !seen.has(owner.id)){seen.add(owner.id);const parent=graph.edges.find(e=>e.type==='sub_segment_of'&&e.from===owner.id);if(!parent||!by.has(parent.to))break;owner=by.get(parent.to)}
  const parameters=owner.data?.analysisParameters||[]
  return {segment,base,parameters,familyLabels:owner.data?.criterionFamilyLabels||{},savedFilters:segment.data?.cohortView?.filters||{}}
 }
 function normalizeFilters(input,parameters){
- if(!input||typeof input!=='object'||Array.isArray(input))fail('Некорректные параметры отбора')
+ if(!input||typeof input!=='object'||Array.isArray(input))fail("Incorrect selection parameters")
  const result={}
  for(const key of Object.keys(input).sort()){
-  const def=parameters.find(p=>p.id===key);if(!def)fail('Неизвестный параметр: '+key)
+  const def=parameters.find(p=>p.id===key);if(!def)fail("Unknown parameter: "+key)
   const value=input[key];if(value==null)continue
   if(def.kind==='number'){
-   if(typeof value!=='object'||Array.isArray(value)||Object.keys(value).some(k=>!['min','max','unknown'].includes(k)))fail('Некорректный диапазон')
-   if(value.unknown===true){if(value.min!=null||value.max!=null)fail('Выберите диапазон или отсутствие данных');result[key]={unknown:true};continue}
-   const range={};for(const k of ['min','max'])if(value[k]!=null&&value[k]!==''){if(typeof value[k]!=='number'||!Number.isFinite(value[k])||value[k]<0)fail('Нужен неотрицательный числовой диапазон');range[k]=value[k]}
-   if(range.min!=null&&range.max!=null&&range.min>range.max)fail('Нижняя граница больше верхней')
+   if(typeof value!=='object'||Array.isArray(value)||Object.keys(value).some(k=>!['min','max','unknown'].includes(k)))fail("Invalid range")
+   if(value.unknown===true){if(value.min!=null||value.max!=null)fail("Select range or no data");result[key]={unknown:true};continue}
+   const range={};for(const k of ['min','max'])if(value[k]!=null&&value[k]!==''){if(typeof value[k]!=='number'||!Number.isFinite(value[k])||value[k]<0)fail("Need a non-negative numeric range");range[k]=value[k]}
+   if(range.min!=null&&range.max!=null&&range.min>range.max)fail("Lower limit is greater than upper limit")
    if(Object.keys(range).length)result[key]=range
   }else{
-   if(!Array.isArray(value)||value.some(v=>typeof v!=='string'||(v!==UNKNOWN&&!def.values?.some(o=>o.id===v))))fail('Неизвестное значение параметра')
+   if(!Array.isArray(value)||value.some(v=>typeof v!=='string'||(v!==UNKNOWN&&!def.values?.some(o=>o.id===v))))fail("Unknown parameter value")
    if(value.length)result[key]=[...new Set(value)].sort()
   }
  }
@@ -57,7 +57,7 @@ function build(data,graph,segmentId){
   }
  }
  const parameters=[...cfg.parameters]
- if(groups.length)parameters.push({id:'job',label:'Задачи',kind:'set',values:groups.map(g=>({id:g.id,label:g.label}))})
+ if(groups.length)parameters.push({id:'job',label:"Tasks",kind:'set',values:groups.map(g=>({id:g.id,label:g.label}))})
  const cases=[...episodes].map(id=>{
   const episode=by.get(id),people=(episode?.personIds||[]).map(id=>by.get(id)).filter(p=>p?.type==='Person'),sessions=(episode?.sessionIds||[]).map(id=>by.get(id)).filter(Boolean)
   const kind=['case_story','written_case_story_self_report'].includes(episode?.kind)?'case_story':new Set(sessions.map(s=>s.kind)).size===1?sessions[0].kind:'unknown'
@@ -106,7 +106,7 @@ function aggregate(model,filters){
  return {filters,materialCount:cases.length,dossierCount:people.size,uniquePeopleKnown:false,kinds,unknownJobs:cases.filter(c=>!mapped.has(c.id)).length,cases,parameters:coverage(cases,model.parameters),jobs:groups}
 }
 function summarize(data,graph,query){
- const model=build(data,graph,query.segmentId),parse=(value,fallback)=>{if(value===undefined)return fallback;try{return typeof value==='string'?JSON.parse(value):value}catch{fail('Некорректные параметры отбора')}}
+ const model=build(data,graph,query.segmentId),parse=(value,fallback)=>{if(value===undefined)return fallback;try{return typeof value==='string'?JSON.parse(value):value}catch{fail("Incorrect selection parameters")}}
  const filters=normalizeFilters(parse(query.filters,model.savedFilters),model.parameters),compareFilters=query.compare===undefined?{}:normalizeFilters(parse(query.compare,{}),model.parameters)
  const selected=aggregate(model,filters),comparison=aggregate(model,compareFilters)
  if(query.evidence){const [jobId,criterionId]=parse(query.evidence,[]);return {revision:data.revision,graphRevision:graph.revision,observations:selected.jobs.find(j=>j.id===jobId)?.criteria.find(c=>c.id===criterionId)?.observations||[]}}

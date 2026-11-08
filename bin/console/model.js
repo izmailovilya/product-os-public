@@ -9,21 +9,21 @@ const { dossierGaps, explainMoveIssues } = require('./research-actions')
 const { isPublicEdition, PUBLIC_SKILLS } = require('../edition')
 
 const STATUS_LABELS = {
-  hypothesis: 'гипотеза',
-  evidenced: 'есть свидетельства',
-  validated: 'подтверждён',
-  contradicted: 'опровергнут',
-  dropped: 'отброшен',
+  hypothesis: "hypothesis",
+  evidenced: "there is evidence",
+  validated: "confirmed",
+  contradicted: "refuted",
+  dropped: "discarded",
 }
 
 const TYPE_LABELS = {
-  product: 'продукт', segment: 'сегмент', competitor: 'конкурент', assumption: 'риск',
-  evidence: 'знание', artifact: 'знание', criterion: 'критерий', job: 'задача клиента',
-  problem: 'проблема', channel: 'канал', move: 'ход', role: 'роль в покупке',
-  value: 'гипотеза ценности',
+  product: "product", segment: "segment", competitor: "competitor", assumption: "risk",
+  evidence: "knowledge", artifact: "knowledge", criterion: "criterion", job: "client task",
+  problem: "problem", channel: "channel", move: "progress", role: "role in purchase",
+  value: "value hypothesis",
 }
 
-const SKILL_GROUPS = [{id:'management',title:'Продукт'},{id:'research',title:'Исследования'},{id:'library',title:'Библиотека'}]
+const SKILL_GROUPS = [{id:'management',title:"Product"},{id:'research',title:"Research"},{id:'library',title:"Library"}]
 const SKILL_META = {
   "os-setup": {
     "category": "management",
@@ -31,9 +31,9 @@ const SKILL_META = {
     "targetTypes": [
       "product"
     ],
-    "title": "Настроить рабочее место",
-    "description": "Создать или восстановить структуру и паспорт продукта.",
-    "output": "Рабочее место и паспорт продукта"
+    "title": "Set up a workspace",
+    "description": "Create or restore the structure and product passport.",
+    "output": "Workplace and product passport"
   },
   "product-context": {
     "category": "management",
@@ -44,11 +44,11 @@ const SKILL_META = {
       "competitor",
       "artifact"
     ],
-    "title": "Добавить контекст",
-    "duration": "По объёму материалов",
+    "title": "Add context",
+    "duration": "By volume of materials",
     "minutes": 8,
-    "description": "Сохранить новые материалы, факты и уточнения с точными источниками.",
-    "output": "Сохранённые оригиналы и проверяемые изменения продуктовой памяти"
+    "description": "Save new materials, facts and clarifications with accurate sources.",
+    "output": "Saved originals and checked changes to product memory"
   },
   "product-status": {
     "category": "management",
@@ -56,29 +56,29 @@ const SKILL_META = {
     "targetTypes": [
       "product"
     ],
-    "title": "Где мы и что дальше",
-    "duration": "5–10 мин",
+    "title": "Where are we and what's next",
+    "duration": "5–10 min",
     "minutes": 8,
-    "description": "Прочитать накопленный контекст и предложить следующий обоснованный шаг.",
-    "output": "Короткий разбор состояния и один обоснованный следующий ход"
+    "description": "Read the accumulated context and suggest an informed next step.",
+    "output": "Short analysis of the state and one reasonable next move"
   },
   "product-research": {},
   "product-segment-hypotheses": {
     "category": "research",
-    "title": "Гипотезы сегментов",
-    "duration": "2–5 мин",
+    "title": "Segment hypotheses",
+    "duration": "2–5 min",
     "minutes": 4,
-    "output": "8–15 сегментов по задачам клиентов, вопросы квалификации и риски"
+    "output": "8–15 segments on customer tasks, qualification issues and risks"
   },
   "product-job-map": {
     "category": "research",
     "targetTypes": [
       "product"
     ],
-    "title": "Карта работ",
-    "duration": "Зависит от объёма",
-    "description": "Связать задачи клиентов и увидеть, где продукт помогает, где нужны доработки и что стоит исследовать.",
-    "output": "Стратегическая карта верхних и нижних работ, границы продукта и предварительные связи с сегментами"
+    "title": "Job map",
+    "duration": "Depends on volume",
+    "description": "Connect customer tasks and see where the product helps, where improvements are needed and what is worth investigating.",
+    "output": "Upstream and Downstream Strategy Map, Product Boundaries and Preliminary Segment Linkages"
   },
   "product-brand-identity": {
     "category": "library",
@@ -86,57 +86,57 @@ const SKILL_META = {
     "targetTypes": [
       "product"
     ],
-    "title": "Айдентика бренда",
-    "description": "Создать или развить фирменный стиль продукта: от брифа и визуальных направлений до правил и файлов для команды.",
-    "duration": "По объёму айдентики",
+    "title": "Brand identity",
+    "description": "Create or develop a corporate identity for the product: from the brief and visual directions to rules and files for the team.",
+    "duration": "By volume of identity",
     "minutes": 30,
-    "output": "Визуальные направления, система бренда, логобук и исходники с проверенными примерами применения"
+    "output": "Visual directions, brand system, logo book and sources with proven examples of application"
   },
   "product-reference-library": {
     "category": "library",
     "targetTypes": [
       "product"
     ],
-    "title": "Собрать библиотеку продуктовых референсов",
-    "description": "Конкретные примеры конкурентов с изображениями и источниками; проверка, свои примеры и удобный доступ из консоли.",
-    "duration": "По выбранному объёму",
+    "title": "Collect a library of product references",
+    "description": "Specific examples of competitors with images and sources; verification, your own examples and convenient access from the console.",
+    "duration": "By selected volume",
     "minutes": 45,
-    "output": "Библиотека по направлениям, проверка источников и материалы для проектирования"
+    "output": "Library by area, checking sources and materials for design"
   }
 }
 
 const MOVE_CATALOG = {
-  hq: { ...SKILL_META['product-status'], title: 'Где мы и что дальше?', skill: 'product-status' },
-  deepResearch: { ...SKILL_META['product-deep-research'], title: 'Глубокое исследование', skill: 'product-deep-research' },
-  walkthrough: { ...SKILL_META['product-walkthrough'], title: 'Пройти флоу как сегмент', skill: 'product-walkthrough' },
-  testRisk: { ...SKILL_META['product-risk-analysis'], title: 'Подготовить проверку риска', skill: 'product-risk-analysis' },
+  hq: { ...SKILL_META['product-status'], title: "Where are we and what next?", skill: 'product-status' },
+  deepResearch: { ...SKILL_META['product-deep-research'], title: "Deep Exploration", skill: 'product-deep-research' },
+  walkthrough: { ...SKILL_META['product-walkthrough'], title: "Go through the flow as a segment", skill: 'product-walkthrough' },
+  testRisk: { ...SKILL_META['product-risk-analysis'], title: "Prepare risk check", skill: 'product-risk-analysis' },
   compare: {
-    title: 'Сравнить по задачам клиентов', skill: 'product-deep-research', duration: '10–20 мин', minutes: 15,
-    output: 'Сравнение по задачам клиентов и открытые слабые места конкурента',
+    title: "Compare by customer tasks", skill: 'product-deep-research', duration: "10–20 min", minutes: 15,
+    output: "Comparison by customer tasks and competitor’s open weaknesses",
   },
   researchGap: {
-    title: 'Уточнить данные исследования', skill: 'product-deep-research', duration: '5–15 мин', minutes: 10,
-    output: 'Ответ на конкретный вопрос, источники и обновлённый раздел досье',
+    title: "Clarify research data", skill: 'product-deep-research', duration: "5–15 min", minutes: 10,
+    output: "Answer to specific question, sources and updated section of the dossier",
   },
   segmentDefinition: {
-    ...SKILL_META['product-segment-hypotheses'], title: 'Уточнить задачу и границы сегмента', skill: 'product-segment-hypotheses',
-    output: 'Определение этого сегмента: ситуация, задача, критерии успеха и отличия от соседних сегментов',
+    ...SKILL_META['product-segment-hypotheses'], title: "Clarify the task and segment boundaries", skill: 'product-segment-hypotheses',
+    output: "Definition of this segment: situation, task, success criteria and differences from neighboring segments",
   },
   fieldValue: {
-    title: 'Подготовить проверку ценности', skill: 'product-risk-analysis', duration: '5–10 мин', minutes: 8,
-    output: 'План полевой проверки ценности с критерием успеха',
+    title: "Prepare value check", skill: 'product-risk-analysis', duration: "5–10 min", minutes: 8,
+    output: "Field Value Test Plan with Success Criteria",
   },
   reconsider: {
-    title: 'Пересмотреть вердикт', skill: 'product-context', duration: '5–10 мин', minutes: 8,
-    output: 'Новые свидетельства за и против + обновлённый вердикт на карте',
+    title: "Reconsider verdict", skill: 'product-context', duration: "5–10 min", minutes: 8,
+    output: "New evidence for and against + updated verdict on the map",
   },
   ingest: {
-    title: 'Добавить выводы отчёта в карту', skill: 'product-context', duration: '2–5 мин', minutes: 4,
-    output: 'Факты из отчёта попадут в карту с источниками и статусами',
+    title: "Add report findings to map", skill: 'product-context', duration: "2–5 min", minutes: 4,
+    output: "Facts from the report will be included in the map with sources and statuses",
   },
   custom: {
-    title: 'Выполнить ход', skill: 'custom', duration: '5–10 мин', minutes: 8,
-    output: 'Результат хода и обновлённые знания продукта',
+    title: "Execute move", skill: 'custom', duration: "5–10 min", minutes: 8,
+    output: "Progress result and updated product knowledge",
   },
 }
 
@@ -155,13 +155,13 @@ function firstHeading(text, fallback) {
 function humanDate(value) {
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return ''
-  return new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'short' }).format(date).replace('.', '')
+  return new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short' }).format(date).replace('.', '')
 }
 
 function timeLabel(value) {
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return ''
-  return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+  return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
 }
 
 function walkFiles(root, predicate) {
@@ -246,7 +246,7 @@ function isProductStateReport(fm, title, slug, nodes) {
 }
 
 function humanSkillName(slug) {
-  return SKILL_META[slug]?.title || ({'product-hq':'Состояние продукта (архив)','custom':'Порученная задача','ui-design':'Дизайн интерфейса','runtime-fixes':'Исправления работы системы','analyze-interviews':'Разбор интервью','product-ui-design':'Дизайн интерфейса','product-search-audit':'Аудит поиска'})[slug] || 'Исследование'
+  return SKILL_META[slug]?.title || ({'product-hq':"Product status (archive)",'custom':"Assigned task",'ui-design':"Interface design",'runtime-fixes':"System operation fixes",'analyze-interviews':"Interview analysis",'product-ui-design':"Interface design",'product-search-audit':"Search audit"})[slug] || "Research"
 }
 
 function loadReports(workspace, nodes) {
@@ -266,7 +266,7 @@ function loadReports(workspace, nodes) {
     const dateText = fm.date && !(stamp?.[2] && fm.date === stamp[1]) ? fm.date : filenameDate
     const date = dateText ? new Date(dateText).getTime() : stat.mtimeMs
     const written = Math.max(date, stat.mtimeMs)
-    const rawSlug = fm.skill || relative.split('/')[1] || 'исследование'
+    const rawSlug = fm.skill || relative.split('/')[1] || "research"
     const slug = ({ 'deep-research': 'product-deep-research', walkthrough: 'product-walkthrough', hq: 'product-hq', 'risk-analysis': 'product-risk-analysis', 'segment-hypotheses': 'product-segment-hypotheses' })[rawSlug] || rawSlug
     const title = fm.title || firstHeading(text, path.basename(file, '.md'))
     const productState = isProductStateReport(fm, title, slug, nodes)
@@ -298,8 +298,8 @@ function loadSkills(repoRoot) {
       slug, title: meta.title || humanSkillName(slug), description,
       category: meta.category || 'other', order: meta.order || 0,
       targetTypes: meta.targetTypes || null,
-      duration: meta.duration || '5–10 мин', minutes: meta.minutes || 8,
-      output: meta.output || 'Результат работы и обновлённый контекст продукта',
+      duration: meta.duration || "5–10 min", minutes: meta.minutes || 8,
+      output: meta.output || "Work result and updated product context",
     }
   }).sort((a, b) => SKILL_GROUPS.findIndex(group => group.id === a.category) - SKILL_GROUPS.findIndex(group => group.id === b.category)
     || a.order - b.order || a.title.localeCompare(b.title, 'ru'))
@@ -405,24 +405,24 @@ function moveFor(key, node, workspace, extra = {}) {
   const target = node || { id: 'product', type: 'product', label: path.basename(workspace) }
   const objective = extra.objective || extra.title || catalog.title
   const prompt = [
-    `Работай в продуктовом воркспейсе: ${workspace}.`,
-    catalog.skill === 'custom' ? `Выполни порученный ход «${objective}» доступными инструментами; не запускай навык с именем custom.` : `Запусти /${catalog.skill} и выполни ход «${objective}».`,
-    `Целевой узел карты: ${target.label} (id: ${target.id}, тип: ${TYPE_LABELS[target.type] || target.type}).`,
-    target.virtual && target.type === 'value' ? 'Это гипотеза развития, показанная из data.developmentHypotheses продукта или valueIdeas сегмента. Найди её по ID или названию в исходном графе; сохрани связи с сегментами и зависимости.' : '',
-    extra.report ? `Разбери и забери в знания отчёт: ${extra.report}.` : '',
-    extra.reason ? `Пробел, который нужно закрыть: ${extra.reason}` : '',
-    `Ожидаемый результат: ${extra.output || catalog.output}.`,
-    key === 'researchGap' ? 'Это уточнение существующего исследования. Исследуй только указанный вопрос для целевого узла; сохрани остальные результаты. Привяжи каждое новое утверждение к первичному источнику, укажи дату и область применимости. Если данных не найдено, запиши область поиска и оставшийся пробел, не выдумывай ответ.' : '',
+    `Work in a food workspace: ${workspace}.`,
+    catalog.skill === 'custom' ? `Execute the assigned move «${objective}» available tools; don't run a skill with a name custom.` : `Launch /${catalog.skill} and make your move «${objective}».`,
+    `Map target node: ${target.label} (id: ${target.id}, type: ${TYPE_LABELS[target.type] || target.type}).`,
+    target.virtual && target.type === 'value' ? "This is the development hypothesis shown from the product data.developmentHypotheses or valueIdeas of the segment. Find it by ID or name in the source column; preserve connections to segments and dependencies." : '',
+    extra.report ? `Disassemble and take into knowledge the report: ${extra.report}.` : '',
+    extra.reason ? `Space to close: ${extra.reason}` : '',
+    `Expected result: ${extra.output || catalog.output}.`,
+    key === 'researchGap' ? "This is a refinement of existing research. Research only the specified question for the target node; save the rest of the results. Tie each new statement to a primary source, indicate the date and scope of applicability. If no data is found, write down the search area and the remaining space, do not make up an answer." : '',
     key === 'researchGap' ? `researchGap: ${JSON.stringify({ nodeId: target.id, section: extra.gapId, question: objective, expectedOutcome: extra.output || catalog.output })}` : '',
-    key === 'researchGap' && extra.gapId === 'messaging' && target.type === 'competitor' ? `Сначала сними сайт кодом: node bin/landing-capture.js ${workspace} --ids ${target.id} (файлы появятся в sources/competitors/ с датой). Передай запись снимка в workflow как args.landingCapture, а в args.targetContext — текущие работы сегментов с ID (jobs), их критерии (criteria) и отличия продукта (differentiators). Цитаты только дословно из снимка; работы только из списка по ID. Если снимок unavailable, не выдумывай обещания: запиши причину.` : '',
-    'Сначала прочитай PRODUCT.md и возьми из research-graph.json только нужный срез вокруг целевого узла.',
-    'Не запускай следующие скиллы автоматически. В конце сообщи результат, изменённые артефакты, выполненную проверку и блокеры.',
+    key === 'researchGap' && extra.gapId === 'messaging' && target.type === 'competitor' ? `First remove the site code: node bin/landing-capture.js ${workspace} --ids ${target.id} (files will appear in sources/competitors/ with date). Send the photo recording to workflow how args.landingCapture, a in args.targetContext — current work of segments with ID (jobs), their criteria (criteria) and product differences (differentiators). Quotes only verbatim from the photo; works only from the list by ID. If the picture unavailable, don't make up promises: write down the reason.` : '',
+    "First read PRODUCT.md and take from research-graph.json only the necessary slice around the target node.",
+    "Do not launch the following skills automatically. At the end, report the result, changed artifacts, performed checks and blockers.",
   ].filter(Boolean).join('\n')
   return {
     id: extra.id || `${key}:${target.id}`,
     kind: key, title: extra.title || catalog.title, skill: catalog.skill,
     output: extra.output || catalog.output, duration: catalog.duration, minutes: catalog.minutes,
-    node: { id: target.id, label: target.label, type: target.type, typeLabel: TYPE_LABELS[target.type] || target.type, statusLabel: STATUS_LABELS[target.status] || 'без статуса' },
+    node: { id: target.id, label: target.label, type: target.type, typeLabel: TYPE_LABELS[target.type] || target.type, statusLabel: STATUS_LABELS[target.status] || "no status" },
     receiptNodeId: target.virtual && target.type === 'value' ? target.ownerId || target.id : target.id,
     objective, reason: extra.reason || '', gapId: extra.gapId || null, manualOnly: Boolean(extra.manualOnly), prompt,
   }
@@ -467,7 +467,7 @@ function projection(graph, workspace) {
   const nodes = augmented.nodes.map(node => ({
     ...node,
     typeLabel: TYPE_LABELS[node.type] || node.type,
-    statusLabel: STATUS_LABELS[node.status] || node.status || 'без статуса',
+    statusLabel: STATUS_LABELS[node.status] || node.status || "no status",
   }))
   const byId = Object.fromEntries(nodes.map(node => [node.id, node]))
   let product = nodes.find(node => node.type === 'product')
@@ -490,14 +490,14 @@ function projection(graph, workspace) {
     const evidence = (evidenceByNode.get(node.id) || []).map(item => ({ id: item.id, label: item.label, relation: item.relation, source: item.source }))
     const context = node.data?.context || node.data?.pain || node.data?.outcome || node.data?.calculation || ''
     const importance = node.type === 'assumption'
-      ? (node.data?.fatal ? 'Если риск не выдержит проверку, продукт или выбранный сегмент может потерять смысл.' : 'Этот риск держит на себе часть решения и пока не закрыт фактами.')
+      ? (node.data?.fatal ? "If the risk fails the test, the product or selected segment may become meaningless." : "This risk holds part of the decision and is not yet covered by the facts.")
       : node.type === 'segment'
-        ? (node.data?.rank ? `Сегмент занимает место №${node.data.rank} в текущем рейтинге.` : 'Это одна из проверяемых гипотез о том, кому продукт нужнее всего.')
+        ? (node.data?.rank ? `Segment takes up space №${node.data.rank} in the current ranking.` : "This is one of the testable hypotheses about who needs the product most.")
         : node.type === 'competitor'
-          ? 'Клиенты уже нанимают это решение для части тех же задач — его сильные стороны задают планку.'
+          ? "Clients are already hiring this solution for some of the same tasks - its strengths set the bar."
           : node.type === 'value'
-            ? 'Эта идея ценности связывает конкретную боль сегмента с изменением продукта.'
-            : 'Узел связан с текущими выводами и влияет на следующий ход.'
+            ? "This value idea links a specific segment pain to product change."
+            : "The node is connected to the current pins and affects the next turn."
     return {
       ...node, context, importance, evidence,
       moveKeys: moveKeysFor(node),
@@ -529,18 +529,18 @@ function suggestionCandidates(projected, reports, threadItems, moves = {}) {
   const nodes = projected.nodes.filter(n => n.status !== 'dropped' && !n.data?.retired)
   const productIds = new Set(nodes.filter(node => node.type === 'product').map(node => node.id))
   const waiting = threadItems.filter(item => item.status === 'waiting').map(item => ({
-    id: `waiting:${item.launchId || item.id}`, priority: 0, reason: 'Агент остановился и не может продолжить без твоего ответа.',
+    id: `waiting:${item.launchId || item.id}`, priority: 0, reason: "The agent has stopped and cannot continue without your response.",
     move: item.move, node: projected.byId[item.node.id] || product, threadId: item.threadId, action: 'open',
   }))
   const fatal = nodes.filter(node => isFatalProductRisk(node, productIds, edges)).map(node => ({
     id: `fatal:${node.id}`, priority: 1,
-    reason: [node.data?.whyFundamental || node.data?.context || 'Это допущение определяет, сможет ли продукт работать.', node.data?.consequence || 'Последствия отмечены как критические, а результат проверки ещё не зафиксирован.', node.data?.testMethod ? `Предлагаемый способ проверки: ${node.data.testMethod}` : 'Нужно определить способ проверки и измеримый порог отказа.'].join(' '),
+    reason: [node.data?.whyFundamental || node.data?.context || "This assumption determines whether the product can operate.", node.data?.consequence || "The consequences are marked as critical, but the result of the check has not yet been recorded.", node.data?.testMethod ? `Suggested verification method: ${node.data.testMethod}` : "A test method and a measurable failure threshold must be defined."].join(' '),
     move: moveFor('testRisk', node, ''), node,
   }))
   const staleAfter = Date.now() - 90 * 24 * 60 * 60 * 1000
   const stale = nodes.filter(node => ['validated', 'evidenced'].includes(node.status) && node.data?.updatedAt && new Date(node.data.updatedAt).getTime() < staleAfter).map(node => ({
     id: `stale:${node.id}`, priority: 2,
-    reason: 'Подтверждение устарело: рынок мог измениться, а решение всё ещё опирается на старые данные.',
+    reason: "Confirmation is out of date: the market may have changed and the decision is still based on old data.",
     move: moveFor(node.type === 'segment' ? 'deepResearch' : 'hq', node, ''), node,
   }))
   const research = nodes.filter(node => ['segment', 'competitor'].includes(node.type)).flatMap(node => {
@@ -549,7 +549,7 @@ function suggestionCandidates(projected, reports, threadItems, moves = {}) {
   })
   const fallback = product ? [{
     id: `hq:${product.id}`, priority: 9,
-    reason: reports.length ? 'Карта изменилась — полезно сверить состояние и получить один следующий ход.' : 'Сначала собери состояние продукта и выбери самый дешёвый способ снять неопределённость.',
+    reason: reports.length ? "The card has changed - it is useful to check the status and get one next move." : "First, collect the state of the product and choose the cheapest way to remove uncertainty.",
     move: moveFor('hq', product, ''), node: product,
   }] : []
   return [...waiting, ...fatal, ...stale, ...research, ...fallback]
@@ -570,14 +570,14 @@ function mapThreadStatus(launch, thread, reports, receipts = []) {
   let status = 'unknown', failure = null
   if (receipt && (report || receipt.summary) && ['completed', 'failed'].includes(receipt.outcome)) {
     status = receipt.outcome === 'completed' ? 'done' : 'failed'
-    failure = status === 'failed' ? receipt.summary || 'Исследование завершилось с ошибкой.' : null
-  } else if (launch.statusOverride === 'stopped') { status = 'stopped'; failure = 'Работа остановлена вами.' }
+    failure = status === 'failed' ? receipt.summary || "The study ended with an error." : null
+  } else if (launch.statusOverride === 'stopped') { status = 'stopped'; failure = "Work has been stopped by you." }
   else if (launch.launchState === 'failed') { status = 'failed'; failure = launch.error }
   else if (thread?.hasPendingInteraction) status = 'waiting'
-  else if (['failed', 'error', 'stopped', 'cancelled'].includes(thread?.status)) { status = 'failed'; failure = thread.error || 'Агент завершил работу с ошибкой или был остановлен.' }
+  else if (['failed', 'error', 'stopped', 'cancelled'].includes(thread?.status)) { status = 'failed'; failure = thread.error || "The agent terminated with an error or was stopped." }
   else if (['active', 'running', 'busy', 'starting', 'working'].includes(thread?.status)) status = 'running'
-  else if (['idle', 'completed', 'done'].includes(thread?.status)) { status = 'incomplete'; failure = 'Агент остановился, но результат этого запуска ещё не записан.' }
-  else failure = launch.error || 'Статус агента пока неизвестен. Проверь существующую работу перед повторным запуском.'
+  else if (['idle', 'completed', 'done'].includes(thread?.status)) { status = 'incomplete'; failure = "The agent has stopped, but the result of this launch has not yet been recorded." }
+  else failure = launch.error || "Agent status is unknown yet. Test existing work before starting again."
   return { status, elapsed, failure, report, receipt, long: status === 'running' && elapsed > (Number(launch.move?.minutes) || 8) * 2 }
 }
 
@@ -592,19 +592,19 @@ function todoItems(workspace, projected, reports, state, threads, receipts = loa
     const key = item.kind || (node?.type === 'assumption' ? 'testRisk' : node?.type === 'competitor' ? 'compare' : node?.type === 'segment' ? 'deepResearch' : 'custom')
     const output = item.expectedOutcome || item.output || item.text.match(/(?:Ожидаемый результат|На выходе|Результат):\s*([^\n]+)/i)?.[1]
     const clarifications = explainMoveIssues(item)
-    const move = moveFor(key, node, workspace, { id: item.id, title, objective: item.objective || item.text, output: output || (key === 'custom' ? 'Ожидаемый результат пока не описан в плане задачи.' : undefined), reason: item.reason, gapId: item.gapId })
+    const move = moveFor(key, node, workspace, { id: item.id, title, objective: item.objective || item.text, output: output || (key === 'custom' ? "The expected result is not yet described in the task plan." : undefined), reason: item.reason, gapId: item.gapId })
     const itemSkill = item.skill === 'product-hq' ? (item.kind === 'hq' ? 'product-status' : item.kind === 'ingest' ? 'product-context' : 'custom') : item.skill
-    if (itemSkill && SKILL_META[itemSkill]) { move.skill = itemSkill; move.prompt = `Запусти /${itemSkill}.\n` + move.prompt.replace(/^Запусти \/[^\n]+\n?/m, '') }
+    if (itemSkill && SKILL_META[itemSkill]) { move.skill = itemSkill; move.prompt = `Launch /${itemSkill}.\n` + move.prompt.replace(/^Запусти \/[^\n]+\n?/m, '') }
     const clarifyMove = item.executionReady === false ? attachFallback(moveFor('custom', node, workspace, {
-      id: `clarify:${item.id}`, title: `Уточнить план: ${title}`, objective: `Уточни существующую задачу ${item.id} в MOVES.md, сохрани её ID. ${clarifications.join(' ')} Не выполняй исходную задачу до уточнения.`,
-      output: 'В той же задаче записаны ожидаемый результат, ответственный, зависимости и недостающие условия; статус готовности обновлён по фактической полноте плана', reason: clarifications.join(' '),
+      id: `clarify:${item.id}`, title: `Refine plan: ${title}`, objective: `Refine an existing task ${item.id} in MOVES.md, save it ID. ${clarifications.join(' ')} Do not complete the original task until clarification.`,
+      output: "The same task contains the expected result, owner, dependencies and missing conditions; readiness status updated based on the actual completeness of the plan", reason: clarifications.join(' '),
     }), workspace) : null
     base.push({ id: move.id, source: 'MOVES.md', move, clarifyMove, node: move.node, owner: item.owner || null, clarifications, status: item.executionReady === false ? 'blocked' : 'ready', failure: item.executionReady === false ? clarifications.join(' ') : null, order: index })
   }
   const launches = state.launches.map(launch => {
     const mapped = mapThreadStatus(launch, byThread.get(launch.threadId), reports, receipts)
     const move = { ...launch.move, prompt: launch.prompt || launch.move?.prompt }
-    return { id: launch.moveId, launchId: launch.id, source: 'Консоль', move, node: move.node, threadId: launch.threadId, provider: launch.provider || 'bb', ...mapped }
+    return { id: launch.moveId, launchId: launch.id, source: "Console", move, node: move.node, threadId: launch.threadId, provider: launch.provider || 'bb', ...mapped }
   })
   const latestByMove = new Map()
   for (const launch of launches) {
@@ -652,8 +652,8 @@ function buildSnapshot({ workspace, repoRoot, graph, graphStatus, state, threads
       const alreadyRun = todo.some(item => item.node?.id === node.id && item.move?.gapId === gap.id && item.status === 'done')
       const manualOnly = sectionStatus === 'researched' || alreadyRun
       return moveFor(gap.kind || 'researchGap', node, workspace, {
-      id: `researchGap:${node.id}:${gap.id}`, gapId: gap.id, title: `${manualOnly ? 'Повторно: ' : ''}${gap.action || gap.label}`, manualOnly,
-      objective: gap.action || gap.label, reason: gap.reason || gap.label, output: gap.output || `Обновлённый раздел «${gap.label || gap.id}»: вывод, первичные источники и оставшиеся неизвестные`,
+      id: `researchGap:${node.id}:${gap.id}`, gapId: gap.id, title: `${manualOnly ? "Repeat: " : ''}${gap.action || gap.label}`, manualOnly,
+      objective: gap.action || gap.label, reason: gap.reason || gap.label, output: gap.output || `Updated section «${gap.label || gap.id}»: output, primary sources and remaining unknowns`,
     }) })
     const regular = moveKeysFor(node).filter(key => !['deepResearch', 'compare'].includes(key))
     moves[node.id] = [...actions, ...regular.map(key => moveFor(key, node, workspace))].filter(move => !publicEdition || PUBLIC_SKILLS.includes(move.skill)).map(move => attachFallback(move, workspace))

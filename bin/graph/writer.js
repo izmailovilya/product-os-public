@@ -9,7 +9,7 @@ const { mergeCompetitors } = require('./competitors')
 function mergeData(previous, patch) {
   const next = { ...(previous || {}) }
   for (const [key, value] of Object.entries(patch || {})) {
-    if (['__proto__', 'constructor', 'prototype'].includes(key)) throw new Error('Недопустимое имя поля')
+    if (['__proto__', 'constructor', 'prototype'].includes(key)) throw new Error("Invalid field name")
     if (value === undefined) continue
     if (value === null) delete next[key]
     else if (typeof value === 'object' && !Array.isArray(value)) next[key] = mergeData(next[key], value)
@@ -47,10 +47,10 @@ function migrateGraph(input) {
   const seen = new Set()
   g.edges = g.edges.filter(e => {
     const k = `${e.from}|${e.type}|${e.to}`
-    if (seen.has(k)) { warnings.push(`дубликат связи ${k} исключён`); return false }
+    if (seen.has(k)) { warnings.push(`duplicate connection ${k} excluded`); return false }
     seen.add(k)
     if (by.has(e.from) && by.has(e.to)) return true
-    warnings.push(`висячая связь ${e.type} ${e.from} → ${e.to} исключена из карты (узел не найден)`)
+    warnings.push(`dangling link ${e.type} ${e.from} → ${e.to} excluded from map (node not found)`)
     return false
   })
   for (const e of g.edges.filter(e => e.type === 'performs')) {
@@ -80,7 +80,7 @@ function migrateGraph(input) {
       const certain = evidence.filter(e => pairs.length === 1 || by.get(e.to)?.data.segmentId === pe.from)
       if (pairs.length > 1 && (certain.length === 0 || certain.length !== evidence.length)) {
         n.status = 'hypothesis'; n.data.legacyScopeUnknown = true
-        warnings.push(`Критерий ${id}: старые свидетельства без контекста не перенесены в ${pe.from}.`)
+        warnings.push(`Criterion ${id}: old evidence without context is not transferred to ${pe.from}.`)
       }
       const supportingType = n.status === 'contradicted' ? 'contradicted_by' : 'evidenced_by'
       if (['evidenced', 'validated', 'contradicted'].includes(n.status) && !certain.some(e => e.type === supportingType && evidenceUsable(by.get(e.to)) && (n.status !== 'validated' || ['interview', 'test', 'payment'].includes(by.get(e.to)?.data?.origin)))) {
@@ -117,7 +117,7 @@ class GraphTransaction {
       recoverPending(this.workspace)
       this.raw = fs.existsSync(this.file) ? fs.readFileSync(this.file, 'utf8') : null
       this.original = this.raw ? JSON.parse(this.raw) : { version: 2, product: path.basename(this.workspace), nodes: [], edges: [], revision: 0 }
-      if (options.expectedRevision != null && options.expectedRevision !== (this.original.revision || 0)) throw Object.assign(new Error('Граф изменился. Перечитай нужный срез и повтори операцию.'), { code: 'REVISION_CONFLICT' })
+      if (options.expectedRevision != null && options.expectedRevision !== (this.original.revision || 0)) throw Object.assign(new Error("The graph has changed. Re-read the desired section and repeat the operation."), { code: 'REVISION_CONFLICT' })
       const migrated = migrateGraph(this.original)
       this.graph = migrated.graph; this.warnings = migrated.warnings
       this.before = clone(this.graph)
@@ -135,12 +135,12 @@ class GraphTransaction {
   }
 
   node(id, type, label, extra = {}) {
-    if (type === 'evidence') throw new Error('Наблюдения записываются операцией evidence, а не node')
-    if (type === 'criterion' && (!extra.data?.segmentId || !extra.data?.jobId) && !this.graph.nodes.some(n => n.id === id && n.data?.segmentId)) throw new Error('Критерию нужны segmentId и jobId')
+    if (type === 'evidence') throw new Error("Observations are recorded by the operation evidence, not node")
+    if (type === 'criterion' && (!extra.data?.segmentId || !extra.data?.jobId) && !this.graph.nodes.some(n => n.id === id && n.data?.segmentId)) throw new Error("The criterion needs a segmentId and a jobId")
     let n = this.graph.nodes.find(n => n.id === id)
-    if (n?.type === 'criterion' && label && label !== n.label) throw new Error('Изменение критерия требует нового ID')
-    if (n?.type === 'criterion' && ['segmentId', 'jobId', 'level'].some(k => extra.data?.[k] !== undefined && extra.data[k] !== n.data?.[k])) throw new Error('Смена контекста или порога требует нового критерия')
-    if (n && n.type !== type) throw new Error(`Тип узла ${id} нельзя изменить`)
+    if (n?.type === 'criterion' && label && label !== n.label) throw new Error("Changing criteria requires a new ID")
+    if (n?.type === 'criterion' && ['segmentId', 'jobId', 'level'].some(k => extra.data?.[k] !== undefined && extra.data[k] !== n.data?.[k])) throw new Error("Changing context or threshold requires a new criterion")
+    if (n && n.type !== type) throw new Error(`Node type ${id} cannot be changed`)
     if (type === 'artifact' && (extra.data?.kind || n?.data?.kind) === 'research-reading-review') {
       const candidate = { source: extra.source || this.source || n?.source, data: mergeData(n?.data || {}, extra.data || {}) }
       const issue = require('../research-brief/reading-review').readingReviewIssue(this.workspace, candidate)
@@ -153,7 +153,7 @@ class GraphTransaction {
     if (label) n.label = label
     if (extra.source || this.source) n.source = extra.source || this.source
     if (extra.data) {
-      for (const key of ['statusHistory', 'resolution', 'research', 'updatedAt']) if (Object.hasOwn(extra.data, key)) throw new Error(`${key} записывается специальной операцией, а не node`)
+      for (const key of ['statusHistory', 'resolution', 'research', 'updatedAt']) if (Object.hasOwn(extra.data, key)) throw new Error(`${key} written by a special operation, not node`)
       n.data = mergeData(n.data, extra.data)
     }
     if (extra.status && extra.status !== 'hypothesis') this.pending.push({ id, status: extra.status })
@@ -161,7 +161,7 @@ class GraphTransaction {
   }
 
   edge(from, type, to, data) {
-    if (['evidenced_by', 'contradicted_by'].includes(type) && ['resolvedAt', 'resolution', 'resolvedBy'].some(k => data && Object.hasOwn(data, k))) throw new Error('Разрешать свидетельства можно только через transition')
+    if (['evidenced_by', 'contradicted_by'].includes(type) && ['resolvedAt', 'resolution', 'resolvedBy'].some(k => data && Object.hasOwn(data, k))) throw new Error("Evidence can only be resolved via transition")
     let e = this.graph.edges.find(e => e.from === from && e.type === type && e.to === to)
     if (!e) { e = { from, type, to }; this.graph.edges.push(e) }
     if (data) e.data = mergeData(e.data, data)
@@ -169,15 +169,15 @@ class GraphTransaction {
   }
 
   observe({ target, text, source, origin, segmentId, jobId, productId, observationId, respondentId, relation = 'evidenced_by', ...extra }) {
-    if (!['evidenced_by', 'contradicted_by'].includes(relation)) throw new Error('Неверная связь свидетельства')
-    if (!nonempty(source) || !nonempty(text) || !['web', 'interview', 'test', 'payment'].includes(origin)) throw new Error('Наблюдению нужны текст, первичный источник и происхождение')
-    if (!/^https?:\/\//.test(source) && !/^sources\//.test(source)) throw new Error('Источник наблюдения — URL или оригинал в sources/, не вывод из отчёта')
+    if (!['evidenced_by', 'contradicted_by'].includes(relation)) throw new Error("Invalid certificate connection")
+    if (!nonempty(source) || !nonempty(text) || !['web', 'interview', 'test', 'payment'].includes(origin)) throw new Error("Observation needs text, primary source and origin")
+    if (!/^https?:\/\//.test(source) && !/^sources\//.test(source)) throw new Error("Observation source - URL or original in sources/, not output from report")
     if (/^sources\//.test(source)) {
       const file = path.resolve(this.workspace, source.split('#')[0]), root = path.join(this.workspace, 'sources')
-      if (!file.startsWith(`${root}${path.sep}`) || !fs.existsSync(file) || !fs.realpathSync(file).startsWith(`${fs.realpathSync(root)}${path.sep}`)) throw new Error('Оригинал свидетельства не найден внутри sources/')
-    } else { const url = new URL(source); if (!url.hostname) throw new Error('Неверный URL источника') }
+      if (!file.startsWith(`${root}${path.sep}`) || !fs.existsSync(file) || !fs.realpathSync(file).startsWith(`${fs.realpathSync(root)}${path.sep}`)) throw new Error("Original certificate not found inside sources/")
+    } else { const url = new URL(source); if (!url.hostname) throw new Error("Invalid source URL") }
     const subject = this.graph.nodes.find(n => n.id === target)
-    if (!subject) throw new Error(`Цель наблюдения не найдена: ${target}`)
+    if (!subject) throw new Error(`Surveillance target not found: ${target}`)
     segmentId ||= subject.data?.segmentId || (subject.type === 'segment' ? subject.id : undefined)
     jobId ||= subject.data?.jobId
     const data = { ...extra, origin, kind: extra.kind || 'quote' }
@@ -192,25 +192,25 @@ class GraphTransaction {
 
   transition({ id, status, evidenceIds = [], reason, resolves = [], reopen = false, resolutionKind, source = this.source }) {
     const n = this.graph.nodes.find(n => n.id === id)
-    if (!n || !STATUSES.has(status)) throw new Error(`Неверная смена статуса: ${id}`)
-    if (n.type === 'evidence') throw new Error('Статус наблюдения неизменен; исправление оформляется новым наблюдением')
+    if (!n || !STATUSES.has(status)) throw new Error(`Invalid status change: ${id}`)
+    if (n.type === 'evidence') throw new Error("Observation status unchanged; correction is formalized by a new observation")
     const linked = relation => this.graph.edges.filter(e => e.from === id && e.type === relation && !e.data?.resolvedAt)
       .filter(e => evidenceUsable(this.graph.nodes.find(n => n.id === e.to)))
     const good = linked(status === 'contradicted' ? 'contradicted_by' : 'evidenced_by')
     const selected = good.filter(e => evidenceIds.includes(e.to))
-    if (['evidenced', 'validated', 'contradicted'].includes(status) && !selected.length) throw new Error(`Статус ${status} у ${id} требует связанного первичного свидетельства`)
-    if (status === 'validated' && !selected.some(e => ['interview', 'test', 'payment'].includes(this.graph.nodes.find(n => n.id === e.to).data.origin))) throw new Error(`Валидация ${id} требует клиентских данных`)
-    if (n.status === 'dropped' && (!reopen || !nonempty(reason))) throw new Error(`Возврат ${id} требует явного reopen и причины`)
-    if (['hypothesis', 'dropped'].includes(status) && (!nonempty(reason) || !nonempty(source))) throw new Error('Снятие или повторное открытие гипотезы требует причины и источника решения')
+    if (['evidenced', 'validated', 'contradicted'].includes(status) && !selected.length) throw new Error(`Status ${status} y ${id} requires associated primary evidence`)
+    if (status === 'validated' && !selected.some(e => ['interview', 'test', 'payment'].includes(this.graph.nodes.find(n => n.id === e.to).data.origin))) throw new Error(`Validation ${id} requires client data`)
+    if (n.status === 'dropped' && (!reopen || !nonempty(reason))) throw new Error(`Return ${id} requires explicit reopen and reasons`)
+    if (['hypothesis', 'dropped'].includes(status) && (!nonempty(reason) || !nonempty(source))) throw new Error("Removing or reopening a hypothesis requires a reason and source of solution")
     const opposite = linked(status === 'contradicted' ? 'evidenced_by' : 'contradicted_by')
-    if (status !== 'contradicted' && !['hypothesis', 'dropped'].includes(status) && opposite.some(e => !resolves.includes(e.to))) throw new Error(`У ${id} есть неразрешённые опровержения; укажи resolves и объяснение`)
-    if (resolves.length && !nonempty(reason)) throw new Error('Разрешение противоречия требует объяснения')
+    if (status !== 'contradicted' && !['hypothesis', 'dropped'].includes(status) && opposite.some(e => !resolves.includes(e.to))) throw new Error(`U ${id} there are unresolved rebuttals; indicate resolves and explanation`)
+    if (resolves.length && !nonempty(reason)) throw new Error("Resolution of contradiction requires explanation")
     for (const evId of resolves) {
       const e = opposite.find(e => e.to === evId)
-      if (!e) throw new Error(`Неизвестное разрешаемое свидетельство: ${evId}`)
+      if (!e) throw new Error(`Unknown resolvable certificate: ${evId}`)
       e.data = { ...e.data, resolvedAt: new Date().toISOString(), resolution: reason, resolvedBy: evidenceIds }
     }
-    const event = { from: n.status, to: status, evidenceIds, reason: reason || 'Новое связанное свидетельство', source, at: new Date().toISOString() }
+    const event = { from: n.status, to: status, evidenceIds, reason: reason || "New linked certificate", source, at: new Date().toISOString() }
     n.data.statusHistory = [...(n.data.statusHistory || []), event]
     n.status = status; this.decisions.push({ id, ...event })
     if (status === 'dropped') n.data.resolution = { kind: resolutionKind === 'dependency-removed' ? resolutionKind : 'not-pursued', reason, source }
@@ -221,9 +221,9 @@ class GraphTransaction {
   complete({ nodeId, skill, report, runId, outcome = 'completed', storage }) {
     const n = this.graph.nodes.find(n => n.id === nodeId)
     this.validateReport(report)
-    if (!['completed', 'failed'].includes(outcome)) throw new Error('Неверный исход исследования')
-    if (!n || !nonempty(skill) || !/^reports\/.+\.md$/.test(report || '')) throw new Error('Завершению нужны узел, скилл и отчёт')
-    if (skill === 'product-design' && outcome === 'completed' && !runId) throw new Error('Завершению product-design нужен runId и проверяемое закрытие хранения')
+    if (!['completed', 'failed'].includes(outcome)) throw new Error("Invalid test result")
+    if (!n || !nonempty(skill) || !/^reports\/.+\.md$/.test(report || '')) throw new Error("Completion requires a node, skill and report")
+    if (skill === 'product-design' && outcome === 'completed' && !runId) throw new Error("Product-design completion needs runId and verifiable storage closure")
     n.data.research ||= {}
     n.data.research[skill] = { report, runId: runId || null, completedAt: new Date().toISOString(), outcome }
     if (runId) this.receipt({ runId, nodeId, skill, report, outcome, storage })
@@ -234,7 +234,7 @@ class GraphTransaction {
     const file = path.resolve(this.workspace, report || ''), root = path.join(this.workspace, 'reports')
     const staged = this.files.get(report)
     if (report?.endsWith('.md') && file.startsWith(`${root}${path.sep}`) && staged && /^reports\/communications\/run-[a-z0-9-]+\.md$/i.test(report)) return
-    if (!report?.endsWith('.md') || !file.startsWith(`${root}${path.sep}`) || !fs.existsSync(file) || !fs.statSync(file).isFile() || !fs.realpathSync(file).startsWith(`${fs.realpathSync(root)}${path.sep}`)) throw new Error('Отчёт результата должен существовать в reports/ этого воркспейса')
+    if (!report?.endsWith('.md') || !file.startsWith(`${root}${path.sep}`) || !fs.existsSync(file) || !fs.statSync(file).isFile() || !fs.realpathSync(file).startsWith(`${fs.realpathSync(root)}${path.sep}`)) throw new Error("The result report must exist in reports/ of this workspace")
   }
 
   stageFile(relative, content) {
@@ -244,26 +244,26 @@ class GraphTransaction {
   }
 
   receipt({ runId, nodeId, skill, report = null, summary, outcome = 'completed', storage }) {
-    if (!/^run-[a-z0-9-]+$/i.test(runId || '') || !['completed', 'failed'].includes(outcome) || !this.graph.nodes.some(n => n.id === nodeId) || !nonempty(skill)) throw new Error('Неверный результат запуска')
-    if (!report && !nonempty(summary)) throw new Error('Результату нужен отчёт или содержательное резюме')
+    if (!/^run-[a-z0-9-]+$/i.test(runId || '') || !['completed', 'failed'].includes(outcome) || !this.graph.nodes.some(n => n.id === nodeId) || !nonempty(skill)) throw new Error("Invalid startup result")
+    if (!report && !nonempty(summary)) throw new Error("The result needs a report or meaningful summary")
     const stateFile = path.join(this.workspace, '.product-os', 'state.json')
     if (fs.existsSync(stateFile)) {
       const launch = JSON.parse(fs.readFileSync(stateFile, 'utf8')).launches?.find(l => (l.runId || l.id) === runId)
-      if (launch && (launch.move?.skill !== skill || (launch.move?.receiptNodeId || launch.move?.node?.id) !== nodeId)) throw new Error('Результат не совпадает со скиллом/узлом фактического запуска')
+      if (launch && (launch.move?.skill !== skill || (launch.move?.receiptNodeId || launch.move?.node?.id) !== nodeId)) throw new Error("The result does not match the skill/node of the actual launch")
     }
     if (report) {
       this.validateReport(report)
       const root = path.join(this.workspace, '.product-os', 'runs')
       for (const name of fs.existsSync(root) ? fs.readdirSync(root).filter(f => f.endsWith('.json')) : []) {
         const previous = JSON.parse(fs.readFileSync(path.join(root, name), 'utf8'))
-        if (previous.report === report && previous.runId !== runId) throw new Error('Этот отчёт уже принадлежит другому запуску')
+        if (previous.report === report && previous.runId !== runId) throw new Error("This report already belongs to another run")
       }
       const text = this.files.get(report)?.content ?? fs.readFileSync(path.join(this.workspace, report), 'utf8')
       const declared = text.match(/^---\n[\s\S]*?^runId:\s*["']?([^\s"']+)/m)?.[1]
-      if (declared && declared !== runId) throw new Error('runId отчёта не совпадает с результатом запуска')
+      if (declared && declared !== runId) throw new Error("report runId does not match the run result")
     }
     const relative = `.product-os/runs/${runId}.json`
-    if (fs.existsSync(path.join(this.workspace, relative)) || this.files.has(relative)) throw new Error('Результат этого запуска уже записан')
+    if (fs.existsSync(path.join(this.workspace, relative)) || this.files.has(relative)) throw new Error("The result of this run has already been written")
     this.stageFile(relative, JSON.stringify({ runId, nodeId, skill, report, summary, outcome, graphRevision: (this.original.revision || 0) + 1, completedAt: new Date().toISOString() }, null, 2))
     if (skill === 'product-design' && outcome === 'completed') this.designCompletions.set(relative, clone({ runId, nodeId, skill, report, storage }))
   }
@@ -289,9 +289,9 @@ class GraphTransaction {
       activeIds.add(item.id)
       const title = item.text.split('\n')[0].replace(/\*\*/g, '')
       const n = this.node(item.id, 'move', title, { source: `MOVES.md#${item.id}`, data: {
-        description: item.text, horizon: /сейчас/i.test(item.section) ? 'now' : /позже/i.test(item.section) ? 'later' : 'next',
+        description: item.text, horizon: /(?:сейчас|^now$)/i.test(item.section) ? 'now' : /(?:позже|^later$)/i.test(item.section) ? 'later' : 'next',
         expectedOutcome: item.expectedOutcome,
-        completed: item.done || /сделано|отброшено/i.test(item.section), nodeId: item.nodeId, skill: item.skill,
+        completed: item.done || /(?:сделано|отброшено|^done|^discarded)/i.test(item.section), nodeId: item.nodeId, skill: item.skill,
         suggestionId: item.suggestionId, fingerprint: item.fingerprint, executionReady: item.executionReady, issues: item.issues, killCriterion: item.killCriterion, usesAssets: item.usesAssets,
         failureTest: item.failureTest, resources: item.resources, dependsOn: item.dependsOn, servesGoal: item.servesGoal, respectsConstraints: item.respectsConstraints,
       } })
@@ -315,10 +315,10 @@ class GraphTransaction {
       const by = new Map(this.graph.nodes.map(n => [n.id, n]))
       for (const old of this.before.nodes) {
         const n = by.get(old.id)
-        if (!n && !this.removals.has(old.id)) throw new Error(`Нельзя удалить ${old.id}; используй статус dropped`)
+        if (!n && !this.removals.has(old.id)) throw new Error(`Cannot delete ${old.id}; use status dropped`)
         if (!n) continue
-        if (['evidence', 'communication_decision'].includes(old.type) && JSON.stringify(old) !== JSON.stringify(n)) throw new Error(`Свидетельство ${old.id} неизменно`)
-        if (old.status !== n.status && !this.decisions.some(e => e.id === n.id) && !this.removals.has(n.id)) throw new Error(`Статус ${n.id} изменён в обход transition`)
+        if (['evidence', 'communication_decision'].includes(old.type) && JSON.stringify(old) !== JSON.stringify(n)) throw new Error(`Certificate ${old.id} unchanged`)
+        if (old.status !== n.status && !this.decisions.some(e => e.id === n.id) && !this.removals.has(n.id)) throw new Error(`Status ${n.id} changed to bypass transition`)
       }
       for (const n of this.graph.nodes) {
         const old = this.before.nodes.find(x => x.id === n.id)
@@ -328,14 +328,14 @@ class GraphTransaction {
       const error = validateGraph(this.graph)
       if (error) throw new Error(error)
       const latest = fs.existsSync(this.file) ? fs.readFileSync(this.file, 'utf8') : null
-      if (latest !== this.raw) throw Object.assign(new Error('Граф изменён в обход писателя. Запись отменена без потери данных.'), { code: 'REVISION_CONFLICT' })
+      if (latest !== this.raw) throw Object.assign(new Error("The graph has been changed to bypass the writer. The recording was canceled without loss of data."), { code: 'REVISION_CONFLICT' })
       if (this.research && this.files.size === 0 && JSON.stringify(this.graph) === JSON.stringify(this.original)) return { graph: this.graph, warnings: this.warnings, research: { revision: this.research.revision, factRevision: this.research.factRevision, path: 'research/research-data.json', unchanged: true } }
       this.graph.revision = (this.original.revision || 0) + 1
       if (!this.options.dry) {
         const files = [...this.files.values()]
         for (const entry of files) {
           const file = path.join(this.workspace, entry.path)
-          if (digest(fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : null) !== entry.before) throw Object.assign(new Error(`${entry.path} изменён во время транзакции`), { code: 'REVISION_CONFLICT' })
+          if (digest(fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : null) !== entry.before) throw Object.assign(new Error(`${entry.path} changed during transaction`), { code: 'REVISION_CONFLICT' })
         }
         for (const [relative, request] of this.designCompletions) {
           const completion = require('../design-completion').finalize(this.workspace, request)
@@ -354,20 +354,20 @@ class GraphTransaction {
 }
 
 function applyOperations(workspace, input, options = {}) {
-  if (!input || input.schemaVersion !== 1 || !Array.isArray(input.operations)) throw new Error('Нужен пакет {schemaVersion: 1, source, operations: []}')
+  if (!input || input.schemaVersion !== 1 || !Array.isArray(input.operations)) throw new Error("Required package {schemaVersion: 1, source, operations: []}")
   const tx = new GraphTransaction(workspace, { ...options, source: input.source, expectedRevision: input.expectedRevision, expectedResearchRevision: input.expectedResearchRevision, strict: true })
   try {
     const refs = new Map()
     for (const operation of input.operations) {
-      if (operation.op === 'node' && (['channel','journey','touchpoint','rubric','reference','communication_decision'].includes(operation.node?.type) || ['communication_material','content-pack','channel-concept','editorial-profile'].includes(operation.node?.data?.kind))) throw new Error('Каналы коммуникации не входят в эту поставку Product OS')
+      if (operation.op === 'node' && (['channel','journey','touchpoint','rubric','reference','communication_decision'].includes(operation.node?.type) || ['communication_material','content-pack','channel-concept','editorial-profile'].includes(operation.node?.data?.kind))) throw new Error("Communication channels are not included in this Product OS delivery")
       if (['research-put', 'research-update', 'research-coverage', 'research-checkpoint', 'research-provenance'].includes(operation.op)) require('../research/store').apply(tx, operation)
       else if (operation.op === 'node') {
         const { id, type, label, ...extra } = operation.node || {}
         // Confidence says who stands behind an unproven hypothesis. It never replaces evidence-based status.
         const confidence = extra.data?.confidence
         if (confidence !== undefined && confidence !== null) {
-          if (!['expert', 'ai'].includes(confidence)) throw new Error('Уверенность гипотезы: expert или ai')
-          if (confidence === 'expert' && !nonempty(extra.data.confidenceSource)) throw new Error('Экспертной гипотезе нужен confidenceSource: чьё решение и где оно записано')
+          if (!['expert', 'ai'].includes(confidence)) throw new Error("Hypothesis confidence: expert or ai")
+          if (confidence === 'expert' && !nonempty(extra.data.confidenceSource)) throw new Error("Expert hypothesis needs confidenceSource: whose decision and where is it recorded?")
         }
         tx.node(id, type, label, extra)
       } else if (operation.op === 'normalize-competition') require('./competition-normalization').normalizeCompetition(tx, operation)
@@ -383,14 +383,14 @@ function applyOperations(workspace, input, options = {}) {
         resolves: (operation.resolves || []).map(id => refs.get(id) || id),
       })
       else if (operation.op === 'research-brief') {
-        if (require('../edition').isPublicEdition()) throw new Error('Брифы исследований не создаются в Product OS Public')
+        if (require('../edition').isPublicEdition()) throw new Error("Research briefs are not created in Product OS Public")
         require('../research-brief/store').apply(tx, operation)
       }
       else if (operation.op === 'complete') tx.complete(operation)
       else if (operation.op === 'move') tx.move(operation)
-      else if (operation.op === 'communication') throw new Error('Каналы коммуникации не входят в эту поставку Product OS')
+      else if (operation.op === 'communication') throw new Error("Communication channels are not included in this Product OS delivery")
       else if (operation.op === 'receipt') tx.receipt(operation)
-      else throw new Error(`Неизвестная операция: ${operation.op}`)
+      else throw new Error(`Unknown operation: ${operation.op}`)
     }
     return tx.commit()
   } finally { tx.close() }

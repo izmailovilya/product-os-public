@@ -1,32 +1,32 @@
-# Поделиться консолью с командой
+# Share the console with your team
 
-Попросите агента: «Поделись консолью с командой». Коллеги получают ссылку для
-просмотра сохранённого снимка. Редактирование и запуск агентов через ссылку закрыты.
-Просмотр работает независимо от компьютера владельца; изменения появятся после
-публикации нового снимка под тем же именем.
+Ask your agent to share the console. Colleagues receive a read-only snapshot link;
+editing and agent launches are unavailable. Hosting works independently of your
+computer. Publish a new snapshot under the same name to update the shared view.
 
-## Сначала выбрать доступ
+## Choose access
 
-При первой публикации спроси владельца: «Сделать доступ открытым или по паролю?
-Для приватных данных рекомендую пароль». Если выбор уже дан в разговоре, используй
-его. До ответа ничего не публикуй. Открытый доступ означает, что материалы доступны
-любому, у кого есть адрес. Один общий пароль не даёт индивидуальных ролей или
-отзыва доступа у одного коллеги; смена пароля завершает прежние сессии.
+For the first publication, choose public access or a shared password. A password
+is recommended for private material. Respect a choice already given and do not
+publish before it is known. Public access allows anyone with the address to view
+materials. A shared password has no individual roles or per-person revocation;
+changing it invalidates previous sessions.
 
-Выбор сохраняется для последующих обновлений. Менять его можно по поручению
-владельца с `--change-access`. Перед публикацией показывай режим и состав снимка.
-Снимок содержит всю сохранённую память продукта, PRODUCT.md, MOVES.md, IDEAS.md
-и отчёты из reports/. Выбор отдельных сегментов в этой версии не поддерживается.
-Оригиналы sources/ по умолчанию исключены; включай `--include-sources` только по
-поручению владельца. Изображения, шрифты и структурированные пакеты, необходимые
-для показа айдентики и референсов, входят в снимок и перечислены отдельно.
-Цитаты и сведения из источников могут оставаться в памяти
-и отчётах независимо от этого флага. Для исключения ранее включённых оригиналов
-используй `--exclude-sources`. Ничего не обезличивается автоматически.
+The choice is saved for updates. Change it only when instructed, with
+`--change-access`. Show the access mode and snapshot contents before publication.
+The snapshot includes all saved product memory, PRODUCT.md, MOVES.md, IDEAS.md and
+reports. Selecting individual segments is not supported.
 
-## Подготовка и проверка
+Original `sources/` files are excluded by default. Include them only when instructed
+with `--include-sources`; use `--exclude-sources` to remove previously included
+originals from a new snapshot. Images, fonts and structured identity/reference
+packages needed for display are included and listed separately. Quotations and
+source-derived information can remain in memory and reports regardless of this
+flag. Nothing is automatically anonymized.
 
-Команды — через установленный `node <tools>/bin/product-os.js`:
+## Prepare and review
+
+Run commands through the installed `node <tools>/bin/product-os.js`:
 
 ```sh
 product-os share prepare . --access password --name my-product-console
@@ -34,69 +34,67 @@ product-os share review <package>
 product-os share preview <package>
 ```
 
-`prepare` создаёт локальный пакет в `.product-os/shares/`, работая с временной
-копией исходных данных. Само создание пакета не публикует его. REVIEW.json
-перечисляет файлы, недоступные вложения, дату и режим. Проверь содержимое через
-preview, особенно память, отчёты, иллюстрации и скачивания; список имён не заменяет
-проверку содержимого. Повторный `prepare` сохраняет имя Worker, режим, выбор
-оригиналов и настроенный пароль, если владелец их не менял.
+`prepare` creates a local package in `.product-os/shares/` using a temporary copy
+of the data. It does not publish. REVIEW.json lists files, unavailable attachments,
+the date and access mode. Review actual content in the preview, including memory,
+reports, images and downloads; filenames alone are insufficient. Repeating
+`prepare` preserves the Worker name, access mode, source-file choice and configured
+password unless the owner changes them.
 
-## Пароль без платной функции хостинга
+## Set a password
 
-Запрашивай пароль защищённым вводом, не в чате и не аргументом команды. В BB
-используй доступный secret request с точным файлом назначения:
+Use secure input, never chat or command arguments. In BB, request a secret into
+an explicit protected file:
 
 ```sh
 bb secret request PRODUCT_OS_SHARE_PASSWORD \
-  --purpose "Задать пароль для просмотра консоли командой" \
-  --describe PRODUCT_OS_SHARE_PASSWORD "Общий пароль команды, от 12 символов" \
+  --purpose "Set a password for the shared console" \
+  --describe PRODUCT_OS_SHARE_PASSWORD "Shared team password, at least 12 characters" \
   --write-env <protected-dotenv-file>
 product-os share password <package> --env-file <protected-dotenv-file>
 ```
 
-В других средах используй их защищённый запрос credentials либо попроси владельца
-самостоятельно создать dotenv вне публикуемых файлов. Не проси вставлять пароль
-в разговор. Пароль: от 12 символов; рекомендуй длинный случайный. Команда читает
-его сама и не выводит. В `.dev.vars` сохраняются только соль с PBKDF2-хешем
-и случайный ключ подписи сессии; исходный пароль в пакет не копируется.
-PBKDF2 выполняется в браузере с 600 000 итераций, а сервер проверяет дополнительный
-хеш результата. Это сохраняет медленный подбор пароля при быстрой проверке на
-Worker с бесплатным лимитом CPU; сайт и вход требуют HTTPS и JavaScript.
-Файл закрыт правами 0600 и не находится в assets/. Его значения не читай и
-не включай в отчёты. Повторный `share password` меняет соль и ключ, завершая
-старые сессии после новой публикации.
+In other environments, use their secure credential input or have the owner create
+a dotenv file outside published assets. Use at least 12 characters, preferably a
+long random password. The command reads it without printing it.
 
-## Публикация на Cloudflare
+`.dev.vars` stores a salt, a PBKDF2-derived hash and a random session-signing key;
+the original password is not copied into the package. The browser performs 600,000
+PBKDF2 iterations and the server verifies an additional hash. This keeps password
+guessing expensive while allowing fast verification within free Worker CPU limits.
+The site and login require HTTPS and JavaScript. The secrets file has mode 0600
+and stays outside `assets/`. Do not read its values into chat or reports. Repeating
+`share password` rotates the salt and key; publishing invalidates old sessions.
 
-Нужны аккаунт Cloudflare и авторизация Wrangler (`npx wrangler login` либо уже
-настроенный токен). Не включай платные сервисы и не меняй тариф. Workers имеет
-бесплатную квоту; превышение квот и условия аккаунта не являются обещанием
-безлимитного бесплатного хостинга.
+## Publish to Cloudflare
 
-После просмотра пакета и разрешения владельца опубликовать именно эти данные:
+You need a Cloudflare account and Wrangler authentication through `npx wrangler login`
+or an existing token. Do not enable paid services or change the plan. Hosting is
+subject to Cloudflare Workers quotas; unlimited free hosting is not promised.
+
+After reviewing the package and obtaining authorization to publish its specific data:
 
 ```sh
-product-os share deploy <package> --approved-digest <digest из share review>
+product-os share deploy <package> --approved-digest <digest-from-share-review>
 ```
 
-Команда проверяет текущий digest, запускает закреплённый Wrangler и передаёт
-секреты напрямую из файла. Публикуется только подготовленный снимок, не папка
-продукта. Верни адрес из результата Cloudflare, дату снимка и режим доступа.
-Проверь ссылку без сессии и после входа; проверь прямые адреса данных и скачиваний.
-Ошибку доступа/хостинга называй ошибкой, не успешной публикацией.
+The command checks the current digest, runs the pinned Wrangler version and passes
+secrets directly from the file. It publishes only the prepared snapshot, not the
+product folder. Return the actual deployment URL, snapshot date and access mode.
+Check the link without a session and after login, including direct data/download
+URLs. An access or hosting error is a failure, not a successful publication.
 
-Для локального preview коллегам из удалённого BB используй существующий Connect
-только по поручению показать его; localhost на их устройстве не откроется.
-При доверенном HTTPS reverse proxy запускай preview с `--origin <https-origin>`:
-проверка origin и cookie должны использовать внешний адрес, а не внутренний HTTP.
-Такой preview ещё не является постоянной опубликованной консолью.
+For a remote BB preview, use an existing Connect route only when asked to show it;
+localhost is not accessible on another person's device. With a trusted HTTPS reverse
+proxy, use `--origin <https-origin>` so origin and cookie checks use the external
+address. A preview is not a permanent deployment.
 
-## Как устроена защита
+## Protection
 
-Cloudflare Worker выполняется перед каждой выдачей static assets. HTML, API,
-вложения и изображения доступны только через проверенный перечень маршрутов;
-прямой адрес внутреннего файла не обходит пароль. Общедоступны только оформление
-формы и шрифты Product OS без данных продукта. Сессия живёт восемь часов,
-подписана, привязана к сайту и версии пароля, хранится в Secure/HttpOnly/SameSite
-cookie. Проверяется origin формы, размер запроса и ограничение попыток входа.
-POST/PUT/DELETE для данных и запуска агентов не поддерживаются даже после входа.
+The Worker checks requests before serving static assets. Product HTML, API data,
+attachments and images use an explicit route inventory; internal file paths do not
+bypass authentication. Only the Product OS login shell and fonts are public without
+product data. Sessions last eight hours, are signed and bound to the site and
+password version, and use Secure/HttpOnly/SameSite cookies. Login checks the form
+origin, request size and attempt limits. Data writes and agent launches remain
+unavailable after login.

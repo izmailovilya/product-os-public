@@ -9,7 +9,7 @@ const decode = value => new TextDecoder().decode(Uint8Array.from(atob(value.repl
 const sha = async value => hex(await crypto.subtle.digest('SHA-256', encoder.encode(value)))
 
 export async function passwordRecord(password) {
-  if (typeof password !== 'string' || password.length < 12 || encoder.encode(password).length > 512) throw new Error('Пароль должен содержать от 12 символов и не более 512 байт.')
+  if (typeof password !== 'string' || password.length < 12 || encoder.encode(password).length > 512) throw new Error("The password must contain at least 12 characters and no more than 512 bytes.")
   const salt = hex(crypto.getRandomValues(new Uint8Array(16)))
   const proof = hex(await derive(password, salt, 600000))
   return `pbkdf2-sha256$600000$${salt}$${await sha(proof)}`
@@ -65,7 +65,7 @@ export function safeNext(value) {
   return url.origin === 'https://snapshot.invalid' && !url.pathname.startsWith('/_share') ? url.pathname + url.search + url.hash : '/'
 }
 export async function boundedForm(request) {
-  if (!/^application\/x-www-form-urlencoded(?:;|$)/i.test(request.headers.get('content-type') || '')) throw new Error('Нужна форма входа.')
+  if (!/^application\/x-www-form-urlencoded(?:;|$)/i.test(request.headers.get('content-type') || '')) throw new Error("Login form required.")
   const reader = request.body?.getReader()
   if (!reader) return new URLSearchParams()
   let result = '', size = 0
@@ -75,7 +75,7 @@ export async function boundedForm(request) {
       const { done, value } = await reader.read()
       if (done) break
       size += value.byteLength
-      if (size > 4096) throw new Error('Слишком большая форма.')
+      if (size > 4096) throw new Error("The form is too large.")
       result += decoder.decode(value, { stream: true })
     }
     return new URLSearchParams(result + decoder.decode())

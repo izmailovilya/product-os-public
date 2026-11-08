@@ -1,67 +1,58 @@
 ---
 name: os-setup
-description: Create or repair a Product OS workspace, capture the product passport from known context, and open its local console. Use for «настрой воркспейс», «начнём продукт», or «os setup».
+description: Create or repair a Product OS workspace, capture its product profile from known context, and open the local console. Use for "set up the workspace", "start a product" or "os setup".
 ---
 
-# Настройка Product OS
+# Set up Product OS
 
-Создай рабочее место продукта, сохрани известный контекст и покажи его в консоли.
-Не запускай исследование рынка и не придумывай сведения о клиентах.
+Create a product workspace, save the known context and show it in the console.
+Do not start market research or invent customer information.
 
-Прочитай [правила](../CONTRACT.md) и [запись памяти](../GRAPH-WRITES.md).
-Работай в отдельной папке продукта, а не в репозитории инструментария.
+Read [the operating rules](../CONTRACT.md) and
+[the memory writing guide](../GRAPH-WRITES.md). Work in a separate product folder,
+not the toolkit repository.
 
-## Контекст
+## Context
 
-Сначала используй сведения из разговора и существующего PRODUCT.md. Уточняй только
-то, без чего нельзя продолжить: продукт, стадия, цель, ограничения и рынок.
-Не проси повторить уже известное. Неизвестное запиши как неизвестное.
-Разделяй слова владельца, наблюдения из источников и собственные предположения.
+Use the conversation and existing PRODUCT.md first. Clarify only missing information
+needed to continue: the product, stage, goal, constraints and market. Do not ask
+for known answers. Record unknowns explicitly. Distinguish owner statements,
+source observations and your assumptions.
 
-## Создание и восстановление
+## Create or repair
 
-`<tools>` — абсолютный путь к установленному каталогу product-os-tools.
-Сначала проверь локальный runtime продукта, затем общий runtime пользователя.
-Обычное расположение — `.claude/skills/product-os-tools` внутри продукта либо
-`~/.claude/skills/product-os-tools` в домашней папке. Используй окружение своего
-агента; при его отсутствии проверь окружение второго агента или checkout Product OS.
-Домашний каталог определяется отдельно от текущей папки продукта. Для запуска
-используй Node.js и абсолютный путь к `<tools>/bin/product-os.js`.
-При общей установке не копируй скиллы/runtime в каждый продукт и не запускай
-там `install`: достаточно `init` и сохранения исходного контекста.
+`<tools>` is the absolute path to the installed `product-os-tools` directory.
+Check the product-local runtime first, then the user's shared installation.
+Claude Code normally uses `.claude/skills/product-os-tools`; Codex uses
+`.agents/product-os-tools`. These paths may be inside the product folder or the
+user's home directory. Check the other agent's environment or a toolkit checkout
+if needed. Resolve the home directory separately from the product folder.
 
-1. Сохрани PRODUCT.md: что делает продукт; для кого; стадия и имеющиеся материалы;
-   цель владельца; ограничения; рынок; утверждения, которые пока не проверены.
-   При восстановлении сохрани существующий текст. Обновляй только согласованные сведения.
-2. Выполни `node <tools>/bin/product-os.js init <workspace> --agent both`.
-   Команда создаёт только недостающие папки и файлы, сохраняет пользовательские
-   инструкции и инициализирует граф через общий транзакционный writer.
-3. Проверь `node <tools>/bin/graph-write.js <workspace> --check`.
-4. Если владелец дал материалы, используй [product-context](../product-context/SKILL.md),
-   чтобы сохранить оригиналы и сведения с источниками.
-5. Открой `node <tools>/bin/product-os.js <workspace>`. Проверь доступность консоли
-   и покажи её адрес. Если браузер недоступен, честно укажи границу проверки.
+Use Node.js and the absolute path to `<tools>/bin/product-os.js`. With a shared
+installation, do not copy the runtime into each product or run `install` there;
+`init` and saving the starting context are sufficient.
 
-Product OS содержит настройку, ведение контекста и базовые исследовательские навыки:
-[product-research](../product-research/SKILL.md) (проверка одного вопроса по открытым
-источникам), [product-segment-hypotheses](../product-segment-hypotheses/SKILL.md)
-(карта возможных клиентов), [product-job-map](../product-job-map/SKILL.md)
-(стратегическая карта работ), [product-brand-identity](../product-brand-identity/SKILL.md)
-(айдентика бренда) и [product-reference-library](../product-reference-library/SKILL.md)
-(библиотека референсов). Не ссылайся на отсутствующие навыки и не обещай
-специализированные интервью, глубокое исследование рынка, контент или разработку.
-Обычные вопросы обсуждай с владельцем, опираясь на предоставленные материалы.
+1. Save PRODUCT.md: what the product does, for whom, its stage and available
+   materials, the owner's goal, constraints, market and unverified claims.
+   During repair, preserve existing text and update only agreed information.
+2. Run `node <tools>/bin/product-os.js init <workspace> --agent both`.
+   It creates missing files and directories, preserves user instructions and
+   initializes the graph through the shared transactional writer.
+3. Check `node <tools>/bin/graph-write.js <workspace> --check`.
+4. If materials were supplied, use [product-context](../product-context/SKILL.md)
+   to preserve originals and source-backed information.
+5. Run `node <tools>/bin/product-os.js <workspace>`. Check the console is available
+   and show its address. If a browser is unavailable, state what was not verified.
 
-Готово: паспорт сохранён, исходные файлы не потеряны, граф валиден, консоль доступна.
+This edition also includes [product-research](../product-research/SKILL.md) for one
+question using public sources, [product-segment-hypotheses](../product-segment-hypotheses/SKILL.md)
+for potential customers, [product-job-map](../product-job-map/SKILL.md) for customer
+jobs, [product-brand-identity](../product-brand-identity/SKILL.md) and
+[product-reference-library](../product-reference-library/SKILL.md).
 
-<!-- product-os-public:usage:start -->
-## Учёт применения
+Do not refer to missing skills or promise specialized interview processing, deep
+market research, content production or implementation. Discuss ordinary questions
+using the materials the owner provided.
 
-После первого содержательного результата этого навыка в текущем разговоре следуй
-[правилам аналитики](../TELEMETRY.md):
-
-`node <tools>/bin/product-os.js telemetry skill-used os-setup`
-
-Учитывай один раз за разговор. Чтение этого файла, установка и проверка кода
-не являются применением. Отключение и недоступность счётчика не мешают основной задаче.
-<!-- product-os-public:usage:end -->
+Done means the product profile is saved, originals are preserved, the graph is
+valid and the console is available.

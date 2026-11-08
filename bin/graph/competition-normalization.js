@@ -3,12 +3,12 @@
 const clone = value => JSON.parse(JSON.stringify(value))
 function normalizeCompetition(tx, input) {
   const { ids, keepId = ids?.[0], name, category, scenarios, reason } = input
-  if (!Array.isArray(ids) || !ids.length || new Set(ids).size !== ids.length || !name?.trim() || !category?.id || !category?.name || !reason?.trim()) throw new Error('Нужны записи, название категории и основание объединения')
-  if (!Array.isArray(scenarios) || scenarios.length !== ids.length || new Set(scenarios.map(s => s.sourceId)).size !== ids.length || scenarios.some(s => !ids.includes(s.sourceId) || !s.label?.trim())) throw new Error('Каждой исходной записи нужен отдельный сценарий')
-  if (input.alternative && (typeof input.alternative.label !== 'string' || !input.alternative.label.trim() || !['provider', 'tool'].includes(input.alternative.selection))) throw new Error('Для способа решения нужны название и тип выбора: provider или tool')
+  if (!Array.isArray(ids) || !ids.length || new Set(ids).size !== ids.length || !name?.trim() || !category?.id || !category?.name || !reason?.trim()) throw new Error("Need records, category name and association basis")
+  if (!Array.isArray(scenarios) || scenarios.length !== ids.length || new Set(scenarios.map(s => s.sourceId)).size !== ids.length || scenarios.some(s => !ids.includes(s.sourceId) || !s.label?.trim())) throw new Error("Each source record needs a separate script")
+  if (input.alternative && (typeof input.alternative.label !== 'string' || !input.alternative.label.trim() || !['provider', 'tool'].includes(input.alternative.selection))) throw new Error("The solution method requires a name and selection type: provider or tool")
   const originals = ids.map(id => tx.graph.nodes.find(n => n.id === id))
-  if (originals.some(n => !n || n.type !== 'competitor' || !(n.data?.isCategory || n.data?.entityType === 'category') || n.data?.competitionScenarios)) throw new Error('Объединять можно только ещё не разобранные групповые записи; конкретные продукты сохраняют свои ID')
-  for (const s of scenarios) if (s.discoveryPlaces && (!Array.isArray(s.discoveryPlaces) || s.discoveryPlaces.some(p => typeof p.label !== 'string' || !p.label.trim() || !['marketplace', 'provider-example'].includes(p.role)))) throw new Error('Укажи название и роль места поиска')
+  if (originals.some(n => !n || n.type !== 'competitor' || !(n.data?.isCategory || n.data?.entityType === 'category') || n.data?.competitionScenarios)) throw new Error("You can only merge group records that have not yet been sorted; specific products retain their IDs")
+  for (const s of scenarios) if (s.discoveryPlaces && (!Array.isArray(s.discoveryPlaces) || s.discoveryPlaces.some(p => typeof p.label !== 'string' || !p.label.trim() || !['marketplace', 'provider-example'].includes(p.role)))) throw new Error("Specify the name and role of the search location")
   const records = scenarios.map(s => {
     const original = originals.find(n => n.id === s.sourceId)
     return { id: original.id, label: s.label.trim(), original: clone(original),

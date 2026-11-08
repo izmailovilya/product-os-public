@@ -33,9 +33,9 @@ function domainOf(text) {
 }
 
 // A parenthetical is the entry's own address only when it holds nothing but a domain —
-// "Raketa Pay (raketapay.ru)" is Raketa Pay, while "Платёжные агенты (например, «Плати
-// Легко»/pay-saas.ru, Global-Payments…)" is a category that merely mentions other people's
-// sites; keying it by pay-saas.ru would silently claim the bucket IS Плати Легко.
+// "Raketa Pay (raketapay.ru)" is Raketa Pay, while "Paying agents (for example, “Pay
+// Easy»/pay-saas.ru, Global-Payments…)" is a category that merely mentions other people's
+// sites; keying it by pay-saas.ru would silently claim the bucket IS Pay Easy.
 function splitName(raw) {
   const head = String(raw || '').split(/\s[—–]\s|:\s/)[0].trim()
   const paren = /\(([^)]*)\)/.exec(head)
@@ -68,7 +68,7 @@ function isCategoryBucket({ name, kind } = {}) {
   if (BEHAVIOUR.test(String(kind || ''))) return false
   const raw = String(name || '')
   if (ENUMERATOR.test(raw)) return true
-  // the enumeration can sit after a colon ("посредники: Платежка (platejka.com), GetCard, …")
+  // the enumeration can sit after a colon ("intermediaries: Payment (platejka.com), GetCard, …")
   // or inside the first parenthetical ("(FunPay, GGsel, Plati.ru)") — read whichever comes first
   const colon = raw.indexOf(':')
   const paren = /\(([^)]*)\)/.exec(raw)

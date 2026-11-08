@@ -1,100 +1,100 @@
-# Проверка визуального результата
+# Check visual result
 
-Открывать реальные файлы, не оценивать только промпт/описание. Для PDF/PPTX — рендер
-всех сдаваемых страниц; для SVG и растров — оригинал и превью в целевом размере.
-Технический валидатор проверяет ссылки, хеши, малые превью знака и число контраста, но
-не утверждает, что знак читается.
+Open real files, don't evaluate prompt/description only. For PDF/PPTX - render
+all submitted pages; for SVG and rasters - original and preview in the target size.
+Technical validator checks links, hashes, small sign previews and contrast number, but
+does not assert that the character is readable.
 
-- Смысл: название и обещание точны, требования брифа сохранены, неподтверждённые факты
-  не попали в макеты. Первая страница логобука отвечает «зачем» и «что ценим». По мокапу
-  нельзя утверждать рост узнаваемости или продаж.
-- Знак: нет деформаций/обрезки, языковые и цветовые версии соответствуют мастер-файлу;
-  дескриптор читается в предназначенном размере. Проверить нужные светлые/тёмные фоны.
-- Типографика: реальные шрифты/замены, кириллица и спецзнаки, короткие и длинные строки,
-  переносы, иерархия, отсутствие наложений и отсутствующих глифов; абзац на реальной
-  длине строки носителя с выбранным интерлиньяжем; заголовок в прописных проверен
-  отдельно; трекинг основного текста не изменён без записанной причины.
-- Цифровые носители: иконка 16/32/64 px и favicon просмотрены в реальном размере (1:1),
-  не по увеличенному превью; аватар с круглой обрезкой не режет знак; тёмная тема знака
-  и пар палитры открыта; og-image и письмо — с реальным текстом.
-- Контраст: каждая пара «текст на фоне» из правил `topic: color` имеет число
-  (относительная яркость WCAG) и сравнение с порогом правила; пара ниже порога помечена
-  как декоративная или заменена. Это прикладная проверка, не аудит доступности сайта.
-- Система: несколько разных носителей узнаваемы по общей логике; зафиксированные
-  постоянные элементы соблюдены, вариативность имеет условия. Один логотип на мокапе
-  ещё не демонстрирует всю систему.
-- Файлы: исходник существует, экспорт соответствует ему, прозрачность/фон и размеры
-  верны, относительные ссылки открываются, документ описывает именно переданные версии.
-  Показанную анимацию/AI-редактируемость не обещать, если есть только статичный экспорт.
-- Использование: другой участник находит нужный вариант и понимает, как применить его.
-  Неясность назначения — дефект передачи. Непроверенную печать или ресурс отметить отдельно.
+- Meaning: the title and promise are accurate, the requirements of the brief are preserved, unconfirmed facts
+did not hit the layouts. The first page of the brand guidelines answers “why” and “what we value.” Based on mockup
+growth in awareness or sales cannot be claimed.
+- Sign: no deformation/cutting, language and color versions correspond to the master file;
+The descriptor is read at the intended size. Check the required light/dark backgrounds.
+- Typography: real fonts/replacements, Cyrillic and special characters, short and long lines,
+hyphens, hierarchy, no overlays and missing glyphs; paragraph on real
+media line length with selected leading; title in capitals checked
+separately; body text tracking is not changed without a recorded reason.
+- Digital media: icon 16/32/64 px and favicon viewed in real size (1:1),
+not from the enlarged preview; an avatar with a round cut does not cut the sign; dark sign theme
+and palette steam is open; og-image and letter - with real text.
+- Contrast: each text-on-background pair from the `topic: color` rules has a number
+(WCAG relative brightness) and comparison with rule threshold; the pair below the threshold is marked
+as decorative or replaced. This is an application check, not a site accessibility audit.
+- System: several different media are recognized by a common logic; fixed
+Constant elements are met, variability has conditions. One logo on mockup
+does not show the entire system yet.
+- Files: source exists, export matches it, transparency/background and dimensions
+correct, relative links are opened, the document describes exactly the transferred versions.
+The shown animation/AI editability cannot be promised if there is only a static export.
+- Use: another participant finds the desired option and understands how to apply it.
+Purpose unclear - transmission defect. Mark the unverified seal or resource separately.
 
-## Проверка системы по задаче
+## System check for task
 
-Для полной айдентики или её аудита запиши в том же отчёте: критерий → конкретный
-файл/страница → наблюдение → проверено / открыто / неприменимо → нужное действие.
-Для правки одного знака или экспорта оставь только относящиеся к ней критерии.
+For a full identity or its audit, write in the same report: criterion → specific
+file/page → observation → checked / open / not applicable → desired action.
+To edit one character or export, leave only the criteria related to it.
 
-1. **Верность брифу.** Сопоставь обещание, название, существенные тексты и схемы с
-   источником. У сохранённых элементов должно быть основание сохранения; у изменений
-   содержания — поручение или отдельное решение. Правку проверь во всём комплекте,
-   включая обложки и ZIP, а не только в одном показанном макете.
-2. **Отличимость.** Положи носители рядом с собранными материалами альтернатив из
-   категории (workflow.md, «Конкуренты и окружение»); отдельно закрой знак и название.
-   Назови, что остаётся собственным: тип знака, композиция, типографический приём,
-   графика, изображение, голос. Отсутствие сравнения — открытое допущение с `check`, а
-   не доказательство слабости или уникальности. Не запускай исследование узнаваемости
-   вместо локального ревью. Johnson, с. 38–45; Wheeler, с. 44; Budelmann и Kim, 70–72.
-3. **Вариации.** Проверь применимые форматы и разную плотность контента. Для основного
-   приёма покажи условия обязательного, допустимого и ненужного применения. Смена
-   только длины заголовка проверяет переносы, но ещё не гибкость системы. Ищи общее
-   семейство при разных задачах, не обязательное повторение одного украшения.
-   Wheeler, с. 36–38; Budelmann и Kim, принципы 25–27.
-4. **Назначение формы.** Сопоставь заявленную функцию графики с тем, что действительно
-   видно. Абстракция не обязана объяснять продукт, но если обещает это, проверяй
-   предметы, подписи и связи. Различай знак, вторичную графику и функциональную схему.
-   Прикладная проверка соответствия стратегии: Budelmann и Kim, принцип 51.
-5. **Повторный выпуск вслепую.** Выполняет отдельный субагент, не автор комплекта.
-   Он получает только папку комплекта (копию) и задание вида «собери обложку с таким-то
-   текстом в указанном инструменте» — без доступа к переписке, отчёту и этому чеклисту.
-   Он выбирает исходник по индексу, подставляет текст, получает экспорт, проверяет
-   символы, переносы и шрифты и записывает, что потребовало догадки или внешней
-   зависимости. Его замечания попадают в отчёт как есть, без правки автором; автор
-   отвечает на каждое действием или пометкой «принято как ограничение». Если субагент
-   недоступен, проверку выполняет автор и так и пишет: это не независимая проверка.
-   Если сторонний редактор не открывался, не обещай его совместимость.
-   Johnson, с. 266, 272; Budelmann и Kim, принципы 58–60, 62; Королькова, с. 84, 134, 184.
+1. **Fidelity to the brief.** Match the promise, title, essential texts and diagrams with
+source. Saved items must have a reason for being saved; at changes
+contents - an order or a separate decision. Check the editing in the entire set,
+Including covers and ZIP, not just in the one layout shown.
+2. **Distinctiveness.** Place the media next to the collected alternative materials from
+categories (workflow.md, “Competitors and environment”); Separately close the sign and name.
+Name what remains your own: type of sign, composition, typographic technique,
+graphics, image, voice. No comparison - open assumption with `check`, and
+not proof of weakness or uniqueness. Don't run a recognition study
+instead of local review. Johnson, p. 38–45; Wheeler, p. 44; Budelmann and Kim, 70–72.
+3. **Variations.** Check applicable formats and different content densities. For main
+reception show the conditions for mandatory, permissible and unnecessary use. Change
+Only header length checks for wraps, not system flexibility yet. Look for general
+family for different tasks, not necessarily repeating one decoration.
+Wheeler, p. 36–38; Budelmann and Kim, principles 25–27.
+4. **Purpose of the form.** Compare the declared graphics function with what is actually
+visible. An abstraction doesn't have to explain the product, but if it promises to do so, check it out
+objects, signatures and connections. Distinguish between sign, secondary graphics and function diagram.
+Applied Strategy Compliance Check: Budelmann and Kim, Principle 51.
+5. **Blind re-release.** Performed by a separate subagent, not the author of the kit.
+He receives only the kit folder (copy) and a task like “assemble the cover with such and such
+text in the specified tool" - without access to correspondence, report and this checklist.
+It selects the source by index, substitutes text, receives export, checks
+characters, hyphens and fonts and writes that required a guess or external
+dependencies. His comments are included in the report as is, without editing by the author; author
+responds to each with an action or a “accepted as constraint” mark. If subagent
+unavailable, the author performs the check and writes: this is not an independent check.
+If a third-party editor did not open, do not promise its compatibility.
+Johnson, p. 266, 272; Budelmann and Kim, principles 58–60, 62; Korolkova, s. 84, 134, 184.
 
-Это прикладное ревью по [основаниям](knowledge.md), не универсальный экзамен на
-соответствие всем книгам. Неустановленная узнаваемость оставляет гипотезу открытой;
-она сама по себе не запрещает показать дизайн. Пропущенный заказанный знак, подмена
-содержания или неработающий обещанный шаблон — незавершённая часть заказа. Сохрани
-разницу между «файлы исправны», «система проверена в работе» и «владелец принял».
+This is an applied review on [foundations](knowledge.md), not a universal exam on
+Match all books. Unidentified recognition leaves the hypothesis open;
+it in itself does not prohibit showing the design. Missed ordered sign, substitution
+contents or broken promised template - unfinished part of the order. Save
+the difference between “files are OK”, “the system has been tested in operation” and “the owner has accepted”.
 
-Для каждого проверенного визуального файла сохраняй в identity.json: fileId,
-viewed=true, размер/условия просмотра, результат и открытые дефекты; если оригинал
-нельзя открыть напрямую, существующий renderPath. Для превью знака 16/32/64 px,
-созданных валидатором в `previews/`, запись QA обязательна. Проверяй заново после
-изменения файла; запись относится к SHA-256 просмотренной версии. Не заменяй проверку
-порогом общей оценки агента. Блокирующий дефект или отсутствие просмотра оставляет draft.
+For each checked visual file, save in identity.json: fileId,
+viewed=true, viewing size/conditions, result and open defects; if original
+Cannot directly open existing renderPath. For sign preview 16/32/64 px,
+created by validator in `previews/`, QA record is required. Check again after
+file changes; the entry refers to the SHA-256 scanned version. Do not replace check
+agent's overall rating threshold. A blocking defect or lack of viewing leaves draft.
 
-Публикация, регистрация товарного знака, покупка шрифтов и изменение действующего сайта
-не являются частью локальной визуальной проверки. Отчёт не заявляет их выполнения;
-список действий владельца — в workflow.md.
-# Презентация в библиотеке
+Publication, registration of a trademark, purchase of fonts and change of the current website
+Not part of local visual inspection. The report does not state their implementation;
+list of owner actions - in workflow.md.
+# Presentation in the library
 
-Проверь сохранённую композицию по [presentation.md](presentation.md) в текущем
-viewer консоли, включая путь, собранный до повторения разделов. Прочитай образец
-вместе с подписью, выбери файл для названного носителя, открой источник и вернись.
-Первый экран показывает бренд; отбор и разделы объясняют его применение. Изображения
-и шрифт должны загрузиться. Проверь недоступный файл и затронутое представление на
-узком экране с увеличенным текстом; альтернативную структуру — при изменении reader.
+Check the saved composition against [presentation.md](presentation.md) in the current
+Console viewer, including path collected before repeating sections. Read sample
+together with the signature, select the file for the named media, open the source and return.
+The first screen shows the brand; selection and sections explain its application. Images
+and the font should load. Check for inaccessible file and affected view on
+narrow screen with enlarged text; alternative structure - when changing reader.
 
-В том же отчёте раздели результат: исправность файлов/ссылок; пригодность текущей
-композиции для задачи; фактический выбор владельца и его область. Для композиции
-назови видимый факт и последствие: например, технический экспорт занял место образца
-или увеличение оторвало подпись от рисунка. Это основание исправить показ даже при
-успешной валидации. Отсутствующий просмотр оставляет эту часть непроверенной;
-одних записей QA активов для неё недостаточно. История и pipeline-метаданные не
-вытесняют визуалы. Компоновка из принятых ингредиентов не становится принятым
-носителем. Для локального экспорта достаточно его целевого размера и применения.
+In the same report, divide the result: serviceability of files/links; suitability of current
+compositions for the task; the actual choice of the owner and his area. For composition
+name a visible fact and consequence: for example, technical export took the place of sample
+or the enlargement has torn the signature from the drawing. This is a reason to correct the display even with
+successful validation. Missing view leaves this part unchecked;
+Asset QA records alone are not enough for her. History and pipeline metadata not
+Visuals are supplanted. Composition of accepted ingredients does not become accepted
+medium. For local export, its target size and application are sufficient.

@@ -62,7 +62,7 @@ async function snapshotPage(workspace, url, quotes, fetcher = fetchPage) {
   if (cached && (cached.status !== 200 || quotes.every(q => quoteFoundIn(cached.text, q)))) return cached
   const cyrillic = quotes.some(q => /[а-яё]/i.test(q))
   let best = cached
-  for (const language of cyrillic ? ['ru-RU,ru;q=0.9,en;q=0.5', 'en-US,en;q=0.9'] : ['en-US,en;q=0.9', 'ru-RU,ru;q=0.9,en;q=0.5']) {
+  for (const language of cyrillic ? ['en-US,ru;q=0.9,en;q=0.5', 'en-US,en;q=0.9'] : ['en-US,en;q=0.9', 'en-US,ru;q=0.9,en;q=0.5']) {
     let page
     // No response at all (offline sandbox, DNS) is not a fact about the page: nothing is cached.
     try { page = await fetcher(url, language) } catch { continue }
@@ -128,7 +128,7 @@ async function attestResult(workspace, result, { fetcher = fetchPage, concurrenc
 function attestResultSync(workspace, result) {
   if (process.env.PRODUCT_OS_PAGE_CHECK === 'off' || !(result?.verificationChecks || []).length) return result
   const run = spawnSync(process.execPath, [__filename, 'attest', workspace], { input: JSON.stringify(result), encoding: 'utf8', maxBuffer: 512 * 1024 * 1024, timeout: 15 * 60 * 1000 })
-  if (run.error || run.status !== 0) throw new Error(`Проверка цитат по страницам не выполнена: ${run.error?.message || run.stderr.trim()}`)
+  if (run.error || run.status !== 0) throw new Error(`Page citation check failed: ${run.error?.message || run.stderr.trim()}`)
   return JSON.parse(run.stdout)
 }
 

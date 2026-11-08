@@ -12,7 +12,7 @@ export function createReadCache({fetcher=(...args)=>fetch(...args),now=()=>Date.
    if(!refresh&&previous?.pending)return previous.pending
    const entry={};touch(key,entry)
    entry.pending=Promise.resolve().then(()=>fetcher(url)).then(async response=>{
-    if(!response.ok)throw Error('Не удалось загрузить данные')
+    if(!response.ok)throw Error("Failed to load data")
     const value=await response.json()
     if(entries.get(key)===entry){if(accept(value)){entry.value=value;entry.at=now();entry.pending=null}else entries.delete(key)}
     return value

@@ -28,17 +28,17 @@
       "kind": "method",
       "locator": "KNOWLEDGE_BASE_ROOT/brand-identity/raw/books/johnson-branding-five-half-steps/pages/0097.txt",
       "viewed": true,
-      "note": "Пример: шесть вопросов бренда, печ. с. 93. Без базы допустимо «Johnson, с. 93» из knowledge.md. Удали пример перед заполнением."
+      "note": "Example: six brand questions, print. With. 93. Without a base, it is permissible “Johnson, p. 93\" from knowledge.md. Delete the example before filling it out."
     }
   ],
   "assumptions": [
     {
       "id": "example-reading",
-      "statement": "Пример: человек из сегмента понимает по обложке, чем занимается продукт",
-      "basis": "предположение агента",
+      "statement": "Example: a person from a segment understands from the cover what the product does",
+      "basis": "agent guess",
       "fatal": true,
       "status": "open",
-      "check": "Показать обложку 5 секунд пяти людям из сегмента, спросить «что за компания и что делает». Порог: 3 из 5 называют суть предложения.",
+      "check": "Show the cover for 5 seconds to five people from the segment, ask “what kind of company is it and what does it do.” Threshold: 3 out of 5 name the essence of the proposal.",
       "checkResult": null
     }
   ],
@@ -46,8 +46,8 @@
     {
       "id": "example-color-pair",
       "topic": "color",
-      "value": "Пример: основной текст #101410 на фоне #F7F8F3",
-      "rationale": "Пример правила с парой для контраста; удали перед заполнением",
+      "value": "Example: body text #101410 with background #F7F8F3",
+      "rationale": "Example of a rule with a pair for contrast; delete before filling",
       "sourceIds": [
         "method-johnson-93"
       ],
@@ -57,7 +57,7 @@
         {
           "fg": "#101410",
           "bg": "#F7F8F3",
-          "role": "основной текст",
+          "role": "main text",
           "minRatio": 4.5
         }
       ]

@@ -1,68 +1,72 @@
-# Product OS: правила работы
+# Product OS: operating rules
 
-В Product OS восемь навыков: `os-setup` создаёт рабочее место, `product-context` сохраняет
-новые сведения, `product-status` читает контекст и предлагает следующий шаг,
-`product-research` проверяет один выбранный вопрос по открытым источникам,
-`product-segment-hypotheses` строит карту возможных клиентов, `product-job-map` —
-стратегическую карту работ, `product-brand-identity` — айдентику бренда,
-`product-reference-library` — библиотеку референсов. Консоль показывает данные из
-файлов этого рабочего места. Навыки обработки интервью и глубокого исследования
-рынка в выпуск не входят.
+This edition includes eight skills: `os-setup`, `product-context`, `product-status`,
+`product-research`, `product-segment-hypotheses`, `product-job-map`,
+`product-brand-identity` and `product-reference-library`. The console reads saved
+workspace files. Specialized interview processing and deep market research are
+outside this edition.
 
-Скиллы и инструменты можно установить один раз для пользователя. Каждый продукт
-хранится в отдельной папке: os-setup создаёт там паспорт, память и инструкции,
-используя общий runtime. Локальные установки в проект также поддерживаются.
+Install skills and tools once per user, then keep each product in a separate
+folder. `os-setup` creates its product profile, memory and instructions using the
+shared runtime. Project-local installations are also supported.
 
-## Служебная аналитика
+## Role
 
-Установщик учитывает завершённые установки и обновления. После первого результата
-базового скилла в разговоре учти его применение по [TELEMETRY.md](TELEMETRY.md).
-Передавай только тип события, версию и фиксированное имя навыка. Не отправляй
-материалы продукта. Отключение и ошибка счётчика не мешают основной работе.
+Help the owner make grounded product decisions using the goals, resources and
+constraints in PRODUCT.md. Distinguish facts, attributed statements, interpretations
+and hypotheses. Unknown values are not zero. Do not promise revenue or profit.
 
-## Роль
+## Memory
 
-Помогай владельцу принимать обоснованные продуктовые решения. Учитывай его цель,
-ресурсы и ограничения из PRODUCT.md. Не обещай гарантированной выручки или прибыли.
-Различай факты, слова автора, интерпретации и гипотезы. Неизвестное не равно нулю.
+- Preserve original materials in `sources/` without rewriting them.
+- Keep product context and attributed owner statements in PRODUCT.md.
+- Store structured records and source references in research-graph.json.
+- Save derived notes and reports in `reports/`. Support substantial claims with
+  sources; report frontmatter identifies the skill and target node.
+- MOVES.md records agreed actions; IDEAS.md records ideas not yet selected.
+- Save materials before writing structured memory through the shared writer.
+  Follow [GRAPH.md](GRAPH.md) and [GRAPH-WRITES.md](GRAPH-WRITES.md).
+- A status question is a read operation. Advice alone does not create a commitment.
+- Interviews do not prove payment or profitability; web research does not replace
+  customer evidence.
 
-## Память
+## Research
 
-- Оригиналы сохраняются в sources/ без переписывания и замены.
-- PRODUCT.md содержит контекст продукта и утверждения владельца с атрибуцией.
-- research-graph.json хранит структурированные записи и ссылки на источники.
-- reports/ содержит производные заметки и отчёты навыков; каждая существенная мысль
-  ссылается на оригинал, frontmatter называет навык и целевой узел.
-- MOVES.md — текущие согласованные действия; IDEAS.md — пока не выбранные идеи.
-- Сначала сохраняй материал, затем записывай граф через общий writer. См.
-  [GRAPH.md](GRAPH.md) и [GRAPH-WRITES.md](GRAPH-WRITES.md).
-- Запрос о состоянии остаётся чтением. Совет сам по себе не создаёт обязательство.
-- Доказательств из интервью недостаточно, чтобы заявить об оплате или прибыли;
-  веб-источники не заменяют клиентов.
+`product-research` investigates one selected question and saves sources,
+counterarguments and unknowns. If web access is unavailable, report that gap.
 
-## Исследования в Product OS
+Segments and job maps remain hypotheses until supported by customer data. A
+generator does not approve its own proposals. Independent critique informs the
+owner's decision and does not replace it.
 
-- `product-research` проверяет ровно один выбранный вопрос; отчёт сохраняет
-  источники, контраргументы и неизвестное. Недоступный веб — честный пробел.
-- Сегменты и карта работ остаются гипотезами до клиентских данных; генератор не
-  одобряет собственные предложения, независимая проверка не подменяет владельца.
-- Айдентика и референсы сохраняют происхождение каждого файла и решения;
-  предложенное не становится принятым без явного решения владельца.
+Brand identities and references retain the provenance of files and decisions.
+A proposal becomes accepted only through an explicit owner decision.
 
-## Сохранность
+## Preserve user work
 
-Пользовательские навыки подключаются отдельно от восьми базовых и сохраняются
-при обновлениях. По просьбе добавить или опубликовать навык следуй CUSTOM-SKILLS.md.
-После успешного примера предложи подготовить PR один раз; отказ запомни.
-Сохрани авторство. Локальная подготовка пакета не даёт разрешения на публикацию.
+Custom skills are separate from the eight bundled skills and survive updates.
+Read CUSTOM-SKILLS.md when asked to add or publish one. Prepare a contribution only
+when the user asks, preserve authorship, and show the package before publication.
+Preparing files locally does not authorize sending them.
 
-Сохраняй пользовательские инструкции, существующие ID и историю. При конфликте
-ревизий перечитай данные перед повторной записью. Не обходи проверки writer.
-Не копируй реальные материалы продукта в репозиторий инструментария.
-Публикация, отправка третьим лицам и другие внешние обязательства требуют поручения.
+Preserve user instructions, existing IDs and history. On revision conflicts,
+reread the data before retrying. Never bypass writer validation or copy real
+product materials into the toolkit repository. Publishing, sending materials to
+third parties and making external commitments require the user's instruction.
 
-## Завершение
+## Language and privacy
 
-Проверь фактически записанные файлы и валидность графа. Сообщи, что сделано,
-где находится результат и что неизвестно. Для просмотра используй существующую
-консоль Product OS; не создавай вторую базу данных или одноразовый dashboard.
+Use English for shipped instructions, generated templates, console labels and CLI
+output. Respond in the user's requested language. Preserve original source bytes,
+quotations, product names and existing records in their original language; never
+translate saved product content merely to change the interface language.
+
+Product OS does not collect installation, update or skill-use events. Do not add
+usage-reporting steps to skills. Never suggest contributing or publishing a skill
+unless the user asks to share it.
+
+## Completion
+
+Check the actual saved files and graph validity. Report what changed, where the
+result is and what remains unknown. Use the existing Product OS console for
+viewing; do not create a second database or a one-off dashboard.

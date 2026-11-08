@@ -1,12 +1,12 @@
-# Свои навыки и вклад в Product OS
+# Custom skills
 
-Попросите агента: «Добавь этот навык» или «Создай навык для моей задачи».
-Сначала агент использует известный контекст и уточняет только недостающие условия.
-Готовый навык можно добавить из папки, не создавая fork Product OS.
+Ask your agent to add an existing skill or create one for your task. Use known
+context first and clarify missing requirements. Adding a skill from a folder does
+not require a Product OS fork.
 
-## Установка и изменение
+## Install and edit
 
-Команды выполняются через установленный `node <tools>/bin/product-os.js`:
+Run commands through the installed `node <tools>/bin/product-os.js`:
 
 ```sh
 product-os skills add . /path/to/my-skill --agent both
@@ -14,76 +14,68 @@ product-os skills list .
 product-os skills sync . my-skill --agent both
 ```
 
-Исходник сохраняется в `.product-os/custom-skills/my-skill/`, а агентам
-устанавливаются копии в `.agents/skills/` и `.claude/skills/`. Редактируйте исходник,
-затем вызывайте `sync`. Обновление Product OS не заменяет эти файлы. Имена встроенных
-навыков зарезервированы; существующие чужие и изменённые копии не перезаписываются.
-`--agent codex` и `--agent claude` устанавливают только выбранному агенту.
-Новый разговор с агентом может потребоваться для обнаружения нового навыка.
+The canonical source lives in `.product-os/custom-skills/my-skill/`. Agents receive
+copies in `.agents/skills/` and `.claude/skills/`. Edit the canonical source and run
+`sync`. Product OS updates preserve these files. Bundled skill names are reserved;
+unmanaged or modified agent copies are never overwritten. Use `--agent codex` or
+`--agent claude` for one agent. Start a new conversation if needed for discovery.
 
-В папке нужен `SKILL.md` с YAML frontmatter `name` и `description`; имя папки
-совпадает с `name`. Дополнительные материалы размещаются в `references/`, `scripts/`,
-`assets/`, `examples/` или `agents/`. Установка проверяет структуру и копирует файлы;
-скрипты навыка не запускаются. Структурная проверка не доказывает качество поведения.
+The folder needs SKILL.md with YAML frontmatter containing `name` and `description`;
+the folder name must match `name`. Put supporting files in `references/`, `scripts/`,
+`assets/`, `examples/` or `agents/`. Installation checks structure and copies files;
+it does not execute scripts or prove the skill's quality.
 
-Навык читает PRODUCT.md и относящийся к задаче контекст. Новые материалы сохраняет
-в sources/, результаты — в reports/, общую память меняет через `graph-write` по
-CONTRACT.md и GRAPH-WRITES.md. Свою базу данных вместо общей памяти не создаёт.
-Установка стороннего навыка не означает поручения выполнить его инструкции.
+Skills read PRODUCT.md and relevant context, preserve originals in `sources/`, save
+results in `reports/` and update shared memory through `graph-write` under CONTRACT.md
+and GRAPH-WRITES.md. Do not create a competing database. Installing a third-party
+skill does not authorize carrying out its instructions.
 
-## Проверка и предложение поделиться
+## Verify and share only when asked
 
-После реального выполнения на согласованном примере агент записывает наблюдаемый
-результат. Не отмечайте успех по одной установке или прочтению инструкции.
+After running an agreed example, record the actual result and limitations:
 
 ```sh
-product-os skills verify . my-skill --evidence "Какой пример проверили, что получили и какие ограничения остались"
-product-os skills offer . my-skill
+product-os skills verify . my-skill --evidence "Observed result and limitations"
 ```
 
-Если `shouldAsk: true`, предложите один раз:
+Installation or reading the instructions is not a successful example. Do not suggest
+publishing automatically. Prepare a contribution only when the user asks to share it.
 
-> Этот навык может пригодиться другим пользователям Product OS. Подготовить
-> pull request, чтобы поделиться им? Авторство сохраним за вами.
+## Prepare a pull request
 
-При отказе выполните `skills decline . my-skill`. Не повторяйте предложение
-для той же версии. После существенных изменений сначала синхронизируйте навык
-и проверьте заново; косметическая правка не повод снова предлагать публикацию.
-Явную просьбу поделиться выполняйте и после прежнего отказа.
-
-## Подготовка PR
-
-Уточните, как указать автора, если это ещё неизвестно. Для заимствованного навыка
-сохраните исходное авторство и условия использования. Подготовьте обобщённую версию
-без материалов продукта и клиента, приватных адресов, переписок и секретов.
-Проверка примера тоже станет публичной частью PR: обезличьте её перед `verify`.
+Confirm attribution if unknown. Preserve original credit and compatible licensing
+for borrowed work. Generalize the skill without product/customer materials, private
+addresses, correspondence or secrets. Verification evidence also becomes public;
+anonymize the example before recording it with `verify`.
 
 ```sh
-product-os skills prepare . my-skill --author "Имя или GitHub username" --file references/example.md
+product-os skills prepare . my-skill --author "Name or GitHub username" --file references/example.md
 ```
 
-По умолчанию включается только SKILL.md. Каждый необходимый дополнительный файл
-выберите отдельным `--file`. Проверьте ссылки из инструкции, добавьте все нужные
-зависимости. Пакет находится в `.product-os/contributions/`: папка
-`community-skills/<name>/`, AUTHOR.md, текст PR.md и перечень review.json.
-Содержимое файлов не очищается автоматически: покажите владельцу весь пакет,
-включая пример, авторство и предлагаемые условия MIT, до разрешения отправить его.
+Only SKILL.md is included by default. Select each additional file with `--file` and
+check all required links and dependencies. The package in `.product-os/contributions/`
+contains `community-skills/<name>/`, AUTHOR.md, PR.md and review.json. Files are not
+automatically sanitized. Show the entire package, example, attribution and MIT terms
+before asking to submit it.
 
-После явного поручения опубликовать используйте доступный GitHub-инструмент либо
-`gh`: fork `izmailovilya/product-os-public`, отдельная ветка, копирование только
-проверенной папки `community-skills/<name>/`, commit и pull request. Используйте
-`gh pr create --repo izmailovilya/product-os-public --head <login>:<branch>
---title "Добавить навык <name>" --body-file <package>/PR.md` из checkout fork.
-Не коммитьте воркспейс продукта и не используйте `git add .` в нём. Автор commit —
-пользователь с настроенной GitHub/Git-идентичностью; не назначайте автором владельца
-Product OS. При отсутствии доступа сохраните локальный пакет и объясните один
-недостающий шаг. Созданный PR ещё не означает принятия. После отправки верните ссылку.
+With explicit publication authorization, use an available GitHub tool or `gh`:
+fork `izmailovilya/product-os-public`, create a branch, copy only the reviewed skill
+folder, commit and open a PR. From the fork checkout, run:
 
-## Принятые навыки сообщества
+```sh
+gh pr create --repo izmailovilya/product-os-public --head <login>:<branch> \
+  --title "Add skill <name>" --body-file <package>/PR.md
+```
 
-PR предлагает навык в `community-skills/`, отдельно от восьми базовых навыков Public.
-После ревью сопровождающий переносит принятую папку вместе с авторством в
-`community-skills/` исходного инструментария до следующей сборки. Сборщик включает
-её в выпуск; синхронизация останавливается, если принятый вклад ещё не перенесён.
-Пользователи подключают выбранный навык через `skills add`, без автоматического
-включения всех расширений. Авторство сохраняется в AUTHOR.md и описании выпуска.
+Do not commit the product workspace or run `git add .` there. Use the contributor's
+configured Git identity, not the Product OS owner's. If access is unavailable,
+keep the local package and explain the missing step. Return the PR link after
+submission; a submitted PR is not automatically accepted.
+
+## Accepted community skills
+
+Contributions live in `community-skills/`, separately from the eight bundled skills.
+After review, the maintainer imports the accepted folder and attribution into the
+source toolkit before the next export. Synchronization stops if an accepted
+contribution has not been imported. Users choose extensions with `skills add`;
+they are not all enabled automatically. Preserve credit in AUTHOR.md and release notes.

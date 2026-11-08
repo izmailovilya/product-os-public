@@ -20,7 +20,7 @@ function compatibleCompetitors(nodes) {
     if (!explicit && isCategoryBucket({ name: node.label, kind: data.kind })) {
       data.isCategory = true
       data.entityType = 'category'
-      data.classificationCompatibility = 'В старой записи перечислены несколько решений. Она показана как обзор группы; состав и отдельные продукты нужно уточнить.'
+      data.classificationCompatibility = "Old post lists several solutions. It is shown as an overview of the group; The composition and individual products need to be clarified."
     }
     return { ...node, data }
   })

@@ -54,7 +54,7 @@ function researchTime(value) {
 }
 function marketLabelIssue(markets = []) {
   const bad = markets.find(m => String(m).length > 40 || /[;:]/.test(String(m)))
-  return bad ? `targetMarkets must be short market labels such as "Россия" or "Русскоязычные в ЕС" (qualifiers belong in productContext), not: ${bad}` : null
+  return bad ? `targetMarkets must be short market labels such as "Russia" or "Russian speakers in the EU" (qualifiers belong in productContext), not: ${bad}` : null
 }
 function createResearchContext(args = {}) {
   const supplied = args.researchContext || {}
@@ -98,8 +98,8 @@ function prepareSegments(segments) {
     // The display label is deliberately separate from the full research definition.
     // Old runs remain readable; new prompts explicitly author the short label.
     const candidate = String(s.shortName || s.name || '').split(/[:«“]/)[0].replace(/\.{3}|…/g, '').trim().split(/\s+/).filter(Boolean).slice(0, 4).join(' ')
-    let shortName = candidate && !/\bunknown\b/i.test(candidate) ? candidate : `Сегмент ${ids.size}`
-    if (shortName.split(/\s+/).length < 2) shortName = `Сегмент ${shortName}`
+    let shortName = candidate && !/\bunknown\b/i.test(candidate) ? candidate : `Segment ${ids.size}`
+    if (shortName.split(/\s+/).length < 2) shortName = `Segment ${shortName}`
     if (labels.has(researchKey(shortName))) shortName = `${shortName.split(/\s+/).slice(0, 3).join(' ')} ${ids.size}`
     labels.add(researchKey(shortName))
     return { ...s, shortName, description: s.description || s.name || s.context, criteria }
@@ -554,13 +554,13 @@ function rankSegments(entries) {
 // all fold onto the key, so a formula written three ways is still one formula on the map.
 const FORMULA_KEYS = ['core_for_big', 'core_value', 'trigger', 'orientation', 'big_jobs_lived', 'micro', 'problem_contrast']
 const FORMULA_ALIASES = {
-  core_for_big: ['Core Jobs for Big Jobs', 'Goal link', 'Работа ради большой цели'],
-  core_value: ['Core Jobs + value', 'Core Jobs value', 'Value', 'Работа + ценность', 'Работа ценность'],
-  trigger: ['Trigger → Core Jobs', 'Trigger Core Jobs', 'Trigger scenario', 'Триггер → работа', 'Триггер работа'],
-  orientation: ['Orientation Jobs', 'Choice help', 'Работа ориентирования'],
-  big_jobs_lived: ['Big Jobs lived', 'Emotional goal', 'Большая цель прожита'],
-  micro: ['Micro Job', 'Micro Jobs', 'Effortlessness', 'Микро-работа', 'Микро работа'],
-  problem_contrast: ['Problem with current Solution → Core Jobs', 'Problem with current Solution Core Jobs', 'Problem contrast', 'Проблема старого решения'],
+  core_for_big: ['Core Jobs for Big Jobs', 'Goal link', "Working for a big goal"],
+  core_value: ['Core Jobs + value', 'Core Jobs value', 'Value', "Work + value", "Work value"],
+  trigger: ['Trigger → Core Jobs', 'Trigger Core Jobs', 'Trigger scenario', "Trigger → work", "Trigger operation"],
+  orientation: ['Orientation Jobs', 'Choice help', "Orientation work"],
+  big_jobs_lived: ['Big Jobs lived', 'Emotional goal', "Big goal accomplished"],
+  micro: ['Micro Job', 'Micro Jobs', 'Effortlessness', "Micro-work", "Micro work"],
+  problem_contrast: ['Problem with current Solution → Core Jobs', 'Problem with current Solution Core Jobs', 'Problem contrast', "Problem with old solution"],
 }
 function formulaKeyText(value) { return String(value ?? '').toLocaleLowerCase('ru').replace(/[→+_\-\s]+/g, ' ').trim() }
 function normalizeFormula(value) {

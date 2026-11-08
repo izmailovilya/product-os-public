@@ -2,12 +2,12 @@
 // assumption is a research result; it does not erase the work that established it.
 const { evidenceUsable } = require('./graph/schema')
 const GATES = [
-  { key: 'hypothesis', label: 'Гипотеза оформлена', weight: 10, unlock: 'описать работу, критерии по приоритету и контекст' },
-  { key: 'market-signal', label: 'Рыночные свидетельства изучены', weight: 10, unlock: 'найти первичные источники под критерии и проблемы сегмента' },
-  { key: 'customers', label: 'Критерии проверены с клиентами', weight: 30, unlock: 'проверить верхние критерии каждой работы на 15 независимых интервью' },
-  { key: 'fatal', label: 'Фатальные допущения исследованы', weight: 20, unlock: 'проверить фатальные риски сегмента и продукта; сохранить результат, включая отрицательный' },
-  { key: 'payment', label: 'Платёжное поведение проверено', weight: 20, unlock: 'зафиксировать оплату нашего продукта или результат реального теста оплаты' },
-  { key: 'economics', label: 'Экономика исследована', weight: 10, unlock: 'посчитать экономику на цене с источником и измеренном CAC; убыточный результат тоже засчитывается' },
+  { key: 'hypothesis', label: "Hypothesis completed", weight: 10, unlock: "describe the work, priority criteria and context" },
+  { key: 'market-signal', label: "Market evidence examined", weight: 10, unlock: "find primary sources for the criteria and problems of the segment" },
+  { key: 'customers', label: "Criteria verified with clients", weight: 30, unlock: "check the top criteria of each job for 15 independent interviews" },
+  { key: 'fatal', label: "Fatal assumptions explored", weight: 20, unlock: "check the fatal risks of the segment and product; save the result, including negative ones" },
+  { key: 'payment', label: "Payment behavior checked", weight: 20, unlock: "record payment for our product or the result of a real payment test" },
+  { key: 'economics', label: "Economy explored", weight: 10, unlock: "calculate economics based on price with source and measured CAC; a losing result is also counted" },
 ]
 const INTERVIEW_TARGET = 15
 const TOP_CRITERIA = 3
@@ -44,15 +44,15 @@ function verificationOf(segmentId, nodes = [], edges = []) {
   const context = performs.every(pe => pe.data?.context || d.context)
   gate('hypothesis').earned = performs.length && ordered.length >= 2 && context ? 10 : 0
   const word=(n,one,few,many)=>n%10===1&&n%100!==11?one:n%10>=2&&n%10<=4&&!(n%100>=12&&n%100<=14)?few:many
-  gate('hypothesis').detail = `${performs.length} ${word(performs.length,'работа','работы','работ')} в графе · ${ordered.length?ordered.length+' '+word(ordered.length,'критерий','критерия','критериев'):'критерии графа ещё не выделены'}${context ? '' : ' · контекст не описан'}`
+  gate('hypothesis').detail = `${performs.length} ${word(performs.length,"job","work","work")} in the column · ${ordered.length?ordered.length+' '+word(ordered.length,"criterion","criteria","criteria"):"graph criteria have not yet been selected"}${context ? '' : " · context not described"}`
   const web = segmentEvidence.filter(ev => originOf(ev) === 'web')
   gate('market-signal').earned = web.length ? 10 : 0
-  gate('market-signal').detail = `${web.length} свидетельств с первичными источниками`
+  gate('market-signal').detail = `${web.length} evidence with primary sources`
   const interviews = new Set(segmentEvidence.filter(ev => originOf(ev) === 'interview')
     .map(ev => ev.data.respondentId || ev.data.observationId || ev.source.split('#')[0])).size
   const studied = top.filter(c => evidence(c.id).some(ev => CUSTOMER_ORIGINS.has(originOf(ev))))
   gate('customers').earned = Math.round(30 * Math.min(1, interviews / INTERVIEW_TARGET) * (top.length ? studied.length / top.length : 0))
-  gate('customers').detail = `интервью: ${interviews} из ${INTERVIEW_TARGET} · ${top.length?'проверено '+studied.length+' из '+top.length+' основных критериев':'проверяемые критерии графа ещё не выделены'}`
+  gate('customers').detail = `interview: ${interviews} from ${INTERVIEW_TARGET} · ${top.length?"checked "+studied.length+" from "+top.length+" main criteria":"the graph criteria being checked have not yet been selected"}`
   const closed = fatal.filter(n => {
     if (n.status === 'dropped') return n.data?.resolution?.kind === 'dependency-removed' && n.data.resolution.reason && n.data.resolution.source
     const type = n.status === 'contradicted' ? 'contradicted_by' : 'evidenced_by'
@@ -63,12 +63,12 @@ function verificationOf(segmentId, nodes = [], edges = []) {
   })
   gate('fatal').earned = fatal.length ? Math.round(20 * closed.length / fatal.length) : 0
   gate('fatal').detail = fatal.length
-    ? `исследовано ${closed.length} из ${fatal.length} · включая риски всего продукта`
-    : 'фатальные допущения ещё не выделены; риски продукта и сегмента не проверены'
+    ? `investigated ${closed.length} from ${fatal.length} · including the risks of the entire product`
+    : "fatal assumptions have not yet been highlighted; product and segment risks have not been verified"
   const payment = segmentEvidence.filter(ev => ev.data?.segmentId === segmentId && productIds.has(ev.data?.productId)
     && (originOf(ev) === 'payment' || (originOf(ev) === 'test' && ev.data.kind === 'payment-test')))
   gate('payment').earned = payment.length ? 20 : 0
-  gate('payment').detail = payment.length ? 'есть результат проверки оплаты нашего продукта' : 'нет проверки оплаты с указанием продукта и сегмента'
+  gate('payment').detail = payment.length ? "there is a result of checking the payment for our product" : "no payment verification indicating product and segment"
   const eco = d.economics || {}
   const realPrice = eco.priceBasis === 'product-pricing' && !d.economicsUnpriced
   const verifiedScenario = d.scoringVersion !== 2 || d.economicScenario?.status === 'scenario' && d.economicScenario?.measuredCac === true
@@ -79,14 +79,14 @@ function verificationOf(segmentId, nodes = [], edges = []) {
   const ratio = known && eco.cacUsd > 0 ? contribution / eco.cacUsd : null
   gate('economics').earned = known ? 10 : 0
   gate('economics').detail = known
-    ? `${ratio == null ? 'CAC = 0' : `LTV:CAC ${Math.round(ratio * 100) / 100}`} · ${contribution >= eco.cacUsd ? 'привлечение окупается' : 'привлечение не окупается'}; результат изучен`
-    : 'нужны исходные числа, источник цены и источник измеренного CAC'
+    ? `${ratio == null ? 'CAC = 0' : `LTV:CAC ${Math.round(ratio * 100) / 100}`} · ${contribution >= eco.cacUsd ? "attraction pays off" : "attraction does not pay off"}; result studied`
+    : "Need raw numbers, price source and measured CAC source"
   const contradictedCriteria = top.filter(c => evidence(c.id, 'contradicted_by', { active: true }).some(ev => CUSTOMER_ORIGINS.has(originOf(ev))))
   const broken = fatal.filter(n => n.status === 'contradicted')
   const blockers = [
-    ...contradictedCriteria.map(n => ({ id: n.id, gate: 'customers', reason: `Опровергнут критерий «${n.label}»` })),
-    ...broken.map(n => ({ id: n.id, gate: 'fatal', reason: `Опровергнуто фатальное допущение «${n.label}»` })),
-    ...(known && contribution < eco.cacUsd ? [{ id: segmentId, gate: 'economics', reason: 'Исследованная экономика не покрывает привлечение клиента' }] : []),
+    ...contradictedCriteria.map(n => ({ id: n.id, gate: 'customers', reason: `Criteria rejected «${n.label}»` })),
+    ...broken.map(n => ({ id: n.id, gate: 'fatal', reason: `Fatal assumption refuted «${n.label}»` })),
+    ...(known && contribution < eco.cacUsd ? [{ id: segmentId, gate: 'economics', reason: "Researched economics does not cover customer acquisition" }] : []),
   ]
   for (const g of gates) { g.done = g.earned >= g.weight; g.partial = g.earned > 0 && !g.done }
   const percent = gates.reduce((sum, g) => sum + g.earned, 0)

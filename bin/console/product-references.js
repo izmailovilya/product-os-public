@@ -12,16 +12,16 @@ function validPath(relative, extensions) {
     extensions.includes(path.posix.extname(relative).toLowerCase())
 }
 function packageFile(workspace, relative, extensions = ['.json']) {
-  if (!validPath(relative, extensions)) throw Error('Недопустимый путь пакета.')
+  if (!validPath(relative, extensions)) throw Error("The package path is invalid.")
   const root = fs.realpathSync(workspace)
   const real = fs.realpathSync(path.join(root, relative))
   const canonical = path.relative(root, real).split(path.sep).join('/')
-  if (!real.startsWith(root + path.sep) || !validPath(canonical, extensions) || !fs.statSync(real).isFile()) throw Error('Файл вне разрешённого пакета.')
+  if (!real.startsWith(root + path.sep) || !validPath(canonical, extensions) || !fs.statSync(real).isFile()) throw Error("The file is outside the allowed package.")
   return real
 }
 function readJSON(workspace, relative) {
   const file = packageFile(workspace, relative)
-  if (fs.statSync(file).size > 20 * 1024 * 1024) throw Error('Файл пакета слишком большой.')
+  if (fs.statSync(file).size > 20 * 1024 * 1024) throw Error("The package file is too large.")
   return JSON.parse(fs.readFileSync(file, 'utf8'))
 }
 function imageMime(buffer, extension) {
@@ -47,19 +47,19 @@ function applyReadingViews(workspace,result,relative) {
       if (!object(entry)||!row||seen.has(entry.cardId)||entry.basedOnCardSha256!==referenceCardHash(row.card)||
         Object.entries(limits).some(([key,max])=>entry[key]!=null&&(typeof entry[key]!=='string'||!entry[key].trim()||entry[key].length>max))||
         ['title','summary','format'].some(key=>typeof entry[key]!=='string'||!entry[key].trim())) {
-        result.issues.push('Описание одного примера устарело или повреждено. Для него показаны исходные материалы.')
+        result.issues.push("The description of one example is out of date or corrupt. Source materials for it are shown.")
         continue
       }
       seen.add(entry.cardId)
       row.readingView=Object.fromEntries(Object.keys(limits).filter(key=>entry[key]!=null).map(key=>[key,entry[key]]))
       row.readingViewSource=relative
     }
-    result.files.push({label:'Описания примеров для просмотра',path:relative})
-  } catch {result.issues.push('Понятные описания примеров недоступны. Показаны исходные материалы.')}
+    result.files.push({label:"Descriptions of examples to view",path:relative})
+  } catch {result.issues.push("Clear descriptions of examples are not available. Source materials shown.")}
 }
 function applyDesignMaterials(workspace,result,materials) {
   if (materials == null) return
-  if (!Array.isArray(materials)||materials.length>24) {result.issues.push('Список материалов нашего продукта повреждён. Референсы остаются доступны.');return}
+  if (!Array.isArray(materials)||materials.length>24) {result.issues.push("Our product's material list is corrupt. References remain available.");return}
   const seen=new Set(), groups=[]
   const text=(value,max)=>typeof value==='string'&&value.trim()&&value.length<=max
   for (const group of materials) {
@@ -72,7 +72,7 @@ function applyDesignMaterials(workspace,result,materials) {
       if (!dataFiles) throw Error()
       seen.add(group.id);groups.push({id:group.id,title:group.title,description:group.description,decision:group.decision,links})
       for (const link of [...links,...dataFiles]) result.files.push({label:group.title+' · '+link.label,path:link.path})
-    } catch {result.issues.push('Один из пакетов нашего продукта недоступен. Остальные материалы можно открыть.')}
+    } catch {result.issues.push("One of our product packages is unavailable. The rest of the materials can be opened.")}
   }
   result.library.designMaterials=groups
 }
@@ -80,53 +80,53 @@ function loadLibrary(workspace, graph, productId, artifactId) {
   const artifacts = registered(graph, productId)
   const libraries = artifacts.map(n => ({id:n.id, title:n.label, manifestFile:n.data.manifestFile}))
   const artifact = artifactId ? artifacts.find(n => n.id === artifactId) : artifacts[0]
-  if (!artifact) return {state:'unregistered', libraries, cards:[], issues:[], message:artifactId?'Библиотека не найдена.':'Библиотека пока не зарегистрирована.'}
+  if (!artifact) return {state:'unregistered', libraries, cards:[], issues:[], message:artifactId?"Library not found.":"The library has not yet been registered."}
   const library = {artifactId:artifact.id, title:artifact.label, manifestFile:artifact.data.manifestFile}
   const result = {state:'ready', libraries, library, cards:[], issues:[], files:[]}
   try {
     const manifest = readJSON(workspace, library.manifestFile)
-    if (!object(manifest) || manifest.schemaVersion !== 1) return {...result,state:'unsupported',message:'Версия манифеста не поддерживается.'}
-    if (manifest.productId !== productId || !Array.isArray(manifest.tracks)) throw Error('Манифест не соответствует продукту или контракту.')
+    if (!object(manifest) || manifest.schemaVersion !== 1) return {...result,state:'unsupported',message:"The manifest version is not supported."}
+    if (manifest.productId !== productId || !Array.isArray(manifest.tracks)) throw Error("The manifest does not match the product or contract.")
     Object.assign(library, {title:manifest.title || library.title, status:manifest.status, libraryId:manifest.libraryId, tracks:[], gaps:manifest.gaps || []})
-    result.files.push({label:'Манифест',path:library.manifestFile})
+    result.files.push({label:"Manifest",path:library.manifestFile})
     const ids = new Set(), trackIds = new Set()
     for (const track of manifest.tracks) {
-      const trackTitle = track?.title || track?.key || 'Направление'
+      const trackTitle = track?.title || track?.key || "Direction"
       try {
-        if (!object(track) || typeof track.key !== 'string' || !track.key.trim() || trackIds.has(track.key)) throw Error('Направление отсутствует или повторяется.')
+        if (!object(track) || typeof track.key !== 'string' || !track.key.trim() || trackIds.has(track.key)) throw Error("The direction is missing or repeated.")
         trackIds.add(track.key)
         library.tracks.push(track)
         const cards = readJSON(workspace, track.cardsPath), sources = readJSON(workspace, track.sourcesPath)
-        if (cards.schemaVersion !== 1 || sources.schemaVersion !== 1) throw Error('Версия карточек или источников не поддерживается.')
-        if (!Array.isArray(cards.cards) || !Array.isArray(sources.sources)) throw Error('Неверная структура карточек или источников.')
+        if (cards.schemaVersion !== 1 || sources.schemaVersion !== 1) throw Error("The version of cards or sources is not supported.")
+        if (!Array.isArray(cards.cards) || !Array.isArray(sources.sources)) throw Error("Invalid card or source structure.")
         const sourceIds = new Set()
         for (const source of sources.sources) {
-          if (!object(source) || typeof source.id !== 'string' || sourceIds.has(source.id)) throw Error('Источник отсутствует или повторяется.')
+          if (!object(source) || typeof source.id !== 'string' || sourceIds.has(source.id)) throw Error("The source is missing or repeated.")
           sourceIds.add(source.id)
         }
         for (const card of cards.cards) {
-          if (!object(card) || typeof card.id !== 'string' || !card.id || ids.has(card.id)) {result.issues.push(`${trackTitle}: карточка без ID или с повторным ID пропущена.`);continue}
+          if (!object(card) || typeof card.id !== 'string' || !card.id || ids.has(card.id)) {result.issues.push(`${trackTitle}: card without ID or with repeat ID skipped.`);continue}
           if (['steps','claims','media'].some(key => card[key] != null && (!Array.isArray(card[key]) || card[key].some(value => !object(value))))) {
-            result.issues.push(`${trackTitle}: у «${card.title || card.id}» повреждены шаги, утверждения или изображения; карточка пропущена.`)
+            result.issues.push(`${trackTitle}: y «${card.title || card.id}» Steps, statements or images are corrupted; card missed.`)
             continue
           }
           ids.add(card.id)
           result.cards.push({card,trackKey:track.key,trackTitle,sources:sources.sources})
           const refs = [...(Array.isArray(card.sourceIds)?card.sourceIds:[]),card.primarySourceId,...(Array.isArray(card.claims)?card.claims:[]).map(c=>c.sourceId),...(Array.isArray(card.media)?card.media:[]).map(m=>m.sourceId)].filter(Boolean)
-          if (refs.some(id=>!sourceIds.has(id))) result.issues.push(`${trackTitle}: у «${card.title || card.id}» есть несвязанный источник.`)
+          if (refs.some(id=>!sourceIds.has(id))) result.issues.push(`${trackTitle}: y «${card.title || card.id}» there is an unrelated source.`)
         }
-        for (const [key,label] of [['cardsPath','Карточки'],['sourcesPath','Источники'],['coveragePath','Покрытие'],['verificationPath','Проверка']]) {
+        for (const [key,label] of [['cardsPath',"Cards"],['sourcesPath',"Sources"],['coveragePath',"Covering"],['verificationPath',"Check"]]) {
           if (track[key]) {packageFile(workspace,track[key]);result.files.push({label:`${trackTitle} · ${label}`,path:track[key]})}
         }
-        if (track.reportPath) {packageFile(workspace,track.reportPath,['.md']);result.files.push({label:`${trackTitle} · Отчёт`,path:track.reportPath})}
-      } catch {result.issues.push(`${trackTitle}: пакет недоступен, повреждён или использует неподдерживаемую версию.`)}
+        if (track.reportPath) {packageFile(workspace,track.reportPath,['.md']);result.files.push({label:`${trackTitle} · Report`,path:track.reportPath})}
+      } catch {result.issues.push(`${trackTitle}: Package is unavailable, corrupted, or using an unsupported version.`)}
     }
     applyReadingViews(workspace,result,manifest.readerPresentationPath)
     applyDesignMaterials(workspace,result,manifest.designMaterials)
     return result
   } catch (error) {
     // Only a missing registered manifest is an expected collection state.
-    return {...result, state:error.code === 'ENOENT' ? 'awaiting' : 'error', message:error.code === 'ENOENT'?'Материалы собираются. Манифест ещё не сохранён.':'Не удалось прочитать зарегистрированный манифест. Проверьте формат и доступность пакета.'}
+    return {...result, state:error.code === 'ENOENT' ? 'awaiting' : 'error', message:error.code === 'ENOENT'?"Materials are being collected. The manifest has not yet been saved.":"The registered manifest could not be read. Check the format and availability of the package."}
   }
 }
 function libraryImage(workspace, graph, params) {

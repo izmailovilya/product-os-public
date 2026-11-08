@@ -39,49 +39,49 @@ function evidenceUsable(node) {
 }
 
 function validateGraph(graph, { requireSources = true } = {}) {
-  if (!graph || !Array.isArray(graph.nodes) || !Array.isArray(graph.edges)) return 'нет массивов nodes/edges'
+  if (!graph || !Array.isArray(graph.nodes) || !Array.isArray(graph.edges)) return "no nodes/edges arrays"
   const by = new Map()
   for (const n of graph.nodes) {
-    if (!n || !safeId(n.id) || by.has(n.id)) return `дублирующийся или неверный id: ${n?.id || '—'}`
-    if (!NODE_TYPES.has(n.type)) return `неизвестный тип узла: ${n.type}`
-    if (!nonempty(n.label) || (requireSources && !nonempty(n.source))) return `у узла ${n.id} нет label/source`
-    if (n.status && !STATUSES.has(n.status)) return `неизвестный статус: ${n.id}: ${n.status}`
-    if (n.data != null && (typeof n.data !== 'object' || Array.isArray(n.data))) return `data узла ${n.id} должен быть объектом`
-    if(n.data?.customerProfile){const issue=require('../customer-profile').customerProfileIssue(n.data.customerProfile);if(n.type!=='segment'||issue)return issue||'Профиль принадлежит сегменту'}
-    if(n.data?.parameterModel){const issue=require('../segment-model').segmentModelIssue(n.data.parameterModel);if(n.type!=='segment'||issue)return issue||'Модель параметров принадлежит сегменту'}
-    if (n.type === 'evidence' && n.data?.origin && !ORIGINS.has(n.data.origin)) return `неизвестное происхождение: ${n.id}`
+    if (!n || !safeId(n.id) || by.has(n.id)) return `duplicate or invalid id: ${n?.id || '—'}`
+    if (!NODE_TYPES.has(n.type)) return `unknown node type: ${n.type}`
+    if (!nonempty(n.label) || (requireSources && !nonempty(n.source))) return `at node ${n.id} no label/source`
+    if (n.status && !STATUSES.has(n.status)) return `unknown status: ${n.id}: ${n.status}`
+    if (n.data != null && (typeof n.data !== 'object' || Array.isArray(n.data))) return `data node ${n.id} must be an object`
+    if(n.data?.customerProfile){const issue=require('../customer-profile').customerProfileIssue(n.data.customerProfile);if(n.type!=='segment'||issue)return issue||"Profile belongs to segment"}
+    if(n.data?.parameterModel){const issue=require('../segment-model').segmentModelIssue(n.data.parameterModel);if(n.type!=='segment'||issue)return issue||"Parameter model belongs to segment"}
+    if (n.type === 'evidence' && n.data?.origin && !ORIGINS.has(n.data.origin)) return `unknown origin: ${n.id}`
     by.set(n.id, n)
   }
   const keys = new Set()
   for (const e of graph.edges) {
-    if (!e || !EDGE_TYPES.has(e.type)) return `неизвестный тип связи: ${e?.type}`
+    if (!e || !EDGE_TYPES.has(e.type)) return `unknown communication type: ${e?.type}`
     const from = by.get(e.from), to = by.get(e.to)
-    if (!from || !to) return `висячая связь ${e.from} → ${e.to}`
-    if (keys.has(edgeKey(e))) return `дублирующаяся связь: ${edgeKey(e)}`
+    if (!from || !to) return `dangling link ${e.from} → ${e.to}`
+    if (keys.has(edgeKey(e))) return `duplicate connection: ${edgeKey(e)}`
     keys.add(edgeKey(e))
     const [fromTypes, toTypes] = RELATIONS[e.type]
-    if (!fromTypes.includes(from.type) || !toTypes.includes(to.type)) return `неверные типы концов связи: ${edgeKey(e)}`
-    if (e.from === e.to) return `связь с самим собой: ${edgeKey(e)}`
-    if (e.type === 'mentions_solution' && (to.data?.isCategory || to.data?.entityType === 'category')) return `Упоминание должно вести к отдельному решению: ${e.to}`
+    if (!fromTypes.includes(from.type) || !toTypes.includes(to.type)) return `invalid connection end types: ${edgeKey(e)}`
+    if (e.from === e.to) return `connection with yourself: ${edgeKey(e)}`
+    if (e.type === 'mentions_solution' && (to.data?.isCategory || to.data?.entityType === 'category')) return `Mention must lead to a separate solution: ${e.to}`
     if (e.type === 'performs') {
       const used = new Set(), priorities = new Set()
       for (const ref of e.data?.criteria || []) {
         const c = by.get(ref.id)
-        if (c?.type !== 'criterion' || used.has(ref.id) || !Number.isInteger(ref.priority) || ref.priority < 1 || priorities.has(ref.priority)) return `неверный список критериев: ${e.from} → ${e.to}`
-        if (c.data?.segmentId && c.data.segmentId !== from.id) return `критерий другого сегмента: ${c.id}`
-        if (c.data?.jobId && c.data.jobId !== to.id) return `критерий другой работы: ${c.id}`
+        if (c?.type !== 'criterion' || used.has(ref.id) || !Number.isInteger(ref.priority) || ref.priority < 1 || priorities.has(ref.priority)) return `invalid criteria list: ${e.from} → ${e.to}`
+        if (c.data?.segmentId && c.data.segmentId !== from.id) return `another segment criterion: ${c.id}`
+        if (c.data?.jobId && c.data.jobId !== to.id) return `other work criterion: ${c.id}`
         used.add(ref.id); priorities.add(ref.priority)
       }
     }
-    if (['evidenced_by', 'contradicted_by'].includes(e.type) && from.data?.segmentId && to.data?.segmentId && from.data.segmentId !== to.data.segmentId) return `свидетельство другого сегмента: ${edgeKey(e)}`
+    if (['evidenced_by', 'contradicted_by'].includes(e.type) && from.data?.segmentId && to.data?.segmentId && from.data.segmentId !== to.data.segmentId) return `evidence of another segment: ${edgeKey(e)}`
   }
   const parents = new Map()
   for (const e of graph.edges.filter(e => e.type === 'sub_segment_of')) {
-    if (parents.has(e.from)) return `два родителя подсегмента: ${e.from}`
+    if (parents.has(e.from)) return `two parents of the subsegment: ${e.from}`
     parents.set(e.from, e.to)
-    for (const ref of e.data?.addedCriteria || []) if (by.get(ref.id)?.type !== 'criterion') return `неизвестный добавленный критерий: ${ref.id}`
+    for (const ref of e.data?.addedCriteria || []) if (by.get(ref.id)?.type !== 'criterion') return `unknown criterion added: ${ref.id}`
   }
-  for (const [child, parent] of parents) if (parents.has(parent)) return `подсегменты допускают только один уровень: ${child}`
+  for (const [child, parent] of parents) if (parents.has(parent)) return `Subsegments allow only one level: ${child}`
   const problem = validateCommunications(graph, by)
   return problem || validateVisualAssets(graph, by)
 }
@@ -90,44 +90,44 @@ function validateCommunications(graph, by) {
   const targets = (id, type) => graph.edges.filter(e => e.from === id && e.type === type).map(e => e.to)
   const parents = new Map()
   for (const e of graph.edges) {
-    if (['journey_offer', 'channel_offer', 'material_offer', 'subproduct_of'].includes(e.type) && by.get(e.to)?.type === 'channel' && !by.get(e.to).data?.isOffering) return `Канал не обозначен как предложение: ${e.to}`
-    if (e.type === 'subproduct_of' && by.get(e.from)?.type === 'channel' && !by.get(e.from).data?.isOffering) return `Канал не обозначен как предложение: ${e.from}`
+    if (['journey_offer', 'channel_offer', 'material_offer', 'subproduct_of'].includes(e.type) && by.get(e.to)?.type === 'channel' && !by.get(e.to).data?.isOffering) return `Channel is not designated as an offer: ${e.to}`
+    if (e.type === 'subproduct_of' && by.get(e.from)?.type === 'channel' && !by.get(e.from).data?.isOffering) return `Channel is not designated as an offer: ${e.from}`
   }
   for (const e of graph.edges.filter(e => e.type === 'subproduct_of')) {
-    if (parents.has(e.from)) return `Два родителя предложения: ${e.from}`
+    if (parents.has(e.from)) return `Two parent clause: ${e.from}`
     parents.set(e.from, e.to)
   }
   for (const id of parents.keys()) {
     const seen = new Set([id]); let next = parents.get(id)
-    while (next) { if (seen.has(next)) return `Цикл предложений: ${id}`; seen.add(next); next = parents.get(next) }
+    while (next) { if (seen.has(next)) return `Sentence loop: ${id}`; seen.add(next); next = parents.get(next) }
   }
   const url = value => { try { return ['http:', 'https:'].includes(new URL(value).protocol) } catch { return false } }
   for (const n of graph.nodes) {
     const d = n.data || {}
-    if (n.type === 'reference' && d.url && !url(d.url)) return `Неверная ссылка референса: ${n.id}`
+    if (n.type === 'reference' && d.url && !url(d.url)) return `Invalid reference link: ${n.id}`
     if (n.type === 'artifact' && d.kind === 'communication_material') {
       const channelIds = targets(n.id, 'material_channel')
-      if (d.contextId && !channelIds.some(id => by.get(id)?.data?.contexts?.some(c => c.id === d.contextId))) return `Контекст материала относится к другому каналу: ${n.id}`
-      if (d.rubricId && !targets(d.rubricId, 'rubric_channel').some(id => channelIds.includes(id))) return `Рубрика материала относится к другому каналу: ${n.id}`
+      if (d.contextId && !channelIds.some(id => by.get(id)?.data?.contexts?.some(c => c.id === d.contextId))) return `The content context belongs to another channel: ${n.id}`
+      if (d.rubricId && !targets(d.rubricId, 'rubric_channel').some(id => channelIds.includes(id))) return `The material category belongs to another channel: ${n.id}`
 
-      if (d.stage && !['idea', 'draft', 'review', 'ready'].includes(d.stage)) return `Неверная готовность: ${n.id}`
-      if (d.publicationUrl && (!url(d.publicationUrl) || !/^\d{4}-\d{2}-\d{2}$/.test(d.publishedAt || '') || !Number.isFinite(Date.parse(d.publishedAt)))) return `Публикации нужны ссылка и дата: ${n.id}`
-      if (d.publishedAt && !d.publicationUrl) return `Публикации нужна ссылка: ${n.id}`
-      if (d.feedback != null && (!Array.isArray(d.feedback) || d.feedback.some(f => !f || !nonempty(f.text) || !nonempty(f.at)))) return `Неверная история отзывов: ${n.id}`
-      if (d.body != null && typeof d.body !== 'string') return `Текст материала должен быть строкой: ${n.id}`
+      if (d.stage && !['idea', 'draft', 'review', 'ready'].includes(d.stage)) return `Invalid readiness: ${n.id}`
+      if (d.publicationUrl && (!url(d.publicationUrl) || !/^\d{4}-\d{2}-\d{2}$/.test(d.publishedAt || '') || !Number.isFinite(Date.parse(d.publishedAt)))) return `Publication needs a link and date: ${n.id}`
+      if (d.publishedAt && !d.publicationUrl) return `Publication needs a link: ${n.id}`
+      if (d.feedback != null && (!Array.isArray(d.feedback) || d.feedback.some(f => !f || !nonempty(f.text) || !nonempty(f.at)))) return `Invalid review history: ${n.id}`
+      if (d.body != null && typeof d.body !== 'string') return `Material text must be a string: ${n.id}`
     }
     if (n.type === 'journey') {
-      if (!targets(n.id, 'journey_segment').length || !targets(n.id, 'journey_offer').length) return `Пути нужны сегмент и предложение: ${n.id}`
+      if (!targets(n.id, 'journey_segment').length || !targets(n.id, 'journey_offer').length) return `Path needs segment and clause: ${n.id}`
       if (d.jobGraph) {
         const spec = d.jobGraph, ids = spec.jobIds
-        if (!Array.isArray(ids) || !ids.length || ids.length > 40 || new Set(ids).size !== ids.length || ids.some(id => by.get(id)?.type !== 'job') || !ids.includes(spec.coreJobId) || !Array.isArray(spec.transitions)) return `Неверный граф работ пути: ${n.id}`
+        if (!Array.isArray(ids) || !ids.length || ids.length > 40 || new Set(ids).size !== ids.length || ids.some(id => by.get(id)?.type !== 'job') || !ids.includes(spec.coreJobId) || !Array.isArray(spec.transitions)) return `Invalid path work graph: ${n.id}`
         const segments = targets(n.id, 'journey_segment')
         // A retained job graph describes research for part of a shared contact path's audience.
-        if (!segments.some(segment => targets(segment, 'performs').includes(spec.coreJobId))) return `Core Job не относится к сегменту: ${n.id}`
-        if (!targets(n.id, 'journey_offer').some(id => targets(id, 'competes_for').includes(spec.coreJobId))) return `Core Job не связана с предложением пути: ${n.id}`
+        if (!segments.some(segment => targets(segment, 'performs').includes(spec.coreJobId))) return `Core Job does not belong to a segment: ${n.id}`
+        if (!targets(n.id, 'journey_offer').some(id => targets(id, 'competes_for').includes(spec.coreJobId))) return `Core Job not associated with path clause: ${n.id}`
         const seenEdges = new Set()
         for (const e of spec.transitions) {
-          if (!e || !ids.includes(e.from) || !ids.includes(e.to) || e.from === e.to || e.from === spec.coreJobId || seenEdges.has(`${e.from}:${e.to}`) || (e.condition != null && typeof e.condition !== 'string')) return `Неверный переход между работами: ${n.id}`
+          if (!e || !ids.includes(e.from) || !ids.includes(e.to) || e.from === e.to || e.from === spec.coreJobId || seenEdges.has(`${e.from}:${e.to}`) || (e.condition != null && typeof e.condition !== 'string')) return `Invalid transition between jobs: ${n.id}`
           seenEdges.add(`${e.from}:${e.to}`)
         }
         const done = new Set(), visiting = new Set()
@@ -139,26 +139,26 @@ function validateCommunications(graph, by) {
           if (!next.length || !next.every(e => reachesCore(e.to))) return false
           visiting.delete(id); done.add(id); return true
         }
-        if (!ids.every(reachesCore)) return `Все ветви должны вести до Core Job без цикла: ${n.id}`
+        if (!ids.every(reachesCore)) return `All branches must lead to Core Job no loop: ${n.id}`
       }
       const contacts = new Set(targets(n.id, 'has_contact'))
-      if (d.transitions != null && !Array.isArray(d.transitions)) return `Переходы должны быть массивом: ${n.id}`
-      for (const step of d.transitions || []) if (!step || !contacts.has(step.from) || !contacts.has(step.to) || step.from === step.to) return `Переход выходит за пределы пути: ${n.id}`
+      if (d.transitions != null && !Array.isArray(d.transitions)) return `Transitions must be an array: ${n.id}`
+      for (const step of d.transitions || []) if (!step || !contacts.has(step.from) || !contacts.has(step.to) || step.from === step.to) return `Transition goes outside the path: ${n.id}`
     }
     if (n.type === 'touchpoint') {
-      for (const relation of ['contact_job', 'contact_channel', 'contact_rubric']) if (targets(n.id, relation).length > 1) return `Выбери одну связь ${relation}: ${n.id}`
+      for (const relation of ['contact_job', 'contact_channel', 'contact_rubric']) if (targets(n.id, relation).length > 1) return `Select one connection ${relation}: ${n.id}`
       const channel = targets(n.id, 'contact_channel')[0], rubric = targets(n.id, 'contact_rubric')[0]
-      if (rubric && (!channel || !targets(rubric, 'rubric_channel').includes(channel))) return `Рубрика не принадлежит каналу: ${n.id}`
+      if (rubric && (!channel || !targets(rubric, 'rubric_channel').includes(channel))) return `The section does not belong to the channel: ${n.id}`
     }
-    if (n.type === 'rubric' && targets(n.id, 'rubric_channel').length !== 1) return `Рубрике нужен один канал: ${n.id}`
+    if (n.type === 'rubric' && targets(n.id, 'rubric_channel').length !== 1) return `The section needs one channel: ${n.id}`
     if (n.type === 'communication_decision') {
-      if (!['continue', 'change', 'defer'].includes(d.outcome) || targets(n.id, 'decides').length !== 1) return `Неверное решение: ${n.id}`
+      if (!['continue', 'change', 'defer'].includes(d.outcome) || targets(n.id, 'decides').length !== 1) return `Wrong decision: ${n.id}`
       const rubric = targets(n.id, 'decides')[0]
       for (const id of targets(n.id, 'based_on')) {
         const subjects = graph.edges.filter(e => e.to === id && ['evidenced_by', 'contradicted_by'].includes(e.type)).map(e => e.from)
         const materials = graph.edges.filter(e => e.type === 'contact_rubric' && e.to === rubric).flatMap(e => targets(e.from, 'uses_material'))
-        if (!by.get(id)?.data?.rubricIds?.includes(rubric) && !subjects.some(id => id === rubric || materials.includes(id))) return `Данные другой рубрики: ${id}`
-        if (!evidenceUsable(by.get(id))) return `Непригодное свидетельство: ${id}`
+        if (!by.get(id)?.data?.rubricIds?.includes(rubric) && !subjects.some(id => id === rubric || materials.includes(id))) return `Data from another category: ${id}`
+        if (!evidenceUsable(by.get(id))) return `Invalid certificate: ${id}`
       }
     }
   }
